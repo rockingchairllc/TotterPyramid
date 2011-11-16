@@ -9,10 +9,11 @@ def main(global_config, **settings):
     engine = engine_from_config(settings, 'sqlalchemy.')
     initialize_sql(engine)
     config = Configurator(settings=settings)
+    config.include('pyramid_jinja2')
     config.add_static_view('static', 'totter:static', cache_max_age=3600)
     config.add_route('home', '/')
     config.add_view('totter.views.my_view',
                     route_name='home',
-                    renderer='templates/mytemplate.pt')
+                    renderer='mytemplate.jinja2')
     return config.make_wsgi_app()
 

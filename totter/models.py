@@ -99,7 +99,7 @@ def populate():
     import hashlib
     salt = salt_generator()
     password_data = hashlib.md5(salt + hashlib.md5('password1234').hexdigest()).hexdigest()
-    model = User(first_name='Francisco', last_name='Saldana', password=password_data, salt=salt, email='frank@rockingchairllc.com')
+    model = User(first_name='Francisco', last_name='Saldana', salted_password_hash=password_data, salt=salt, email='frank@rockingchairllc.com')
     session.add(model)
     session.flush()
     transaction.commit()
