@@ -27,7 +27,7 @@ from datetime import datetime
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
-salt_generator = lambda : ''.join(random.choice([chr(x) for x in range(0x20,0x7F)]) for x in range(128))
+salt_generator = lambda : ''.join(random.choice([chr(x) for x in range(0x20,0x7F)]) for x in range(16))
 class User(Base):
     __tablename__ = 'Users'
     id = Column('UserUUID',UUID(),primary_key=True,default=uuid.uuid4)
@@ -38,7 +38,7 @@ class User(Base):
     facebook_id = Column('FacebookID', Integer, nullable=True)
     registration_date = Column('RegistrationDate', DateTime, default=datetime.now)
     salted_password_hash = Column('SaltedPasswordHash', CHAR(32)) # MD5(Salt+MD5(Password), nullable=False)
-    salt = Column('Salt', CHAR(128), default=salt_generator, nullable=False)
+    salt = Column('Salt', CHAR(16), default=salt_generator, nullable=False)
 
 participants = Table('Participants', Base.metadata,
     Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID')),
@@ -53,7 +53,7 @@ class Project(Base):
     key = Column('ProjectKey', String(128))
     creator_id = Column('CreatorUUID',UUID())
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
-    anonymous = Column('Anonymous', Boolean)
+    anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     
     participants = relationship('User', secondary=participants, 
         backref=backref('projects', lazy='dynamic'))
@@ -65,7 +65,7 @@ class Idea(Base):
     project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'))
     author_id = Column('AuthorUUID', UUID(), ForeignKey('Users.UserUUID'))
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
-    anonymous = Column('Anonymous', Boolean)
+    anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     
     data = Column('IdeaData', Text)
     project = relationship('Project', backref=backref('ideas'))
@@ -78,7 +78,7 @@ class Comment(Base):
     idea_id = Column('IdeaID', Integer, ForeignKey('Ideas.IdeaID'))
     author_id = Column('AuthorUUID', UUID(), ForeignKey('Users.UserUUID'))
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
-    anonymous = Column('Anonymous', Boolean)
+    anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     data = Column('CommentData', Text)
     idea = relationship('Idea', backref=backref('comments'))
     
