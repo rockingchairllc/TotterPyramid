@@ -15,5 +15,42 @@ def main(global_config, **settings):
     config.add_view('totter.views.my_view',
                     route_name='home',
                     renderer='mytemplate.jinja2')
+
+    config.add_route('create_project', '/project/new')
+    config.add_view('totter.testViews.create',
+                    route_name='create_project',
+                    renderer='create.jinja2')
+                    
+    config.add_route('access', '/access')
+    config.add_view('totter.testViews.enterKey',
+                    route_name='access',
+                    renderer='enterKey.jinja2')
+                    
+                    
+    config.add_route('login', '/login')
+    config.add_view('totter.testViews.login',
+                    route_name='login',
+                    renderer='login.jinja2')
+                    
+    config.add_route('project_overview', '/project/{project_id}', method='GET')
+    config.add_view('totter.testViews.project',
+                    route_name='project_overview',
+                    renderer='project.jinja2')
+                    
+    config.add_route('project_ideas', '/project/{project_id}/ideas', method='GET')
+    config.add_view('totter.testViews.ideas',
+                    route_name='project_ideas',
+                    renderer='ideas.jinja2')
+                    
+    config.add_route('register', '/register')
+    config.add_view('totter.testViews.register',
+                    route_name='register',
+                    renderer='register.jinja2')
+                    
+    config.add_route('stars', '/project/{project_id}/stars')
+    config.add_view('totter.testViews.stars',
+                    route_name='stars',
+                    renderer='stars.jinja2')
+                    
     return config.make_wsgi_app()
 
