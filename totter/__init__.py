@@ -32,12 +32,12 @@ def main(global_config, **settings):
                     route_name='login',
                     renderer='login.jinja2')
                     
-    config.add_route('project_overview', '/project/{project_id}', method='GET')
+    config.add_route('project_overview', '/project/{project_id}')
     config.add_view('totter.testViews.project',
                     route_name='project_overview',
                     renderer='project.jinja2')
                     
-    config.add_route('project_ideas', '/project/{project_id}/ideas', method='GET')
+    config.add_route('project_ideas', '/project/{project_id}/ideas')
     config.add_view('totter.testViews.ideas',
                     route_name='project_ideas',
                     renderer='ideas.jinja2')
