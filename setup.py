@@ -14,7 +14,9 @@ requires = [
     'pyramid_tm',
     'pyramid_debugtoolbar',
     'zope.sqlalchemy',
-    'pyramid_jinja2'
+    'pyramid_jinja2',
+    'Flup',
+    'MySQL-python',
     ]
 
 if sys.version_info[:3] < (2,5,0):
