@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Totter</title>
+	<link rel="apple-touch-icon" href="{{request.application_url}}static/images/apple-touch-icon.png" />
+    <link rel="stylesheet" href="{{request.application_url}}/static/reset.css" >
+    <link rel="stylesheet" href="{{request.application_url}}/static/style.css" >
+	<link rel="shortcut icon" href="{{request.application_url}}/static/images/favicon.png" />
+</head>
+<body>
+{% block body %}
+{% endblock %}
+{% block footer %}
+   <div class="footer wrapper">
+            <!-- Begin the Footer -->
+            <ul class="footer_links">
+            	<li><a href="index.php">Login</a></li>
+            	<li>&#124;</li>
+                <li><a href="create_totter.php">Create</a></li>
+            	<li>&#124;</li>
+            	<li><a href="project_overview.php">Project</a></li>
+            	<li>&#124;</li>
+            	<li><a href="project_ideas.php">Ideas</a></li>
+            	<li>&#124;</li>
+            	<li><a href="project_ideas_stars.php">Stars</a></li>
+            	<li>&#124;</li>
+            	<li><a href="project_link_logged_out.php">Enter ID &amp; Key</a></li>
+            </ul><!-- .login_footer_links -->
+
+	</div><!-- .wrapper -->
+{% endblock %}
+</body>
