@@ -2,9 +2,9 @@ from pyramid.security import Allow
 from pyramid.security import Everyone
 from pyramid.security import remember
 from pyramid.security import forget
+from pyramid.security import authenticated_userid
 from pyramid.httpexceptions import HTTPFound
 
-import hashlib
 from models import *
 
 class RootFactory(object):
@@ -36,9 +36,7 @@ def login(request):
         session = DBSession()        
         try:
             user = session.query(User).filter(User.email==login).one()
-            salt = user.salt
-            password_data = hashlib.md5(salt + hashlib.md5(password).hexdigest()).hexdigest()
-            if password_data == user.salted_password_hash:
+            if user.password_hash(password) == user.salted_password_hash:
                 headers = remember(request, login)
                 return HTTPFound(location = came_from, headers = headers)
         except:
@@ -47,9 +45,50 @@ def login(request):
 
     return dict(
         message = message,
-        url = request.application_url + '/login',
         came_from = came_from,
         login = login,
         password = password,
+        user = authenticated_userid(request),
+        )
+
+def logout(request):
+    headers = forget(request)
+    return HTTPFound(location = request.route_url('home'), headers = headers)
+
+def register(request):
+    login_url = request.route_url('login')
+    register_url = request.route_url('register')
+    referrer = request.url
+    if referrer == login_url or referrer == register_url:
+        referrer = '/'
+    came_from = request.params.get('came_from', referrer)
+    message = login = password = firstname = lastname = ''
+    if 'form.submitted' in request.params:
+        login = request.params['login']
+        firstname = request.params['firstname']
+        lastname = request.params['lastname']
+        password = request.params['password']
+        session = DBSession()
+        user = User(
+            email = login,
+            first_name = firstname,
+            last_name = lastname,
+            salt = salt_generator(),
+        )
+        user.salted_password_hash = user.password_hash(password)
+        try:
+            session.add(user)
+            headers = remember(request, login)
+            return HTTPFound(location = came_from, headers = headers)            
+        except:
+            message = "Registration error"
+    return dict(
+        message = message,
+        login = login,
+        firstname = firstname,
+        lastname = lastname,
+        password = password,
+        came_from = came_from,
+        user = authenticated_userid(request),
         )
 

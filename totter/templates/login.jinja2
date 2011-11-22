@@ -4,11 +4,12 @@
             
             <h1 class="title">Welcome to Totter</h1>
             {% if message -%}<h2><font color="red"> {{ message }} </font></h2> {% endif %}
-            <form id="loginForm" method='post' action='login'>
+            <form id="loginForm" method='post' action="{{request.route_url('login')}}">
                 <fieldset>
-                    <input type="text" name='login' value="Email" /><br />
+                    <input type="hidden" name="came_from" value="{{came_from}}"/>
+                    <input type="text" name='login' value="{{ login if login else 'Email' }}" /><br />
                     
-                    <input type="text" name='password' value="Password" /><br />
+                    <input type="text" name='password' value="{{ password if password else 'Password' }}" /><br />
 				    <a href="#ForgotPassword" class="forgot_password">Forgot Password?</a>
                     
                     <div class="remember_me">
@@ -19,7 +20,8 @@
                 </fieldset>
             </form>
 			
-            <h3 class="register">New here?  <a href="#register"class="register_btn">Register</a></h3>
+            <h3 class="register">New here?  
+                <a href="{{request.route_url('register')}}" class="register_btn">Register</a></h3>
         
             <div class="fb_login">
             	<div id="fb-root"></div>

@@ -1,0 +1,18 @@
+{% extends "base.jinja2" %}
+{% block body %}	
+    <div class="login_register_wrap drop-shadow curved curved-vt-2">          
+        <h1 class="title">Registration</h1>
+        {% if message -%}<h2><font color="red"> {{ message }} </font></h2> {% endif %}
+        <form id="registerForm" method='post' action="{{request.route_url('register')}}">
+            <fieldset>
+                <input type="text" name='login' value="{{ login if login else 'Email' }}" /><br />
+                <input type="text" name='password' value="{{ password if password else 'Password' }}" /><br />
+                <input type="text" name='firstname' value="{{ firstname if firstname else 'First Name' }}" /><br />
+                <input type="text" name='lastname' value="{{ lastname if lastname else 'Last Name' }}" /><br />
+                       
+                <input type="submit" name='form.submitted' class="login_btn" value="Register" />
+            </fieldset>
+        </form>			                    
+	</div><!-- .login_register_wrap -->
+{% endblock %}
+

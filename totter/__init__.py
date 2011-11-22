@@ -28,19 +28,25 @@ def main(global_config, **settings):
     config.add_route('create_project', '/project/new')
     config.add_view('totter.testViews.create',
                     route_name='create_project',
-                    renderer='create.jinja2')
+                    renderer='create.jinja2',
+                    permission='edit')
                     
     config.add_route('access', '/access')
     config.add_view('totter.testViews.enterKey',
                     route_name='access',
                     renderer='enterKey.jinja2')
-                    
-                    
+                                        
     config.add_route('login', '/login')
     config.add_view('totter.user.login',
                     route_name='login',
                     renderer='login.jinja2')
-                    
+    config.add_view('totter.user.login',
+                    context='pyramid.httpexceptions.HTTPForbidden',
+                    renderer='login.jinja2')
+
+    config.add_route('logout', '/logout')
+    config.add_view('totter.user.logout', route_name='logout')
+
     config.add_route('project_overview', '/project/{project_id}')
     config.add_view('totter.testViews.project',
                     route_name='project_overview',
@@ -52,7 +58,7 @@ def main(global_config, **settings):
                     renderer='ideas.jinja2')
                     
     config.add_route('register', '/register')
-    config.add_view('totter.testViews.register',
+    config.add_view('totter.user.register',
                     route_name='register',
                     renderer='register.jinja2')
                     

@@ -14,9 +14,13 @@
    <div class="footer wrapper">
             <!-- Begin the Footer -->
             <ul class="footer_links">
-            	<li><a href="index.php">Login</a></li>
+            	<li>{% if user != '' %}
+                    <a href="{{request.route_url('logout')}}">Logout</a></li>
+                    {% else %}
+                    <a href="{{request.route_url('login')}}">Login</a></li>
+                    {% endif %}
             	<li>&#124;</li>
-                <li><a href="create_totter.php">Create</a></li>
+                <li><a href="project/new">Create</a></li>
             	<li>&#124;</li>
             	<li><a href="project_overview.php">Project</a></li>
             	<li>&#124;</li>

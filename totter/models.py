@@ -23,6 +23,7 @@ from sqlalchemy_uuid import UUID
 import string
 import random
 from datetime import datetime
+import hashlib
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
@@ -39,6 +40,9 @@ class User(Base):
     registration_date = Column('RegistrationDate', DateTime, default=datetime.now)
     salted_password_hash = Column('SaltedPasswordHash', CHAR(32)) # MD5(Salt+MD5(Password), nullable=False)
     salt = Column('Salt', CHAR(16), default=salt_generator, nullable=False)
+
+    def password_hash(self, password):
+        return hashlib.md5(self.salt + hashlib.md5(password).hexdigest()).hexdigest()
 
 participants = Table('Participants', Base.metadata,
     Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID')),
