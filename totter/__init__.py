@@ -44,6 +44,11 @@ def main(global_config, **settings):
                     context='pyramid.httpexceptions.HTTPForbidden',
                     renderer='login.jinja2')
 
+    config.add_route('facebook', '/facebook')
+    config.add_view('totter.user.facebook',
+                    route_name='facebook',
+                    renderer='login.jinja2')
+
     config.add_route('logout', '/logout')
     config.add_view('totter.user.logout', route_name='logout')
 

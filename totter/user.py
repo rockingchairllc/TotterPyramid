@@ -44,6 +44,7 @@ def login(request):
         message = 'Failed login'
 
     return dict(
+        facebook_app_id = request.registry.settings['facebook.app_id'],
         message = message,
         came_from = came_from,
         login = login,
@@ -94,4 +95,14 @@ def register(request):
         came_from = came_from,
         user = authenticated_userid(request),
         )
+
+def facebook(request):
+    fb_url = "https://www.facebook.com/dialog/oauth"
+    if 'code' in request.params:
+        pass
+    params = "&".join(['client_id=' + fb_app_id, 'redirect_uri=facebook', 'scope=email'])
+    return HTTPFound(location = fb_url + "?" + params)
+
+
+
 
