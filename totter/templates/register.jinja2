@@ -1,4 +1,28 @@
 {% extends "base.jinja2" %}
+{% block scripts %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var fields = [ 
+                [$("[name=login]"), "Email"],
+                [$("[name=firstname]"), "First Name"],
+                [$("[name=lastname]"), "Last Name"]
+            ];
+        function setup(input, defaultVal){
+            input.focus(function(){  
+                if($(this).attr("value") == defaultVal) $(this).attr("value", "");
+            });  
+            input.blur(function(){  
+                if($(this).attr("value") == "") $(this).attr("value", defaultVal);
+            });
+        }
+        for(var i=0; i<fields.length; i++){
+            field = fields[i];
+            setup(field[0], field[1]);
+        }
+    });
+</script>
+{% endblock %}
 {% block body %}	
     <div class="login_register_wrap drop-shadow curved curved-vt-2">          
         <h1 class="title">Registration</h1>
@@ -6,7 +30,7 @@
         <form id="registerForm" method='post' action="{{request.route_url('register')}}">
             <fieldset>
                 <input type="text" name='login' value="{{ login if login else 'Email' }}" /><br />
-                <input type="text" name='password' value="{{ password if password else 'Password' }}" /><br />
+                Password: <input type="password" id='regpass' name='password' value="{{ password }}" /><br />
                 <input type="text" name='firstname' value="{{ firstname if firstname else 'First Name' }}" /><br />
                 <input type="text" name='lastname' value="{{ lastname if lastname else 'Last Name' }}" /><br />
                        

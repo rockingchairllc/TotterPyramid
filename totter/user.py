@@ -69,15 +69,21 @@ def register(request):
         lastname = request.params['lastname']
         password = request.params['password']
         session = DBSession()
+        print 1
         user = User(
             email = login,
             first_name = firstname,
             last_name = lastname,
             salt = salt_generator(),
         )
+        print 2
         user.salted_password_hash = user.password_hash(password)
+        print 3
         try:
             session.add(user)
+            print 4
+            session.commit()
+            print 5
             headers = remember(request, login)
             return HTTPFound(location = came_from, headers = headers)            
         except:
