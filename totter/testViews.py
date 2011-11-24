@@ -14,13 +14,13 @@ def get_test_user():
 def add_comment(request):
     session = DBSession()
     new_comment = session.query(Comment).filter(Comment.id==1).one()
-    return {'comment_id' : '1', 'comment' : new_comment}
+    return {'comment_id' : '1'}
     
 @view_config(route_name='post_idea', request_method='POST', xhr=True, renderer='json')
 def add_idea(request):
     session = DBSession()
     new_idea = session.query(Idea).filter(Idea.id==1).one()
-    return {'idea_id' : '1', 'idea' : new_idea}
+    return {'idea_id' : '1'}
     
 def create(request):
     return {}
@@ -29,7 +29,7 @@ def enterKey(request):
     return {}
 
 
-@view_config(route_name='project_ideas', renderer='json')
+@view_config(route_name='project_ideas', renderer='ideas.jinja2')
 def ideas(request):
     user = get_test_user()
     project_id = uuid.UUID(hex=request.matchdict['project_id'])
