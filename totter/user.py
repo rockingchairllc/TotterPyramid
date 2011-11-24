@@ -99,9 +99,14 @@ def register(request):
 def facebook(request):
     fb_url = "https://www.facebook.com/dialog/oauth"
     if 'code' in request.params:
-        pass
-    params = "&".join(['client_id=' + fb_app_id, 'redirect_uri=facebook', 'scope=email'])
-    return HTTPFound(location = fb_url + "?" + params)
+        return {'code': request.params['code']}
+    params = "&".join([
+        'client_id=' + request.registry.settings['facebook.app_id'], 
+        'redirect_uri='+request.route_url('facebook'),
+        'display=popup',
+        'scope=email',
+    ])
+    return HTTPFound(location = fb_url+"?"+params)
 
 
 
