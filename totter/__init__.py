@@ -58,9 +58,7 @@ def main(global_config, **settings):
                     renderer='project.jinja2')
                     
     config.add_route('project_ideas', '/project/{project_id}/ideas')
-    config.add_view('totter.testViews.ideas',
-                    route_name='project_ideas',
-                    renderer='ideas.jinja2')
+    
                     
     config.add_route('register', '/register')
     config.add_view('totter.user.register',
@@ -71,6 +69,11 @@ def main(global_config, **settings):
     config.add_view('totter.testViews.stars',
                     route_name='stars',
                     renderer='stars.jinja2')
+                    
+    # For XMLHttpRequest
+    config.add_route('post_comment', '/project/{project_id}/idea/{idea_id}/comment')
+    config.add_route('post_idea', '/project/{project_id}/idea')
+    
                     
     return config.make_wsgi_app()
 

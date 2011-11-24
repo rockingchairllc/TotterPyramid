@@ -1,54 +1,41 @@
 #from totter.models import DBSession
 #from totter.models import MyModel
-
+from pyramid.view import view_config
+from models import *
 from pyramid.i18n import TranslationStringFactory
 _ = TranslationStringFactory('totter')
 
+def get_test_user():
+    session = DBSession()
+    return session.query(User).filter(User.email=='frank@rockingchairllc.com').one()
 
+@view_config(route_name='post_comment', request_method='POST', xhr=True, renderer='json')
+def add_comment(request):
+    session = DBSession()
+    new_comment = session.Query(Comment).filter(comment_id=1).one()
+    return {'comment_id' : '1', 'comment' : new_comment}
+    
+@view_config(route_name='post_idea', request_method='POST', xhr=True, renderer='json')
+def add_idea(request):
+    session = DBSession()
+    new_idea = session.Query(Idea).filter(idea_id=1).one()
+    return {'idea_id' : '1', 'idea' : new_idea}
+    
 def create(request):
     return {}
     
 def enterKey(request):
     return {}
-    
+
+
+@view_config(route_name='project_ideas', renderer='json')
 def ideas(request):
-    user_info = {'user_name' : 'Francisco Saldana', 'user_image': 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/211801_1135710554_1230207683_q.jpg'}
-    ideas_data = {'project_title' : 'Grand Opening of Hotel LaRitz',
-        'author_name' : 'Coca Cola',
-        'author_image' : 'http://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/276879_40796308305_1578420141_q.jpg',
-        'people_count' : 32,
-        'ideas_count' : 4,
-        'deadline' : 'None',
-        'ideas' : [{'author_name' : 'Francisco Saldana',
-                    'author_image' : 'http://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/211801_1135710554_1230207683_q.jpg',
-                    'rating' : 3, 
-                    'rating_count' : 120, 'creation_time' : 'December 17, 2009 at 10:20am',
-                    'idea_content' : 'Let\'s have a party',
-                    'comments' : [
-                        {'author_name' : 'Dolores Smith', 'comment_content' : 'We should have it at my house!'},
-                        {'author_name' : 'Sam Smith', 'comment_content' : 'We should make it blue themed.'},
-                        {'author_name' : 'Douche Bag', 'comment_content' : 'Let\'s not.'},
-                    ]},
-                    {'author_name' : 'Sam Smith', 'rating' : 1, 
-                    'author_image' : 'http://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/368731_562443218_874585432_q.jpg',
-                    'rating_count' : 49, 'creation_time' : 'August, 15 2009 at 12:01am',
-                    'idea_content' : 'Blue Themed Party',
-                    'comments' : [
-                        {'author_name' : 'Dolores Smith', 'comment_content' : 'I like green better.'},
-                        {'author_name' : 'Sam Smith', 'comment_content' : 'I never liked you Dolores.'},
-                    ]},
-                    {'author_name' : 'Shubert Samanthan', 'rating' : 2, 
-                    'author_image' : 'http://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/275165_100000084707992_354701_q.jpg',
-                    'rating_count' : 2, 'creation_time' : '3 minutes ago',
-                    'idea_content' : 'Whateverrr',
-                    'comments' : [
-                        {'author_name' : 'Dolores Smith', 'comment_content' : 'Wow youre still here?'},
-                        {'author_name' : 'Tolune Tobias', 'comment_content' : 'LOL'},
-                    ]},
-                    ]
-        }
-    ideas_data.update(user_info)
-    return ideas_data
+    user = get_test_user()
+    project_id = request.matchdict['project_id']
+    session = DBSession()
+    project = session.Query(Project).filter(project_id==project_id)
+    return {'project' : project}
+    
 def login(request):
     return {}
     
