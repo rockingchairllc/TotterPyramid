@@ -134,7 +134,6 @@ def facebook(request):
         return {'message': request.params['error_reason'] + ' ' +
                            request.params['error'] + ' ' +
                            request.params['error_description'] }
-#        return HTTPFound(location = request.route_url('login'))
 
     # Call authentication dialog
     fb_url = "https://www.facebook.com/dialog/oauth"
