@@ -110,7 +110,8 @@ def populate():
     import hashlib
     salt = salt_generator()
     password_data = hashlib.md5(salt + hashlib.md5('password1234').hexdigest()).hexdigest()
-    test_user = User(first_name='Francisco', last_name='Saldana', salted_password_hash=password_data, salt=salt, email='frank@rockingchairllc.com')
+    test_user = User(first_name='Francisco', last_name='Saldana', salted_password_hash=password_data, salt=salt, email='frank@rockingchairllc.com', 
+    profile_picture='https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/211801_1135710554_1230207683_q.jpg')
     session.add(test_user)
     
     test_project = Project(description="This is the project description.", title="This is the project title",
