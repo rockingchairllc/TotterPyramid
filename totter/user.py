@@ -101,16 +101,39 @@ def register(request):
         )
 
 def facebook(request):
-    fb_url = "https://www.facebook.com/dialog/oauth"
+    # Authenticated
     if 'code' in request.params:
-        user = fb.get_user_from_cookie(request.cookies, 
+        fbuser = fb.get_user_from_cookie(request.cookies, 
                             request.registry.settings['facebook.app_id'],
                             request.registry.settings['facebook.secret']
         )
-        if user:
+        if fbuser:
             graph = fb.GraphAPI(user["access_token"])
             profile = graph.get_object("me")
-        return {'code': request.params['code'], 'data': pp.pformat(user) + pp.pformat(profile)}
+            session = DBSession()
+            try:
+                user = session.query(User.name).filter_by(email=profile['email']).one()
+            except:
+                user = User(
+                    email = profile['email'],
+                    first_name = profile['first_name'],
+                    last_name = profile['last_name'],
+                    facebook_id = fbuser['uid'],
+                    salt = salt_generator(),
+                )
+                session.add(user)
+            login = user.email
+            headers = remember(request, login)
+            return HTTPFound(location = request.application_url, headers = headers) 
+        else:
+            return HTTPFound(location = request.route_url('login'))
+# return {'code': request.params['code'], 'data': pp.pformat(fbuser) + pp.pformat(profile)}
+    # Access denied by user
+    elif 'error' in request.params:
+        return HTTPFound(location = request.route_url('login'))
+
+    # Call authentication dialog
+    fb_url = "https://www.facebook.com/dialog/oauth"
     params = "&".join([
         'client_id=' + request.registry.settings['facebook.app_id'], 
         'redirect_uri='+request.route_url('facebook'),
