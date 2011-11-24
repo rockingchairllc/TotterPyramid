@@ -112,8 +112,8 @@ def facebook(request):
             profile = graph.get_object("me")
             session = DBSession()
             try:
-                user = session.query(User.name).filter_by(email=profile['email']).one()
-            except:
+                user = session.query(User).filter_by(email=profile['email']).one()
+            except NoResultFound:
                 user = User(
                     email = profile['email'],
                     first_name = profile['first_name'],
@@ -124,7 +124,8 @@ def facebook(request):
                 session.add(user)
             login = user.email
             headers = remember(request, login)
-            return HTTPFound(location = request.application_url, headers = headers) 
+            url = request.referer if request.referer else request.application_url
+            return HTTPFound(location = url, headers = headers) 
         else:
             return HTTPFound(location = request.route_url('login'))
 # return {'code': request.params['code'], 'data': pp.pformat(fbuser) + pp.pformat(profile)}
