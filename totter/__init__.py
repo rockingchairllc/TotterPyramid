@@ -20,6 +20,7 @@ def main(global_config, **settings):
                           authorization_policy=authz_policy)
     config.include('pyramid_jinja2')
     config.add_static_view('static', 'totter:static', cache_max_age=3600)
+    config.scan()
     config.add_route('home', '/')
     config.add_view('totter.views.my_view',
                     route_name='home',
@@ -47,7 +48,7 @@ def main(global_config, **settings):
     config.add_route('facebook', '/facebook')
     config.add_view('totter.user.facebook',
                     route_name='facebook',
-                    renderer='test.jinja2')
+                    renderer='message.jinja2')
 
     config.add_route('logout', '/logout')
     config.add_view('totter.user.logout', route_name='logout')

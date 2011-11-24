@@ -1,0 +1,9 @@
+{% extends "base.jinja2" %}
+{% block body %}	
+    <div class="login_register_wrap drop-shadow curved curved-vt-2">          
+        {% if message -%}<font color="red"> {{ message }} </font> {% endif %}
+	</div>
+    <br>
+    <a href="{{request.route_url('login')}}">Login</a>
+{% endblock %}
+

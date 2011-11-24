@@ -131,7 +131,9 @@ def facebook(request):
 
     # Access denied by user
     elif 'error' in request.params:
-        return HTTPFound(location = request.route_url('login'))
+        return {'message': request.params['error_reason'] + ' ' +
+                           request.params['error'] + ' ' +
+                           request.params['error_description'] }
 
     # Call authentication dialog
     fb_url = "https://www.facebook.com/dialog/oauth"
