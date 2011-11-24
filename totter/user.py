@@ -103,7 +103,7 @@ def register(request):
 def facebook(request):
     fb_url = "https://www.facebook.com/dialog/oauth"
     if 'code' in request.params:
-        user = fb.get_user_from_cookie(self.request.cookies, 
+        user = fb.get_user_from_cookie(request.cookies, 
                             request.registry.settings['facebook.app_id'],
                             request.registry.settings['facebook.secret']
         )
