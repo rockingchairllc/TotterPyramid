@@ -55,10 +55,11 @@ class Project(Base):
     urlName = Column('URLName', String(128), unique=True)
     title = Column('ProjectTitle', String(128))
     key = Column('ProjectKey', String(128))
-    creator_id = Column('CreatorUUID',UUID())
+    creator_id = Column('CreatorUUID',UUID(), ForeignKey('Users.UserUUID'))
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     
+    creator = relationship(User, backref=backref('created_projects', lazy='dynamic'))
     participants = relationship('User', secondary=participants, 
         backref=backref('projects', lazy='dynamic'))
 
@@ -70,8 +71,9 @@ class Idea(Base):
     author_id = Column('AuthorUUID', UUID(), ForeignKey('Users.UserUUID'))
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
-    
     data = Column('IdeaData', Text)
+    
+    author = relationship(User, backref=backref('ideas', lazy='dynamic'))
     project = relationship('Project', backref=backref('ideas'))
     
 
@@ -84,6 +86,8 @@ class Comment(Base):
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     data = Column('CommentData', Text)
+    
+    author = relationship(User, backref=backref('comments', lazy='dynamic'))
     idea = relationship('Idea', backref=backref('comments'))
     
 class IdeaRatings(Base):
@@ -97,14 +101,33 @@ class IdeaRatings(Base):
     modified = Column('LastModified', DateTime, default=datetime.now)
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     
+    idea = relationship(Idea, backref=backref('ratings', lazy='dynamic'))
+    rater = relationship(User, backref=backref('ratings', lazy='dynamic'))
+    
     
 def populate():
     session = DBSession()
     import hashlib
     salt = salt_generator()
     password_data = hashlib.md5(salt + hashlib.md5('password1234').hexdigest()).hexdigest()
-    model = User(first_name='Francisco', last_name='Saldana', salted_password_hash=password_data, salt=salt, email='frank@rockingchairllc.com')
-    session.add(model)
+    test_user = User(first_name='Francisco', last_name='Saldana', salted_password_hash=password_data, salt=salt, email='frank@rockingchairllc.com')
+    session.add(test_user)
+    
+    test_project = Project(description="This is the project description.", title="This is the project title",
+        key="test_key_1234")
+    test_project.creator = test_user
+    test_project.participants.append(test_user)
+    session.add(test_project)
+    
+    test_idea = Idea(data="This is a test idea")
+    test_idea.author = test_user
+    test_idea.project = test_project
+    session.add(test_idea)
+    
+    test_comment = Comment(data="This is a test comment.")
+    test_comment.author = test_user
+    test_comment.idea = test_idea
+    session.add(test_comment)
     session.flush()
     transaction.commit()
 
