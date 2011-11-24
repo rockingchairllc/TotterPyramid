@@ -33,7 +33,7 @@ def ideas(request):
     user = get_test_user()
     project_id = request.matchdict['project_id']
     session = DBSession()
-    project = session.Query(Project).filter(project_id==project_id).one()
+    project = session.query(Project).filter(project_id==project_id).one()
     return {'project' : project}
     
 def login(request):
