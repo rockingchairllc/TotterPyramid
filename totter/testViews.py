@@ -1,5 +1,6 @@
 #from totter.models import DBSession
 #from totter.models import MyModel
+import uuid
 from pyramid.view import view_config
 from models import *
 from pyramid.i18n import TranslationStringFactory
