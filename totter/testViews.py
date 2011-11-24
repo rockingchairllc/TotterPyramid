@@ -31,7 +31,7 @@ def enterKey(request):
 @view_config(route_name='project_ideas', renderer='json')
 def ideas(request):
     user = get_test_user()
-    project_id = request.matchdict['project_id']
+    project_id = uuid.UUID(hex=request.matchdict['project_id'])
     session = DBSession()
     project = session.query(Project).filter(Project.id==project_id).one()
     return {'project' : project}
