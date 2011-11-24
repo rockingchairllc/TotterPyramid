@@ -4,7 +4,7 @@ from pyramid.security import remember
 from pyramid.security import forget
 from pyramid.security import authenticated_userid
 from pyramid.httpexceptions import HTTPFound
-import facebook
+import facebook as fb
 
 from models import *
 
@@ -103,12 +103,12 @@ def register(request):
 def facebook(request):
     fb_url = "https://www.facebook.com/dialog/oauth"
     if 'code' in request.params:
-        user = facebook.get_user_from_cookie(self.request.cookies, 
+        user = fb.get_user_from_cookie(self.request.cookies, 
                             request.registry.settings['facebook.app_id'],
                             request.registry.settings['facebook.secret']
         )
         if user:
-            graph = facebook.GraphAPI(user["access_token"])
+            graph = fb.GraphAPI(user["access_token"])
             profile = graph.get_object("me")
         return {'code': request.params['code'], 'data': pp.pformat(user) + pp.pformat(profile)}
     params = "&".join([
