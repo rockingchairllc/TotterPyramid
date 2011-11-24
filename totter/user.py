@@ -128,7 +128,7 @@ def facebook(request):
             return HTTPFound(location = url, headers = headers) 
         else:
             return HTTPFound(location = request.route_url('login'))
-# return {'code': request.params['code'], 'data': pp.pformat(fbuser) + pp.pformat(profile)}
+
     # Access denied by user
     elif 'error' in request.params:
         return HTTPFound(location = request.route_url('login'))
@@ -138,9 +138,9 @@ def facebook(request):
     params = "&".join([
         'client_id=' + request.registry.settings['facebook.app_id'], 
         'redirect_uri='+request.route_url('facebook'),
-        'display=popup',
         'scope=email',
     ])
     return HTTPFound(location = fb_url+"?"+params)
+#        'display=popup',
 
 
