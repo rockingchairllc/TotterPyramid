@@ -12,13 +12,13 @@ def get_test_user():
 @view_config(route_name='post_comment', request_method='POST', xhr=True, renderer='json')
 def add_comment(request):
     session = DBSession()
-    new_comment = session.query(Comment).filter(Comment.comment_id==1).one()
+    new_comment = session.query(Comment).filter(Comment.id==1).one()
     return {'comment_id' : '1', 'comment' : new_comment}
     
 @view_config(route_name='post_idea', request_method='POST', xhr=True, renderer='json')
 def add_idea(request):
     session = DBSession()
-    new_idea = session.query(Idea).filter(Idea.idea_id==1).one()
+    new_idea = session.query(Idea).filter(Idea.id==1).one()
     return {'idea_id' : '1', 'idea' : new_idea}
     
 def create(request):
@@ -33,7 +33,7 @@ def ideas(request):
     user = get_test_user()
     project_id = request.matchdict['project_id']
     session = DBSession()
-    project = session.query(Project).filter(Project.project_id==project_id).one()
+    project = session.query(Project).filter(Project.id==project_id).one()
     return {'project' : project}
     
 def login(request):
