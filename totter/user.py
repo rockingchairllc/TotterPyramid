@@ -108,7 +108,7 @@ def facebook(request):
                             request.registry.settings['facebook.secret']
         )
         if fbuser:
-            graph = fb.GraphAPI(user["access_token"])
+            graph = fb.GraphAPI(fbuser["access_token"])
             profile = graph.get_object("me")
             session = DBSession()
             try:
