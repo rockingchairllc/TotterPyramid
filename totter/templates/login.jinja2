@@ -18,7 +18,7 @@
     <div class="login_register_wrap drop-shadow curved curved-vt-2">
             
             <h1 class="title">Welcome to Totter</h1>
-            {% if message -%}<h2><font color="red"> {{ message }} </font></h2> {% endif %}
+            {% if message -%}<font color="red"> {{ message }} </font> {% endif %}
             <form id="loginForm" method='post' action="{{request.route_url('login')}}">
                 <fieldset>
                     <input type="hidden" name="came_from" value="{{came_from}}"/>

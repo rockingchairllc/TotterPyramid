@@ -26,7 +26,7 @@
 {% block body %}	
     <div class="login_register_wrap drop-shadow curved curved-vt-2">          
         <h1 class="title">Registration</h1>
-        {% if message -%}<h2><font color="red"> {{ message }} </font></h2> {% endif %}
+        {% if message -%}<font color="red"> {{ message }} </font> {% endif %}
         <form id="registerForm" method='post' action="{{request.route_url('register')}}">
             <fieldset>
                 <input type="text" name='login' value="{{ login if login else 'Email' }}" /><br />
