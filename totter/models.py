@@ -38,6 +38,7 @@ class User(Base):
     profile_picture = Column('ProfilePicture', String(512), nullable=True)
     facebook_id = Column('FacebookID', Integer, nullable=True)
     registration_date = Column('RegistrationDate', DateTime, default=datetime.now)
+    last_login = Column('LastLogin', DateTime, nullable=True) 
     salted_password_hash = Column('SaltedPasswordHash', CHAR(32)) # MD5(Salt+MD5(Password), nullable=False)
     salt = Column('Salt', CHAR(16), default=salt_generator, nullable=False)
 
@@ -57,6 +58,7 @@ class Project(Base):
     key = Column('ProjectKey', String(128))
     creator_id = Column('CreatorUUID',UUID(), ForeignKey('Users.UserUUID'))
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
+    deadline = Column('Deadline', DateTime, nullable=True)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     
     creator = relationship(User, backref=backref('created_projects', lazy='dynamic'))
