@@ -8,7 +8,9 @@ from sqlalchemy import DateTime
 from sqlalchemy import String, Text, CHAR
 from sqlalchemy import ForeignKey, Table, Enum
 
+
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import scoped_session
