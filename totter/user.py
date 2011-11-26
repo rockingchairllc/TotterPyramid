@@ -108,7 +108,8 @@ def register(request):
 
 def facebook(request):
     # Authenticated
-    print 'FACEBOOK'
+    import logging 
+    logging.warning("facebook")
     if 'code' in request.params:
         fbuser = fb.get_user_from_cookie(request.cookies, 
                             request.registry.settings['facebook.app_id'],
@@ -119,10 +120,10 @@ def facebook(request):
             profile = graph.get_object("me")
             session = DBSession()
             try:
-                print 'Mapped user found!'
+                logging.warning('Mapped user found!')
                 user = session.query(User).filter_by(email=profile['email']).one()
             except NoResultFound:
-                print 'Creating facebook user.'
+                logging.warning('Creating facebook user.')
                 user = User(
                     email = profile['email'],
                     first_name = profile['first_name'],
