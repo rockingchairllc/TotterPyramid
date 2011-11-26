@@ -4,6 +4,7 @@ from pyramid.security import remember
 from pyramid.security import forget
 from pyramid.security import authenticated_userid
 from pyramid.httpexceptions import HTTPFound
+from datetime import datetime
 import facebook as fb
 
 from models import *
@@ -42,10 +43,12 @@ def login(request):
             user = session.query(User).filter(User.email==login).one()
             if user.password_hash(password) == user.salted_password_hash:
                 headers = remember(request, login)
+                user.last_login = datetime.now()
+                session.flush()
                 return HTTPFound(location = came_from, headers = headers)
-        except:
+        except Exception as e:
             pass
-        message = 'Failed login'
+    	message = 'Failed login'
 
     return dict(
         facebook_app_id = request.registry.settings['facebook.app_id'],
