@@ -1,9 +1,10 @@
 
 import os, subprocess, sys
 from pyinotify import WatchManager, Notifier, ThreadedNotifier, EventsCodes, ProcessEvent
+import pyinotify
 
 wm = WatchManager()
-mask = EventsCodes.IN_DELETE | EventsCodes.IN_CREATE  # watched events
+#mask = EventsCodes.IN_DELETE | EventsCodes.IN_CREATE  # watched events
 class PTmp(ProcessEvent):
     def process_IN_CREATE(self, event):
         print "Create: %s" %  os.path.join(event.path, event.name)
