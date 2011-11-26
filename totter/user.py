@@ -141,6 +141,7 @@ def facebook(request):
 
     # Access denied by user
     elif 'error' in request.params:
+        logging.warning('error!')
         logging.warning(str({'message': request.params['error_reason'] + ' ' +
                            request.params['error'] + ' ' +
                            request.params['error_description'] }))
