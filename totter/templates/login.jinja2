@@ -20,8 +20,9 @@
     
     // fetch the status on load
     FB.getLoginStatus(handleSessionResponse);
+    FB.login(handleSessionResponse);
     $('#login').bind('click', function() {
-            FB.login(handleSessionResponse);
+            
     });
 
     // handle a session response from any of the auth related calls
