@@ -16,6 +16,12 @@ def add_comment(request):
     new_comment = session.query(Comment).filter(Comment.id==1).one()
     return {'comment_id' : '1'}
     
+@view_config(route_name='post_rating', request_method='POST', xhr=True, renderer='json')
+def add_rating(request):
+    session = DBSession()
+    
+    return {}
+    
 @view_config(route_name='post_idea', request_method='POST', xhr=True, renderer='json')
 def add_idea(request):
     session = DBSession()
@@ -31,6 +37,7 @@ def enterKey(request):
 
 @view_config(route_name='project_ideas', renderer='ideas.jinja2')
 def ideas(request):
+    # Optional parameters: sort="user" | "rating" | "date"
     user = get_test_user()
     project_id = uuid.UUID(hex=request.matchdict['project_id'])
     session = DBSession()

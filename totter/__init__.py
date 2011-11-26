@@ -74,6 +74,7 @@ def main(global_config, **settings):
     # For XMLHttpRequest
     config.add_route('post_comment', '/project/{project_id}/idea/{idea_id}/comment')
     config.add_route('post_idea', '/project/{project_id}/idea')
+    config.add_route('post_rating', '/project/{project_id}/idea/{idea_id}/rating')
     
                     
     return config.make_wsgi_app()
