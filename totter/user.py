@@ -58,6 +58,7 @@ def login(request):
         login = login,
         password = password,
         user = authenticated_userid(request),
+        app_id=request.registry.settings['facebook.app_id'],
         )
     fail_result[message] = True
     return fail_result
@@ -104,7 +105,6 @@ def register(request):
         password = password,
         came_from = came_from,
         user = authenticated_userid(request),
-        app_id=request.registry.settings['facebook.app_id'],
         )
 
 def facebook(request):
