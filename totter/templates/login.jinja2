@@ -63,11 +63,7 @@
             <h3 class="register">New here?  
                 <a href="{{request.route_url('register')}}" class="register_btn">Register</a></h3>
         
-            <div class="fb_login"  id="login">
-                <a href="#login">
-                    <img src="{{request.application_url}}/static/images/facebook.png">
-                </a>
-            </div><!-- .fb_login -->
+            <div id="fb-root"></div><!-- .fb_login -->
             
 	</div><!-- .login_register_wrap -->
 {% endblock %}
