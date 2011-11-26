@@ -14,29 +14,7 @@
     });
 </script>
 <script src="http://connect.facebook.net/en_US/all.js"></script>
-<script>
-    // initialize the library with the API key
-    FB.init({ apiKey: '{{app_id}}' });
-    
-    // fetch the status on load
-    FB.getLoginStatus(handleSessionResponse);
-    FB.login(handleSessionResponse);
-    $('#login').bind('click', function() {
-            
-    });
 
-    // handle a session response from any of the auth related calls
-    function handleSessionResponse(response) {
-    // if we dont have a session, just hide the user info
-    if (!response.session) {
-        
-        return;
-    }
-    
-    // if we have a session, query for the user's profile picture and name
-    
-    }
-</script>
 {% endblock %}
 {% block body %}	
     <div class="login_register_wrap drop-shadow curved curved-vt-2">
@@ -63,8 +41,31 @@
             <h3 class="register">New here?  
                 <a href="{{request.route_url('register')}}" class="register_btn">Register</a></h3>
         
-            <div id="fb-root"></div><!-- .fb_login -->
+            <div id="fb-root"></div>
+            <!-- .fb_login -->
+            <script>
+    // initialize the library with the API key
+    FB.init({ apiKey: '{{app_id}}' });
+    
+    // fetch the status on load
+    FB.getLoginStatus(handleSessionResponse);
+    FB.login(handleSessionResponse);
+    $('#login').bind('click', function() {
             
+    });
+
+    // handle a session response from any of the auth related calls
+    function handleSessionResponse(response) {
+    // if we dont have a session, just hide the user info
+    if (!response.session) {
+        
+        return;
+    }
+    
+    // if we have a session, query for the user's profile picture and name
+    
+    }
+</script>
 	</div><!-- .login_register_wrap -->
 {% endblock %}
 
