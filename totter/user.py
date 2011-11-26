@@ -120,7 +120,8 @@ def facebook(request):
                 params = {
                     'client_id' : request.registry.settings['facebook.app_id'],
                     'client_secret' : request.registry.settings['facebook.secret'],
-                    'code' : request.params['code']
+                    'code' : request.params['code'],
+                    'redirect_uri' : request.route_url('facebook'),
                 }
             )
             logging.warning('facebook response:')
