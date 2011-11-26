@@ -104,6 +104,7 @@ def register(request):
         password = password,
         came_from = came_from,
         user = authenticated_userid(request),
+        app_id=request.registry.settings['facebook.app_id'],
         )
 
 def facebook(request):
@@ -111,6 +112,7 @@ def facebook(request):
     import logging 
     logging.warning("facebook")
     if 'code' in request.params:
+        
         logging.warning('code present')
         fbuser = fb.get_user_from_cookie(request.cookies, 
                             request.registry.settings['facebook.app_id'],
@@ -159,7 +161,6 @@ def facebook(request):
         'redirect_uri='+request.route_url('facebook'),
         'display=popup',
         'scope=email',
-        'response_type=token'
     ])
     return HTTPFound(location = fb_url+"?"+params)
 
