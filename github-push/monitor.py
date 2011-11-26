@@ -17,7 +17,7 @@ class PTmp(ProcessEvent):
 
 if __name__ == "__main__":
     notifier = Notifier(wm, PTmp())
-    wdd = wm.add_watch('/tmp', mask, rec=False)
+    wdd = wm.add_watch('/tmp', pyinotify.ALL_EVENTS, rec=False)
     while True:  # loop forever
         try:
             # process the queue of events as explained above
