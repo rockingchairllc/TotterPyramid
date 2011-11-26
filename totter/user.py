@@ -49,7 +49,7 @@ def login(request):
                 return HTTPFound(location = came_from, headers = headers)
             else:
                 message = 'invalid_password'
-        except NoResultFound:
+        except:
             message = 'unknown_user'
     
     fail_result = dict(
