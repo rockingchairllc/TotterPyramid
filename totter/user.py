@@ -35,6 +35,7 @@ def login(request):
     message = ''
     login = ''
     password = ''
+    
     if 'form.submitted' in request.params:
         login = request.params['login']
         password = request.params['password']
@@ -46,18 +47,20 @@ def login(request):
                 user.last_login = datetime.now()
                 session.flush()
                 return HTTPFound(location = came_from, headers = headers)
+            else:
+                message = 'invalid_password'
         except Exception as e:
-            pass
-    	message = 'Failed login'
-
-    return dict(
+            message = 'unknown_user'
+    
+    fail_result = dict(
         facebook_app_id = request.registry.settings['facebook.app_id'],
-        message = message,
         came_from = came_from,
         login = login,
         password = password,
         user = authenticated_userid(request),
         )
+    fail_result[message] = True
+    return fail_result
 
 def logout(request):
     headers = forget(request)
