@@ -111,6 +111,7 @@ def facebook(request):
     import logging 
     logging.warning("facebook")
     if 'code' in request.params:
+        logging.warning('code present')
         fbuser = fb.get_user_from_cookie(request.cookies, 
                             request.registry.settings['facebook.app_id'],
                             request.registry.settings['facebook.secret']
@@ -137,6 +138,7 @@ def facebook(request):
             url = request.referer if request.referer else request.application_url
             return HTTPFound(location = url, headers = headers) 
         else:
+            logging.warning('no fbuser?')
             return HTTPFound(location = request.route_url('login'))
 
     # Access denied by user
