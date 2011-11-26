@@ -129,7 +129,7 @@ def facebook(request):
         except URLError:
             pass
         logging.warning('Got facebook access token')
-        graph = fb.GraphAPI(fb_params['access_token']
+        graph = fb.GraphAPI(fb_params['access_token'])
         profile = graph.get_object("me")
         session = DBSession()
         try:
