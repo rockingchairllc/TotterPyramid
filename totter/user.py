@@ -138,7 +138,7 @@ def facebook(request):
         try:
             logging.warning('Mapped user found!')
             user = session.query(User).filter_by(email=profile['email']).one()
-        except NoResultFound:
+        except NoResultFound,e:
             logging.warning(repr(e))
             logging.warning('Creating facebook user.')
             logging.warning(str(profile))
