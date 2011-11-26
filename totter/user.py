@@ -145,7 +145,7 @@ def facebook(request):
                 email = profile['email'],
                 first_name = profile['first_name'],
                 last_name = profile['last_name'],
-                facebook_id = fbuser['uid'],
+                facebook_id = profile['uid'],
                 salt = salt_generator(),
             )
             session.add(user)
