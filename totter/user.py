@@ -123,6 +123,8 @@ def facebook(request):
                     'code' : request.params['code']
                 }
             )
+            logging.warning('facebook response:')
+            logging.warning(fb_resp.content)
             fb_params = dict(urlparse.parse_qsl(fb_resp.content))
             # fb_params['access_token']
             # fb_params['expires']
