@@ -144,7 +144,8 @@ def facebook(request):
         return {'message': request.params['error_reason'] + ' ' +
                            request.params['error'] + ' ' +
                            request.params['error_description'] }
-
+    else:
+        logging.warning('unhandled case')
     # Call authentication dialog
     fb_url = "https://www.facebook.com/dialog/oauth"
     params = "&".join([
