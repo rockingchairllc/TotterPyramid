@@ -42,7 +42,7 @@ def ideas(request):
     project_id = uuid.UUID(hex=request.matchdict['project_id'])
     session = DBSession()
     project = session.query(Project).filter(Project.id==project_id).one()
-    return {'project' : project, 'user' : user}
+    return {'project' : project, 'user' : user, ideas_count: 1, people_count: 1}
     
 def login(request):
     return {}
