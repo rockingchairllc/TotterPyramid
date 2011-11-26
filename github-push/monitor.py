@@ -19,15 +19,15 @@ if __name__ == "__main__":
     notifier = Notifier(wm, PTmp())
     wdd = wm.add_watch('/tmp', mask, rec=False)
     while True:  # loop forever
-    try:
-        # process the queue of events as explained above
-        notifier.process_events()
-        if notifier.check_events():
-            # read notified events and enqeue them
-            notifier.read_events()
-        # you can do some tasks here...
-    except KeyboardInterrupt:
-        # destroy the inotify's instance on this interrupt (stop monitoring)
-        notifier.stop()
-        break
+        try:
+            # process the queue of events as explained above
+            notifier.process_events()
+            if notifier.check_events():
+                # read notified events and enqeue them
+                notifier.read_events()
+            # you can do some tasks here...
+        except KeyboardInterrupt:
+            # destroy the inotify's instance on this interrupt (stop monitoring)
+            notifier.stop()
+            break
     
