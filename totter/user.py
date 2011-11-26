@@ -8,6 +8,7 @@ from datetime import datetime
 import facebook as fb
 import requests, urlparse
 from models import *
+import logging 
 
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
@@ -108,13 +109,12 @@ def register(request):
 
 def facebook(request):
     # Our handler for facebook stuff.
-    import logging 
-    logging.warning("facebook")
+    logging.info('Facebook handler')
     if 'code' in request.params:
         # Facebook redirected the user back to our page with an access code
         # Request access token from facebook:
         try: 
-            logging.warning('Requesting access token from facebook.')
+            logging.info('Requesting access token from facebook.')
             fb_resp = requests.request('GET',
                 'https://graph.facebook.com/oauth/access_token',
                 params = {
@@ -124,24 +124,25 @@ def facebook(request):
                     'redirect_uri' : request.route_url('facebook'),
                 }
             )
-            logging.warning('facebook response:')
-            logging.warning(fb_resp.content)
+            logging.info('facebook response:' + str(fb_resp.content))
             fb_params = dict(urlparse.parse_qsl(fb_resp.content))
-            # fb_params['access_token']
-            # fb_params['expires']
-        except URLError:
-            pass
-        logging.warning('Got facebook access token')
+            # If we're good, fb_params should contain keys (access_token,expires)
+            if 'access_token' not in fb_params:
+                raise Exception(fb_resp.content)
+        except URLError,e:
+            logging.error(repr(e))
+        except Exception,e:
+            logging.error(repr(e))
+        
+        logging.info('Got facebook access token')
         graph = fb.GraphAPI(fb_params['access_token'])
         profile = graph.get_object("me")
         session = DBSession()
         try:
-            logging.warning('Mapped user found!')
+            logging.info('Mapped user found!')
             user = session.query(User).filter_by(email=profile['email']).one()
         except NoResultFound,e:
-            logging.warning(repr(e))
-            logging.warning('Creating facebook user.')
-            logging.warning(str(profile))
+            logging.info('Creating facebook user.')
             user = User(
                 email = profile['email'],
                 first_name = profile['first_name'],
@@ -154,19 +155,15 @@ def facebook(request):
         headers = remember(request, login)
         url = request.referer if request.referer else request.application_url
         return HTTPFound(location = url, headers = headers) 
-
-    # Access denied by user
     elif 'error' in request.params:
         # The user denied our request to use their fb creds.
-        logging.warning('error!')
-        logging.warning(str({'message': request.params['error_reason'] + ' ' +
-                           request.params['error'] + ' ' +
-                           request.params['error_description'] }))
+        logging.info('Facebook credential access denied by user.')
         return {'message': request.params['error_reason'] + ' ' +
                            request.params['error'] + ' ' +
                            request.params['error_description'] }
     else:
         # The user pressed the Login With Facebook button.
+        logging.info('Redirecting to facebook login screen.')
         # Call authentication dialog
         fb_url = "https://www.facebook.com/dialog/oauth"
         params = "&".join([
