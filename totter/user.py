@@ -6,7 +6,7 @@ from pyramid.security import authenticated_userid
 from pyramid.httpexceptions import HTTPFound
 from datetime import datetime
 import facebook as fb
-
+import requests, urlparse
 from models import *
 
 import pprint
@@ -58,7 +58,6 @@ def login(request):
         login = login,
         password = password,
         user = authenticated_userid(request),
-        app_id=request.registry.settings['facebook.app_id'],
         )
     fail_result[message] = True
     return fail_result
@@ -108,43 +107,52 @@ def register(request):
         )
 
 def facebook(request):
-    # Authenticated
+    # Our handler for facebook stuff.
     import logging 
     logging.warning("facebook")
     if 'code' in request.params:
-        
-        logging.warning('code present')
-        fbuser = fb.get_user_from_cookie(request.cookies, 
-                            request.registry.settings['facebook.app_id'],
-                            request.registry.settings['facebook.secret']
-        )
-        if fbuser:
-            graph = fb.GraphAPI(fbuser["access_token"])
-            profile = graph.get_object("me")
-            session = DBSession()
-            try:
-                logging.warning('Mapped user found!')
-                user = session.query(User).filter_by(email=profile['email']).one()
-            except NoResultFound:
-                logging.warning('Creating facebook user.')
-                user = User(
-                    email = profile['email'],
-                    first_name = profile['first_name'],
-                    last_name = profile['last_name'],
-                    facebook_id = fbuser['uid'],
-                    salt = salt_generator(),
-                )
-                session.add(user)
-            login = user.email
-            headers = remember(request, login)
-            url = request.referer if request.referer else request.application_url
-            return HTTPFound(location = url, headers = headers) 
-        else:
-            logging.warning('no fbuser?')
-            return HTTPFound(location = request.route_url('login'))
+        # Facebook redirected the user back to our page with an access code
+        # Request access token from facebook:
+        try: 
+            logging.warning('Requesting access token from facebook.')
+            fb_resp = requests.request('GET',
+                'https://graph.facebook.com/oauth/access_token',
+                params = {
+                    'client_id' : request.registry.settings['facebook.app_id'],
+                    'client_secret' : request.registry.settings['facebook.secret'],
+                    'code' : request.params['code']
+                }
+            )
+            fb_params = dict(urlparse.parse_qsl(fb_resp.content))
+            # fb_params['access_token']
+            # fb_params['expires']
+        except URLError:
+            pass
+        logging.warning('Got facebook access token')
+        graph = fb.GraphAPI(fb_params['access_token']
+        profile = graph.get_object("me")
+        session = DBSession()
+        try:
+            logging.warning('Mapped user found!')
+            user = session.query(User).filter_by(email=profile['email']).one()
+        except NoResultFound:
+            logging.warning('Creating facebook user.')
+            user = User(
+                email = profile['email'],
+                first_name = profile['first_name'],
+                last_name = profile['last_name'],
+                facebook_id = fbuser['uid'],
+                salt = salt_generator(),
+            )
+            session.add(user)
+        login = user.email
+        headers = remember(request, login)
+        url = request.referer if request.referer else request.application_url
+        return HTTPFound(location = url, headers = headers) 
 
     # Access denied by user
     elif 'error' in request.params:
+        # The user denied our request to use their fb creds.
         logging.warning('error!')
         logging.warning(str({'message': request.params['error_reason'] + ' ' +
                            request.params['error'] + ' ' +
@@ -153,14 +161,15 @@ def facebook(request):
                            request.params['error'] + ' ' +
                            request.params['error_description'] }
     else:
-        logging.warning('unhandled case:' + str(request.params))
-    # Call authentication dialog
-    fb_url = "https://www.facebook.com/dialog/oauth"
-    params = "&".join([
-        'client_id=' + request.registry.settings['facebook.app_id'], 
-        'redirect_uri='+request.route_url('facebook'),
-        'display=popup',
-        'scope=email',
-    ])
-    return HTTPFound(location = fb_url+"?"+params)
+        # The user pressed the Login With Facebook button.
+        # Call authentication dialog
+        fb_url = "https://www.facebook.com/dialog/oauth"
+        params = "&".join([
+            'client_id=' + request.registry.settings['facebook.app_id'], 
+            'redirect_uri='+request.route_url('facebook'),
+            'display=popup',
+            'scope=email',
+            
+        ])
+        return HTTPFound(location = fb_url+"?"+params)
 
