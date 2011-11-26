@@ -49,7 +49,7 @@ def login(request):
                 return HTTPFound(location = came_from, headers = headers)
             else:
                 message = 'invalid_password'
-        except:
+        except NoResultFound:
             message = 'unknown_user'
     
     fail_result = dict(
@@ -138,7 +138,7 @@ def facebook(request):
         try:
             logging.warning('Mapped user found!')
             user = session.query(User).filter_by(email=profile['email']).one()
-        except Exception,e:
+        except NoResultFound:
             logging.warning(repr(e))
             logging.warning('Creating facebook user.')
             logging.warning(str(profile))
@@ -146,7 +146,7 @@ def facebook(request):
                 email = profile['email'],
                 first_name = profile['first_name'],
                 last_name = profile['last_name'],
-                facebook_id = profile['uid'],
+                facebook_id = profile['id'],
                 salt = salt_generator(),
             )
             session.add(user)
