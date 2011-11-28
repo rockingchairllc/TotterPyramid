@@ -91,7 +91,13 @@ def add_idea(request):
     new_idea.author = cur_user
     session.add(new_idea)
     session.flush()
-    return {'idea_id' : new_idea.id}
+    
+    try:
+        project = session.query(Project).filter(Project.id==project_id).one()
+    except NoResultFound:
+        raise NotFound()
+        
+    return {'idea_id' : new_idea.id, 'ideas_count' : len(project.ideas)}
     
 def create(request):
     return {}
