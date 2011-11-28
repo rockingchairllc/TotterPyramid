@@ -9,6 +9,7 @@ import facebook as fb
 import requests, urlparse
 from models import *
 import logging 
+import uuid
 
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
@@ -22,7 +23,7 @@ class RootFactory(object):
 def groupfinder(userid, request):
     session = DBSession()
     try:
-        user = session.query(User).filter(User.email==userid).one()
+        user = session.query(User).filter(User.id==uuid.UUID(hex=userid)).one()
         return ['group:users']
     except:
         return None
@@ -44,7 +45,7 @@ def login(request):
         try:
             user = session.query(User).filter(User.email==login).one()
             if user.password_hash(password) == user.salted_password_hash:
-                headers = remember(request, login)
+                headers = remember(request, user.id.hex)
                 user.last_login = datetime.now()
                 session.flush()
                 return HTTPFound(location = came_from, headers = headers)
@@ -82,6 +83,7 @@ def register(request):
         password = request.params['password']
         session = DBSession()
         user = User(
+            id = uuid.uuid4(),
             email = login,
             first_name = firstname,
             last_name = lastname,
@@ -94,7 +96,7 @@ def register(request):
         except IntegrityError:
             message = "Email '%s' already taken" % login
         else:
-            headers = remember(request, login)
+            headers = remember(request, user.id.hex)
             return HTTPFound(location = came_from, headers = headers)            
 
     return dict(
@@ -144,6 +146,7 @@ def facebook(request):
         except NoResultFound,e:
             logging.info('Creating facebook user.')
             user = User(
+                id = uuid.uuid4(),
                 email = profile['email'],
                 first_name = profile['first_name'],
                 last_name = profile['last_name'],
@@ -152,7 +155,7 @@ def facebook(request):
             )
             session.add(user)
         login = user.email
-        headers = remember(request, login)
+        headers = remember(request, user.id.hex)
         url = request.referer if request.referer else request.application_url
         return HTTPFound(location = url, headers = headers) 
     elif 'error' in request.params:
