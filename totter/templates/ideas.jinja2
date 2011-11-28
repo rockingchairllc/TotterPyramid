@@ -35,7 +35,8 @@
 		}
 		
 		function addIdea_to_project() {
-			var IdeaData = JSON.stringify({'project_id': {{project.id}}, 'data': $(".add_idea_modal textarea").val()});
+			var prjId = "{{project.id}}";
+			var IdeaData = JSON.stringify({'project_id': prjId, 'data': $(".add_idea_modal textarea").val()});
 			alert(IdeaData);
 			$.ajax({
 				url:"{{request.application_url}}/project/{{project.id}}/idea",
