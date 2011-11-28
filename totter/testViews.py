@@ -19,20 +19,79 @@ def get_user(request):
 @view_config(route_name='post_comment', request_method='POST', xhr=True, renderer='json')
 def add_comment(request):
     session = DBSession()
-    new_comment = session.query(Comment).filter(Comment.id==1).one()
-    return {'comment_id' : '1'}
+    comment_text = request.json_body['data']
+    idea_id = request.params['idea_id']
+    cur_user = get_user(request)
+    new_comment = Comment(idea_id=idea_id, data=comment_text)
+    new_comment.author = cur_user
+    session.add(new_comment)
+    session.flush()
+    return {'comment_id' : new_comment.id}
     
 @view_config(route_name='post_rating', request_method='POST', xhr=True, renderer='json')
 def add_rating(request):
     session = DBSession()
+    cur_user = get_user(request)
+    idea_id = request.params['idea_id']
+    rating_data = request.json_body
     
+    old_rating = session.query(UserRating)\
+        .filter(UserRating.rater==cur_user)\
+        .filter(UserRating.idea_id==idea_id).first()
+    changed = False
+    loves = 0
+    likes = 0
+    # Handle unlikes/unloves first:
+    if 'like' in rating_data and not rating_data['like']:
+        # Unliked the post.
+        if old_rating.liked:
+            old_rating.liked = False
+            likes = -1
+    if 'love' in rating_data and not rating_data['love']:
+        # Unloved the post.
+        if old_rating.loved:
+            old_rating.loved = False
+            loves = -1
+            
+    # Handle likes/loves:
+    if 'like' in rating_data and rating_data['like']:
+        # Liked the post.
+        if not old_rating.liked:
+            old_rating.liked = True
+            likes = 1
+    if 'love' in rating_data and rating_data['love']:
+        # Loved the post.
+        if not old_rating.loved:
+            old_rating.loved = True
+            loves = 1
+    if likes == 1 and loves == 1:
+        # Client error.
+        pass
+    
+    # Update aggregate count:
+    if likes or loves:
+        agg_rating = session.query(AggregateRating)\
+            .filter(AggregateRating.idea_id==idea_id).first() or AggregateRating(idea_id=idea_id)
+        
+        agg_rating.liked += likes
+        agg_rating.loved += loves
+        agg_rating.count += 1
+        session.merge(agg_rating)
+    
+    session.commit()
     return {}
     
 @view_config(route_name='post_idea', request_method='POST', xhr=True, renderer='json')
 def add_idea(request):
     session = DBSession()
-    new_idea = session.query(Idea).filter(Idea.id==1).one()
-    return {'idea_id' : '1'}
+    idea_text = request.json_body['data']
+    project_id = request.params['project_id']
+    cur_user = get_user(request)
+    new_idea = Idea(project_id=project_id, data=idea_text)
+    new_idea.author = cur_user
+    session.add(new_idea)
+    session.flush()
+    return {'idea_id' : new_idea.id}
     
 def create(request):
     return {}
