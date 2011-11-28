@@ -24,7 +24,7 @@
 			$('#'+idText).html(outText);
 			alert(idx);
 			$.ajax({
-				url:"{{request.application_url}}/project/{{project.id.hex}}/idea/{{project.ideas[0].id}}/rating",
+				url:"{{request.application_url}}/project/{{project.id.hex}}/idea/{{project.ideas[idx].id}}/rating",
 				type: "POST",
 				dataType: "json",
 				data: ratingData,
