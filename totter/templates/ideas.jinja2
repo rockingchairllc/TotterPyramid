@@ -22,7 +22,7 @@
 			outText = 'Total Rating: ' + value;
 			idText = "rate_value" + idx;
 			$('#'+idText).html(outText);
-			
+			alert(idx);
 			$.ajax({
 				url:"{{request.application_url}}/project/{{project.id}}/idea/{{project.ideas[idx].id}}/rating",
 				type: "POST",
