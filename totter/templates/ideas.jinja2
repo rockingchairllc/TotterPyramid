@@ -17,7 +17,8 @@
 				value = value + 2
 			}
 			alert(value);
-			$('#rate_value').html('This is for testing');
+			outText = 'Total Rating: ' + value;
+			$('#rate_value').html(outText);
 			//$.ajax({
 			//	url:"{{request.application_url}}/projects/{{project.id}}/idea/",
 			//	method: "POST",
