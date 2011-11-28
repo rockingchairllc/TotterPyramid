@@ -17,7 +17,7 @@
 				value = value + 2
 			}
 			alert(value);
-			$(this).parent().parent().children('.rate_value').innerHTML = 'Total Rating: ' + value;
+			$(this).parent().children('.rate_value').innerHTML = 'Total Rating: ' + value;
 			$.ajax({
 				url:"{{request.application_url}}/projects/{{project.id}}/idea/",
 				method: "POST",
