@@ -12,11 +12,11 @@
 		function addRating(idx, value, type) {
 			if (type == 1) {
 				value = value + 1
-				ratingData = JSON.stringify({'like': True});
+				ratingData = JSON.stringify({'like': "True"});
 			}
 			else if (type == 2){
 				value = value + 2
-				ratingData = JSON.stringify({'love': True});
+				ratingData = JSON.stringify({'love': "True"});
 			}
 			alert("{{project.ideas[0].aggregate_rating}}");
 			outText = 'Total Rating: ' + value;
