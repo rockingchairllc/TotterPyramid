@@ -17,11 +17,11 @@
 				value = value + 2
 			}
 			alert(value);
-			$(this).parent().children('.rate_value').innerHTML = 'Total Rating: ' + value;
-			$.ajax({
-				url:"{{request.application_url}}/projects/{{project.id}}/idea/",
-				method: "POST",
-			});
+			$('.rate_value').innerHTML = 'Total Rating: ' + value;
+			//$.ajax({
+			//	url:"{{request.application_url}}/projects/{{project.id}}/idea/",
+			//	method: "POST",
+			//});
 		}
 		
 		function addIdea_to_project() {
