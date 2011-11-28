@@ -17,7 +17,7 @@
 				value = value + 2
 			}
 			outText = 'Total Rating: ' + value;
-			alert($(this).parent().html());
+			alert($(this).parent().get(0).html());
 			alert($(this).parent().parent().children('#rate_value').html());
 			//$.ajax({
 			//	url:"{{request.application_url}}/projects/{{project.id}}/idea/",
