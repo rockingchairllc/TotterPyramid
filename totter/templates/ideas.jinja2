@@ -17,7 +17,7 @@
 				value = value + 2
 			}
 			alert(value);
-			$('.rate_value').innerHTML = 'Total Rating: ' + value;
+			$('#rate_value').innerHTML = 'Total Rating: ' + value;
 			//$.ajax({
 			//	url:"{{request.application_url}}/projects/{{project.id}}/idea/",
 			//	method: "POST",
@@ -116,7 +116,7 @@
                     <div class="idea_body">
                         <div class="idea_meta">
                         <div class="username"><a href="#">{{project.ideas[ideas_index].author.first_name}}</a></div>
-	                    	<strong class="rate_value" >Total Rating: {{project.ideas[ideas_index].aggregate_rating}}</strong>
+	                    	<strong id="rate_value" >Total Rating: {{project.ideas[ideas_index].aggregate_rating}}</strong>
 	                        <div class="like_love">
 	                        	<a href="#" class="like_love" onClick="addRating({{project.ideas[ideas_index].aggregate_rating}}, 1)">Like It</a> 
 	                            &bull; 
