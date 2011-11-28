@@ -124,6 +124,9 @@ def ideas(request):
         idea.user_rating = None # This will be the field's default value.
     for idea, rating in ratings:
         idea.user_rating = rating
+    total_rating = 0
+    if idea.aggregate_rating is not None:
+        total_rating = idea.aggregate_rating.likes + idea.aggregate_rating.loves * 2
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return {
         'project' : project, 
