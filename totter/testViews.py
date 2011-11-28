@@ -20,7 +20,7 @@ def get_user(request):
 def add_comment(request):
     session = DBSession()
     comment_text = request.json_body['data']
-    idea_id = request.params['idea_id']
+    idea_id = request.matchdict['idea_id']
     cur_user = get_user(request)
     new_comment = Comment(idea_id=idea_id, data=comment_text)
     new_comment.author = cur_user
@@ -32,7 +32,7 @@ def add_comment(request):
 def add_rating(request):
     session = DBSession()
     cur_user = get_user(request)
-    idea_id = request.params['idea_id']
+    idea_id = request.matchdict['idea_id']
     rating_data = request.json_body
     
     old_rating = session.query(UserRating)\
@@ -85,7 +85,7 @@ def add_rating(request):
 def add_idea(request):
     session = DBSession()
     idea_text = request.json_body['data']
-    project_id = request.params['project_id']
+    project_id = request.matchdict['project_id']
     cur_user = get_user(request)
     new_idea = Idea(project_id=project_id, data=idea_text)
     new_idea.author = cur_user
