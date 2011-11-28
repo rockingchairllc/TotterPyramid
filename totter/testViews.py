@@ -91,7 +91,7 @@ def add_idea(request):
     new_idea.author = cur_user
     session.add(new_idea)
     session.flush()
-    return {'idea_id' : new_idea.id}
+    return {'idea_id' : new_idea.id, 'idea' : new_idea}
     
 def create(request):
     return {}
