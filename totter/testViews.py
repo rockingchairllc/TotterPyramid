@@ -16,7 +16,7 @@ def get_user(request):
     user_id = uuid.UUID(hex=uid_hex)
     return session.query(User).filter(User.id==user_id).one()
     
-@view_config(route_name='post_comment', request_method='POST', xhr=True, renderer='json')
+@view_config(route_name='post_comment', request_method='POST', renderer='json')
 def add_comment(request):
     session = DBSession()
     comment_text = request.json_body['data']
@@ -28,7 +28,7 @@ def add_comment(request):
     session.flush()
     return {'comment_id' : new_comment.id}
     
-@view_config(route_name='post_rating', request_method='POST', xhr=True, renderer='json')
+@view_config(route_name='post_rating', request_method='POST', renderer='json')
 def add_rating(request):
     session = DBSession()
     cur_user = get_user(request)
@@ -81,7 +81,7 @@ def add_rating(request):
     session.commit()
     return {}
     
-@view_config(route_name='post_idea', request_method='POST', xhr=True, renderer='json')
+@view_config(route_name='post_idea', request_method='POST', renderer='json')
 def add_idea(request):
     session = DBSession()
     idea_text = request.json_body['data']
