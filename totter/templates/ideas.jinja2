@@ -137,23 +137,22 @@
                              
                             <!-- Append all new comments to the ul.project_idea_comments -->
                             
-                            {% for comment_index in [0, project.ideas[ideas_index].comments|length() -1] %}
-	                            {% if comment_index == 0 %} 
+                            {% for comment in project.ideas[ideas_index].comments %}
+	                            {% if loop.first %} 
 	                            	<li class="first_update">
-	                            {% elif comment_index == project.ideas[ideas_index].comments|length()-1 %}
+	                            {% elif loop.last %}
 	                            	<li class="last_update">
 	                            {% else %}
 	                            	<li>
 	                            {% endif %}	
 	                            	<a href="#">
-	                                	<img src="{{project.ideas[ideas_index].comments[comment_index].author.profile_picture}}?type=square" width="32" height="32" />
+	                                	<img src="{{comment.author.profile_picture}}?type=square" width="32" height="32" />
 	                                </a>
 	                                <div class="comment_body">
-	                                    <a href="#">{{project.ideas[ideas_index].comments[comment_index].author.first_name}}</a>
-	                                    {{project.ideas[ideas_index].comments[comment_index].data}} 
+	                                    <a href="#">{{comment.author.first_name}}</a>
+	                                    {{comment.data}} 
 	                                </div>
 				{% endfor %}
-	          
                         </ul><!-- .project_idea_comments -->
                     </div><!-- idea_body -->
                 </li>
