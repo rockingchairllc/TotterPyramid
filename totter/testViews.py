@@ -1,15 +1,21 @@
 #from totter.models import DBSession
 #from totter.models import MyModel
 import uuid
+from pyramid.exceptions import NotFound
+from pyramid.security import authenticated_userid
 from pyramid.view import view_config
 from models import *
 from pyramid.i18n import TranslationStringFactory
 _ = TranslationStringFactory('totter')
 
-def get_test_user():
+def get_user(request):
     session = DBSession()
-    return session.query(User).filter(User.email=='frank@rockingchairllc.com').one()
-
+    uid_hex = authenticated_userid(request)
+    if uid_hex is None:
+        return session.query(User).filter(User.email=='test@rockingchairllc.com').one()
+    user_id = uuid.UUID(hex=uid_hex)
+    return session.query(User).filter(User.id==user_id).one()
+    
 @view_config(route_name='post_comment', request_method='POST', xhr=True, renderer='json')
 def add_comment(request):
     session = DBSession()
@@ -38,11 +44,14 @@ def enterKey(request):
 @view_config(route_name='project_ideas', renderer='ideas.jinja2')
 def ideas(request):
     # Optional parameters: sort="user" | "rating" | "date"
-    user = get_test_user()
+    user = get_user(request)
     project_id = uuid.UUID(hex=request.matchdict['project_id'])
     session = DBSession()
-    project = session.query(Project).filter(Project.id==project_id).one()
-    
+    try:
+        project = session.query(Project).filter(Project.id==project_id).one()
+    except NoResultFound:
+        raise NotFound()
+        
     # Create list of ideas with User's rating added:
     ideas = project.ideas
     ratings = session.query(Idea, IdeaRatings)\
