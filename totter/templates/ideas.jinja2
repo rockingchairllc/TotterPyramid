@@ -76,19 +76,19 @@
         
         <div class="the_content">
             <ul class="tabs">
-            	<li><a href="{{request.route_url('project_overview')}}">Overview</a></li>
-                <li><a href="{{request.route_url('project_ideas')}}" class="active_tab">Ideas</a></li>
+            	<li><a href="{{request.route_url('home')}}">Overview</a></li>
+                <li><a href="{{request.route_url('home')}}" class="active_tab">Ideas</a></li>
                 <li><a href="#">People</a></li>
             </ul><!-- .tabs -->
             
             <ul class="project_stats">
             	<li>
                 	People<br />
-                    <span class="project_stat">{{home}}</span>
+                    <span class="project_stat">{{people_count}}</span>
                 </li>
                 <li>
                 	Ideas<br />
-                    <span class="project_stat">{{home}}</span>
+                    <span class="project_stat">{{ideas_count}}</span>
                 </li>
                 <li>
                 	Deadline<br />
