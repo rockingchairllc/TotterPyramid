@@ -143,7 +143,7 @@ class AggregateRating(Base):
     stars = Column('Stars', Integer, nullable=False, default='0')
     count = Column('Count', Integer, nullable=False, default='0')
     
-    idea = relationship(Idea, backref=backref('aggregate_rating'), uselist=False)
+    idea = relationship(Idea, backref=backref('aggregate_rating', uselist=False), uselist=False)
     
     def __init__(self, idea_id=None):
         self.idea_id = idea_id
