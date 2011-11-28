@@ -146,6 +146,7 @@ class AggregateRating(Base):
     idea = relationship(Idea, backref=backref('aggregate_rating'))
     
     def __init__(self, idea_id=None):
+        self.idea_id = idea_id
         self.liked = 0
         self.loved = 0
         self.stars = 0
