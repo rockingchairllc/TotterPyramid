@@ -138,10 +138,10 @@ class UserRating(Base):
 class AggregateRating(Base):
     __tablename__ = 'AggregateRatings'
     idea_id = Column('IdeaID', Integer, ForeignKey('Ideas.IdeaID'), primary_key=True)
-    liked = Column('Liked', Integer, nullable=False, default=0)
-    loved = Column('Loved', Integer, nullable=False, default=0)
-    stars = Column('Stars', Integer, nullable=False, default=0)
-    count = Column('Count', Integer, nullable=False, default=0)
+    liked = Column('Liked', Integer, nullable=False, default='0')
+    loved = Column('Loved', Integer, nullable=False, default='0')
+    stars = Column('Stars', Integer, nullable=False, default='0')
+    count = Column('Count', Integer, nullable=False, default='0')
     
     idea = relationship(Idea, backref=backref('aggregate_rating'))
     
