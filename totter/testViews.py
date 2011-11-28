@@ -59,7 +59,7 @@ def ideas(request):
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return {
         'project' : project, 
-        'ideas', project.ideas, 
+        'ideas': project.ideas, 
         'user' : user, 
         'ideas_count': len(project.ideas), 
         'people_count': 1
