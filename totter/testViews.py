@@ -72,13 +72,13 @@ def add_rating(request):
     if likes or loves:
         agg_rating = session.query(AggregateRating)\
             .filter(AggregateRating.idea_id==idea_id).first() or AggregateRating(idea_id=idea_id)
-        
+            
         agg_rating.liked += likes
         agg_rating.loved += loves
         agg_rating.count += 1
         session.merge(agg_rating)
     
-    session.commit()
+    session.flush()
     return {}
     
 @view_config(route_name='post_idea', request_method='POST', renderer='json')
