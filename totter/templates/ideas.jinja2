@@ -27,10 +27,15 @@
 		}
 		
 		function addIdea_to_project() {
+			var IdeaData = JSON.stringify({'data': $(".add_idea_modal textarea").val()});
 			$.ajax({
 				url:"{{request.application_url}}/projects/{{project.id}}/idea",
-				method: "POST",
-				
+				type: "POST",
+				dataType: "json",
+				data: IdeaData,
+				success: function(){
+					alert("ajax success");
+				}
 			});
 			addIdea()
 		}
