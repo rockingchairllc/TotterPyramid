@@ -94,8 +94,8 @@ class Comment(Base):
     author = relationship(User, backref=backref('comments'))
     idea = relationship(Idea, backref=backref('comments'))
     
-class IdeaRatings(Base):
-    __tablename__ = 'IdeaRatings'
+class UserRating(Base):
+    __tablename__ = 'UserRatings'
     idea_id = Column('IdeaID', Integer, ForeignKey('Ideas.IdeaID'), primary_key=True)
     user_id = Column('UserUUID', UUID(), ForeignKey('Users.UserUUID'), primary_key=True)
     type = Column('Type', Enum('like/love', 'star'))
@@ -105,8 +105,18 @@ class IdeaRatings(Base):
     modified = Column('LastModified', DateTime, default=datetime.now)
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     
-    idea = relationship(Idea, backref=backref('ratings'))
+    idea = relationship(Idea, backref=backref('user_ratings', lazy='dynamic'))
     rater = relationship(User, backref=backref('ratings'))
+
+class AggregateRating(Base):
+    __tablename__ = 'AggregateRatings'
+    idea_id = Column('IdeaID', Integer, ForeignKey('Ideas.IdeaID'), primary_key=True)
+    liked = Column('Liked', Integer)
+    loved = Column('Loved', Integer)
+    stars = Column('Stars', Integer)
+    count = Column('Count', Integer)
+    
+    idea = relationship(Idea, backref=backref('aggregate_rating'))
     
     
 def populate():
