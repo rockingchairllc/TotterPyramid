@@ -24,7 +24,7 @@
 			$('#'+idText).html(outText);
 			alert(idx);
 			$.ajax({
-				url:"{{request.application_url}}/project/{{project.id}}/idea/{{project.ideas[0].id}}/rating",
+				url:"{{request.application_url}}/project/{{project.id.hex}}/idea/{{project.ideas[0].id}}/rating",
 				type: "POST",
 				dataType: "json",
 				data: ratingData,
@@ -39,7 +39,7 @@
 			var IdeaData = JSON.stringify({'project_id': prjId, 'data': $(".add_idea_modal textarea").val()});
 			alert(IdeaData);
 			$.ajax({
-				url:"{{request.application_url}}/project/{{project.id}}/idea",
+				url:"{{request.application_url}}/project/{{project.id.hex}}/idea",
 				type: "POST",
 				dataType: "json",
 				data: IdeaData,
