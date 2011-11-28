@@ -63,9 +63,9 @@ class Project(Base):
     deadline = Column('Deadline', DateTime, nullable=True)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     
-    creator = relationship(User, backref=backref('created_projects', lazy='dynamic'))
+    creator = relationship(User, backref=backref('created_projects'))
     participants = relationship(User, secondary=participants, 
-        backref=backref('projects', lazy='dynamic'))
+        backref=backref('projects'))
 
 class Idea(Base):
     __tablename__ = 'Ideas'
@@ -77,7 +77,7 @@ class Idea(Base):
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     data = Column('IdeaData', Text)
     
-    author = relationship(User, backref=backref('ideas', lazy='dynamic'))
+    author = relationship(User, backref=backref('ideas'))
     project = relationship(Project, backref=backref('ideas'))
     
 
@@ -91,7 +91,7 @@ class Comment(Base):
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     data = Column('CommentData', Text)
     
-    author = relationship(User, backref=backref('comments', lazy='dynamic'))
+    author = relationship(User, backref=backref('comments'))
     idea = relationship(Idea, backref=backref('comments'))
     
 class IdeaRatings(Base):
@@ -105,8 +105,8 @@ class IdeaRatings(Base):
     modified = Column('LastModified', DateTime, default=datetime.now)
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     
-    idea = relationship(Idea, backref=backref('ratings', lazy='dynamic'))
-    rater = relationship(User, backref=backref('ratings', lazy='dynamic'))
+    idea = relationship(Idea, backref=backref('ratings'))
+    rater = relationship(User, backref=backref('ratings'))
     
     
 def populate():
