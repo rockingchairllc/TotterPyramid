@@ -37,7 +37,7 @@ def add_rating(request):
     
     old_rating = session.query(UserRating)\
         .filter(UserRating.rater==cur_user)\
-        .filter(UserRating.idea_id==idea_id).first()
+        .filter(UserRating.idea_id==idea_id).first() or UserRating(rater=cur_user, idea_id=idea_id)
     changed = False
     loves = 0
     likes = 0
@@ -67,7 +67,7 @@ def add_rating(request):
     if likes == 1 and loves == 1:
         # Client error.
         pass
-    
+    session.merge(old_rating)
     # Update aggregate count:
     if likes or loves:
         agg_rating = session.query(AggregateRating)\
