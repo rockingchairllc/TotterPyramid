@@ -54,9 +54,9 @@ def ideas(request):
         
     # Create list of ideas with User's rating added:
     ideas = project.ideas
-    ratings = session.query(Idea, IdeaRatings)\
+    ratings = session.query(Idea, UserRatings)\
         .filter(Idea.project_id == project.id)\
-        .filter(IdeaRatings.user_id == user.id)
+        .filter(UserRatings.user_id == user.id)
         
     # Create a new field Idea.user_rating, that stores the IdeaRating for
     # the current user. We're taking advantage of SQLAlchemy's one-instance
