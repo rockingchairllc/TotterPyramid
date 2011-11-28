@@ -9,12 +9,12 @@
 		function addIdea() {
 			$('.add_idea').toggle();
 		}
-		function addRating(type) {
+		function addRating(value, type) {
 			if (type == 1) {
-				
+				value = value + 1
 			}
 			else if (type == 2){
-				
+				value = value + 2
 			}
 			$(this).parent().parent().children('.rate_value').innerHTML = 'Total Rating: {{rating_value}}';
 			$.ajax({
@@ -76,8 +76,8 @@
         
         <div class="the_content">
             <ul class="tabs">
-            	<li><a href="{{request.route_url('home')}}">Overview</a></li>
-                <li><a href="{{request.route_url('home')}}" class="active_tab">Ideas</a></li>
+            	<li><a href="{{request.route_url('project_overview')}}">Overview</a></li>
+                <li><a href="{{request.route_url('project_ideas')}}" class="active_tab">Ideas</a></li>
                 <li><a href="#">People</a></li>
             </ul><!-- .tabs -->
             
@@ -117,9 +117,10 @@
                         <div class="username"><a href="#">{{project.ideas[ideas_index].author.first_name}}</a></div>
 	                    	<strong class="rate_value" >Total Rating: 22</strong>
 	                        <div class="like_love">
-	                        	<a href="#" class="like_love" onClick="addRating(1)">Like It</a> 
+	                        	{% rate_value = project.ideas[ideas_index].aggregate_rating %}
+	                        	<a href="#" class="like_love" onClick="addRating({{rate_value}}, 1)">Like It</a> 
 	                            &bull; 
-	                            <a href="#" class="like_love" onClick="addRating(2)">Love It</a> 
+	                            <a href="#" class="like_love" onClick="addRating(3, 2)">Love It</a> 
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
                     	<div class="idea_description">{{project.ideas[ideas_index].data}}</div>
@@ -146,13 +147,14 @@
 	                            	<li>
 	                            {% endif %}	
 	                            	<a href="#">
-	                                	<img src="http://graph.facebook.com/10005352/picture?type=square" width="32" height="32" />
+	                                	<img src="{{comment.author.profile_picture}}?type=square" width="32" height="32" />
 	                                </a>
 	                                <div class="comment_body">
 	                                    <a href="#">{{comment.author.first_name}}</a>
 	                                    {{comment.data}} 
 	                                </div>
-				{% endfor %}
+							{% endfor %}
+	          
                         </ul><!-- .project_idea_comments -->
                     </div><!-- idea_body -->
                 </li>
