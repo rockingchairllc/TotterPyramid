@@ -11,12 +11,13 @@
 		}
 		function addRating(type) {
 			if (type == 1) {
-				
+				/* p = project.ideas.ratings. */
+				/* {% project.ideas.ratings = project.ideas.ratings + 1; %} */
 			}
 			else if (type == 2){
-				
+				/*{% project.ideas.ratings = project.ideas.ratings + 2; %}*/
 			}
-			$(this).parent().parent().children('.rate_value').innerHTML = 'Total Rating: {{project.ideas.ratings}}';
+			$(this).parent().parent().children('.rate_value').innerHTML = 'Total Rating: {{rating_value}}';
 			$.ajax({
 				url:"{{request.application_url}}/projects/{{project.id}}/idea/",
 				method: "POST",
@@ -76,8 +77,8 @@
         
         <div class="the_content">
             <ul class="tabs">
-            	<li><a href="{{request.route_url('home').join("project/")}}">Overview</a></li>
-                <li><a href="{{request.route_url('home')}}" class="active_tab">Ideas</a></li>
+            	<li><a href="{{request.route_url('project_overview')}}">Overview</a></li>
+                <li><a href="{{request.route_url('project_ideas')}}" class="active_tab">Ideas</a></li>
                 <li><a href="#">People</a></li>
             </ul><!-- .tabs -->
             
@@ -105,6 +106,7 @@
             </div><!-- .sort_by -->
             
             <ul class="project_ideas">
+            {% for ideas_index in [0,ideas_count] %}
             	<li>
                 	<div class="idea_author">
                     	<a href="#">
@@ -113,18 +115,15 @@
                     </div><!-- .idea_author -->
                     <div class="idea_body">
                         <div class="idea_meta">
-                        <div class="username"><a href="#">Username</a></div>
-	                    	<strong class="rate_value" >Total Rating: {{rating_value}}</strong>
+                        <div class="username"><a href="#">{{project.ideas[ideas_index].author.first_name}}</a></div>
+	                    	<strong class="rate_value" >Total Rating: 22</strong>
 	                        <div class="like_love">
 	                        	<a href="#" class="like_love" onClick="addRating(1)">Like It</a> 
 	                            &bull; 
 	                            <a href="#" class="like_love" onClick="addRating(2)">Love It</a> 
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
-                    	<div class="idea_description">
-                        	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget dictum orci. 
-                            Quisque mi mi, viverra vel imperdiet eget, cursus at dolor. Integer luctus scelerisque fringilla.
-                        </div>
+                    	<div class="idea_description">{{project.ideas[ideas_index].data}}</div>
                         <div class="comment_time">
                             <a href="javascript:void(0)" class="comment_on_idea" onClick="showComment()">Comment</a> 
                             &#124; 
@@ -138,92 +137,28 @@
                             </li><!-- .new_comment -->
                              
                             <!-- Append all new comments to the ul.project_idea_comments -->
-                             
-                            <li class="first_update">
-                            	<a href="#">
-                                	<img src="http://graph.facebook.com/12404109/picture?type=square" width="32" height="32" />
-                                </a>
-                                <div class="comment_body">
-                                    <a href="#">Username</a>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget dictum orci. 
-                                </div>
-                            </li>
-                            <li>
-                                <a href="#">
-                                	<img src="http://graph.facebook.com/12432946/picture?type=square" width="32" height="32" />
-                                </a>
-                                <div class="comment_body">
-                                    <a href="#">Username</a>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget dictum orci. 
-                                </div>
-                            </li>
-                            <li class="last_update">
-                                <a href="#">
-                                	<img src="http://graph.facebook.com/1000499831/picture?size=square" width="32" height="32" />
-								</a>
-                                <div class="comment_body">
-                                    <a href="#">Username</a>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget dictum orci. 
-                                </div>
-                            </li>
+                            
+                            {% for comment_index in [0, count(project.ideas.comments)-1] %}
+	                            {% if comment_index equals 0 %} 
+	                            	<li class="first_update">
+	                            {% elif comment_index equals count(project.ideas.comments)-1 %}
+	                            	<li class="last_update">
+	                            {% else %}
+	                            	<li>
+	                            {% endif %}	
+	                            	<a href="#">
+	                                	<img src="{{project.ideas.comments[comment_index].author.profile_picture}}?type=square" width="32" height="32" />
+	                                </a>
+	                                <div class="comment_body">
+	                                    <a href="#">{{project.ideas.comments[comment_index].author.first_name}}</a>
+	                                    {{project.ideas.comments[comment_index].data}} 
+	                                </div>
+				{% endfor %}
+	          
                         </ul><!-- .project_idea_comments -->
                     </div><!-- idea_body -->
                 </li>
-            	<li>
-                	<div class="idea_author">
-                    	<a href="#">
-                            <img src="http://graph.facebook.com/82701710/picture?type=square" />
-                        </a>
-                    </div><!-- .idea_author -->
-                    <div class="idea_body">
-                        <div class="idea_meta">
-	                        <div class="username"><a href="#">Username</a></div>
-	                        <strong>Total Rating: 38</strong>
-	                        <div class="like_love">
-	                        	<a href="#" class="like_love">Like It</a> 
-	                            &bull; 
-	                            <a href="#" class="like_love">Love It</a> 
-	                        </div><!-- .like_love -->
-                        </div><!-- .idea_meta -->
-                    	<div class="idea_description">
-                        	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget dictum orci. 
-                            Quisque mi mi, viverra vel imperdiet eget, cursus at dolor. Integer luctus scelerisque fringilla.
-                        </div>
-                        <div class="comment_time">
-                            <a href="javascript:void(0)" class="comment_on_idea" onClick="showComment()">Comment</a> 
-                            &#124; 
-                            September 18th at 9:30am
-                        </div><!-- .comment_time -->
-                         
-
-                        <ul class="project_idea_comments">
-                            <li class="new_comment first_update">
-                                <input type="text" value="Start Typing"  /><br />
-                                <span class="enter_to_submit">Push Enter to Submit</span>
-                            </li><!-- .new_comment -->
-                             
-                            <!-- Append all new comments to the ul.project_idea_comments -->
-                            <li class="first_update">
-                            	<a href="#">
-                                	<img src="http://graph.facebook.com/12409002/picture?type=square" width="32" height="32" />
-                                </a>
-                                <div class="comment_body">
-                                    <a href="#">Username</a>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget dictum orci. 
-                                </div>
-                            </li>
-                            <li class="last_update">
-                            	<a href="#">
-                                	<img src="http://graph.facebook.com/10005352/picture?size=square" width="32" height="32" />
-                                </a>
-                                <div class="comment_body">
-                                    <a href="#">Username</a>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus eget dictum orci. 
-                                </div>
-                            </li>
-                        </ul><!-- .project_idea_comments -->
-                    </div><!-- idea_body -->
-                </li>
+            {% endfor %}
             </ul><!-- .project_ideas -->
         </div><!-- .the_content -->
 {%endblock %}
