@@ -85,7 +85,7 @@ def add_rating(request):
 def add_idea(request):
     session = DBSession()
     idea_text = request.json_body['data']
-    project_id = request.matchdict['project_id']
+    project_id = uuid.UUID(hex=request.matchdict['project_id'])
     cur_user = get_user(request)
     new_idea = Idea(project_id=project_id, data=idea_text)
     new_idea.author = cur_user
