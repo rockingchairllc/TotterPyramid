@@ -16,7 +16,7 @@
 			else if (type == 2){
 				value = value + 2
 			}
-			$(this).parent().parent().children('.rate_value').innerHTML = 'Total Rating: {{rating_value}}';
+			$(this).parent().parent().children('.rate_value').innerHTML = 'Total Rating: '+value;
 			$.ajax({
 				url:"{{request.application_url}}/projects/{{project.id}}/idea/",
 				method: "POST",
