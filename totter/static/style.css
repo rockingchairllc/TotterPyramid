@@ -213,7 +213,7 @@ User Info Section
 /*****************************************************************************************************************************************
 Footer
 *******************************************************************************************************************************************/
-ul.footer_links {
+.footer ul.footer_links {
 	height: 50px;
 	position: absolute;
 	bottom: -75px;
@@ -222,7 +222,7 @@ ul.footer_links {
 }
 ul.footer_links li {display: inline-block;}
 ul.footer_links li a {color:#fff;}
-.footer ul.footer_links {
+ul.footer_links {
 	position: fixed;
 	bottom: 20px;
 	left: 50%;
