@@ -124,7 +124,7 @@ def ideas(request):
         idea.user_rating = None # This will be the field's default value.
         idea.total_rating = 0
         if idea.aggregate_rating is not None:
-            idea.total_rating = idea.aggregate_rating.likes + idea.aggregate_rating.loves * 2
+            idea.total_rating = idea.aggregate_rating.liked + idea.aggregate_rating.loved * 2
     for idea, rating in ratings:
         idea.user_rating = rating
     
