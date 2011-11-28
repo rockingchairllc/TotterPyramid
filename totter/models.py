@@ -64,7 +64,7 @@ class Project(Base):
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     
     creator = relationship(User, backref=backref('created_projects', lazy='dynamic'))
-    participants = relationship('User', secondary=participants, 
+    participants = relationship(User, secondary=participants, 
         backref=backref('projects', lazy='dynamic'))
 
 class Idea(Base):
@@ -78,7 +78,7 @@ class Idea(Base):
     data = Column('IdeaData', Text)
     
     author = relationship(User, backref=backref('ideas', lazy='dynamic'))
-    project = relationship('Project', backref=backref('ideas'))
+    project = relationship(Project, backref=backref('ideas'))
     
 
 class Comment(Base):
@@ -92,7 +92,7 @@ class Comment(Base):
     data = Column('CommentData', Text)
     
     author = relationship(User, backref=backref('comments', lazy='dynamic'))
-    idea = relationship('Idea', backref=backref('comments'))
+    idea = relationship(Idea, backref=backref('comments'))
     
 class IdeaRatings(Base):
     __tablename__ = 'IdeaRatings'
