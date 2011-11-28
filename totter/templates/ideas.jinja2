@@ -16,9 +16,8 @@
 			else if (type == 2){
 				value = value + 2
 			}
-			alert(value);
 			outText = 'Total Rating: ' + value;
-			alert($(this).parent().parent().children('#rate_value'));
+			alert($(this).parent().html());
 			alert($(this).parent().parent().children('#rate_value').html());
 			//$.ajax({
 			//	url:"{{request.application_url}}/projects/{{project.id}}/idea/",
