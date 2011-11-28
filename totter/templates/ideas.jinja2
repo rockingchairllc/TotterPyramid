@@ -117,8 +117,8 @@
                         <div class="username"><a href="#">{{project.ideas[ideas_index].author.first_name}}</a></div>
 	                    	<strong class="rate_value" >Total Rating: 22</strong>
 	                        <div class="like_love">
-	                        	{% rate_value = project.ideas[ideas_index].aggregate_rating %}
-	                        	<a href="#" class="like_love" onClick="addRating({{rate_value}}, 1)">Like It</a> 
+	                        	
+	                        	<a href="#" class="like_love" onClick="addRating({{project.ideas[ideas_index].aggregate_rating}}, 1)">Like It</a> 
 	                            &bull; 
 	                            <a href="#" class="like_love" onClick="addRating(3, 2)">Love It</a> 
 	                        </div><!-- like_love -->
