@@ -11,10 +11,10 @@
 		}
 		function addRating(type) {
 			if (type == 1) {
-				{% project.ideas.ratings = project.ideas.ratings + 1; %}
+				//{% project.ideas.ratings = project.ideas.ratings + 1; %}
 			}
 			else if (type == 2){
-				{% rating_value = rating_value + 2; %}
+				//{% rating_value = rating_value + 2; %}
 			}
 			$(this).parent().parent().children('.rate_value').innerHTML = 'Total Rating: {{rating_value}}';
 			$.ajax({
