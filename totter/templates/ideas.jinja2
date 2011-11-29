@@ -15,7 +15,7 @@
 		                var prjId = "{{project.id}}";
 						var CommentData = JSON.stringify({'data': $(this).val(), 'project_id': prjId, 'Idea_id': idx });
 						$.ajax({
-							url:"{{request.application_url}}/project/{{project.id}}/idea/" + idea_id + "/comment",
+							url:"{{request.application_url}}/project/{{project.id}}/idea/" + idx + "/comment",
 							type: "POST",
 							dataType: "json",
 							data: CommentData,
