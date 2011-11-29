@@ -15,7 +15,8 @@ class UUID(types.TypeDecorator):
     def process_bind_param(self,value,dialect=None):
         if value and isinstance(value,uuid.UUID):
             return value.hex
-        elif value and isinstance(value, str) and (len(value) == 32 or len(value) == 36):
+        elif value and (isinstance(value, str) or isinstance(value, unicode))\
+                and (len(value) == 32 or len(value) == 36):
             # NOTE: Doesn't validate hyphen positions.
             temp = value.replace('-', '', 4).lower() 
             if all(c in 'abcdef0123456789' for c in temp):
