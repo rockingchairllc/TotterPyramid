@@ -72,9 +72,11 @@ def main(global_config, **settings):
                     renderer='stars.jinja2')
                     
     # For XMLHttpRequest
-    config.add_route('post_comment', '/project/{project_id}/idea/{idea_id}/comment')
-    config.add_route('post_idea', '/project/{project_id}/idea')
-    config.add_route('post_rating', '/project/{project_id}/idea/{idea_id}/rating')
+    config.add_route('comment_collection', '/project/{project_id}/idea/{idea_id}/comment')
+    config.add_route('comment_entity', '/project/{project_id}/idea/{idea_id}/comment/{comment_id}')
+    config.add_route('idea_collection', '/project/{project_id}/idea')
+    config.add_route('idea_entity', '/project/{project_id}/idea/{idea_id}')
+    config.add_route('rating_collection', '/project/{project_id}/idea/{idea_id}/rating')
     
                     
     return config.make_wsgi_app()

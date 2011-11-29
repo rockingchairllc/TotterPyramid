@@ -15,9 +15,14 @@ def get_user(request):
         return session.query(User).filter(User.email=='test@rockingchairllc.com').one()
     user_id = uuid.UUID(hex=uid_hex)
     return session.query(User).filter(User.id==user_id).one()
+
+def record_event(action, actor_userid, entity_acted_on):
+    pass
     
-@view_config(route_name='post_comment', request_method='POST', renderer='json')
+@view_config(route_name='comment_collection', request_method='POST', renderer='json')
 def add_comment(request):
+    # Add comment request body is JSON-encoded with parameters:
+    # 'data' : The comment text.
     session = DBSession()
     comment_text = request.json_body['data']
     idea_id = request.matchdict['idea_id']
@@ -28,8 +33,13 @@ def add_comment(request):
     session.flush()
     return {'comment_id' : new_comment.id}
     
-@view_config(route_name='post_rating', request_method='POST', renderer='json')
+    
+@view_config(route_name='rating_collection', request_method='POST', renderer='json')
 def add_rating(request):
+    # Add rating request body is JSON-encoded with parameters:
+    # 'like' : Boolean, True if user Liked a post, False if he unliked it.
+    # 'love' : Boolean, True if user loved a post, False is she unloved it.
+    
     session = DBSession()
     cur_user = get_user(request)
     idea_id = request.matchdict['idea_id']
@@ -81,8 +91,10 @@ def add_rating(request):
     session.flush()
     return {}
     
-@view_config(route_name='post_idea', request_method='POST', renderer='json')
+@view_config(route_name='idea_collection', request_method='POST', renderer='json')
 def add_idea(request):
+    # Idea request body is JSON encoded with parameters:
+    # 'data' : The idea text
     session = DBSession()
     idea_text = request.json_body['data']
     project_id = uuid.UUID(hex=request.matchdict['project_id'])
@@ -128,6 +140,8 @@ def ideas(request):
     # per session feature, so that all project.idea entries have a user_rating field.
     for idea in ideas:
         idea.user_rating = None # This will be the field's default value.
+        
+        # Also create a field for numeric rating:
         idea.total_rating = 0
         if idea.aggregate_rating is not None:
             idea.total_rating = idea.aggregate_rating.liked + idea.aggregate_rating.loved * 2
