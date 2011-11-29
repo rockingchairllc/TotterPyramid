@@ -46,7 +46,7 @@ def add_comment(request):
     session.flush()
     
     # Record event:
-    idea_author = session.query(Idea).filter(Idea.id==idea_id).author
+    idea_author = session.query(Idea).filter(Idea.id==idea_id).author.one()
     record_event('add_comment', request.json_body['project_id'], datetime.now(), {
         'commenter_first' : cur_user.first_name,
         'commenter_last' : cur_user.last_name,
