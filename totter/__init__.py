@@ -53,10 +53,7 @@ def main(global_config, **settings):
     config.add_route('logout', '/logout')
     config.add_view('totter.user.logout', route_name='logout')
 
-    config.add_route('project_overview', '/project/{project_id}')
-    config.add_view('totter.testViews.project',
-                    route_name='project_overview',
-                    renderer='project.jinja2')
+    config.add_route('project_entity', '/project/{project_id}')
                     
     config.add_route('project_ideas', '/project/{project_id}/ideas')
     
@@ -77,7 +74,7 @@ def main(global_config, **settings):
     config.add_route('idea_collection', '/project/{project_id}/idea')
     config.add_route('idea_entity', '/project/{project_id}/idea/{idea_id}')
     config.add_route('rating_collection', '/project/{project_id}/idea/{idea_id}/rating')
-    
+    config.add_route('event_collection', '/project/{project_id}/event')
                     
     return config.make_wsgi_app()
 
