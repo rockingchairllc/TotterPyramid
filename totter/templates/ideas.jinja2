@@ -25,6 +25,7 @@
 								var m_data = '<li class="first_update"> <a href="#"> <img src="{{user.profile_picture}}?type=square" width="32" height="32" /> </a>' +
 												'<div class="comment_body"> <a href="#">{{user.first_name}}</a>' + cmtdata + '</div></li>';
 								alert(m_data);
+								alert($('#comments'+idx).children('#new_comment'));
 								$('#comments'+idx).children('#new_comment').after(m_data);	
 							}
 						});
