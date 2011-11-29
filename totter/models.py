@@ -85,7 +85,7 @@ class Project(Base):
 class ProjectEvent(Base):
     __tablename__ = 'ProjectEvents'
     id = Column('EventID', Integer, primary_key=True, nullable=False, autoincrement=True)
-    project_id = Column('ProjectUUID', UUID(), nullable=False, index=True)
+    project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), nullable=False, index=True)
     when = Column('When', DateTime, default=datetime.now, nullable=False, index=True)
     event_data = Column('Data', Text)
     
