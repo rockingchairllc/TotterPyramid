@@ -6,18 +6,17 @@
 		function showComment(idx) {
 			$('#comments'+idx).children('.new_comment').toggle();
 		}
-
+		
 		$(document).ready(function(){
 			$('input[name=comment_text]').each(function(){
 				$(this).bind('keypress', function(e){
-			        	if( e.keyCode==13 ){
-			                	idx = $(this).attr("order");
-			                	alert(idx);
-		            		}
-	        		});
+		        	if( e.keyCode==13 ){
+		                idx = $(this).attr("order");
+		                alert(idx);
+		            }
+	        	});
 			});
 		});
-
 		function addIdea() {
 			$('.add_idea').toggle();
 		}
@@ -173,7 +172,7 @@
                          
                         <ul class="project_idea_comments" id="comments{{ideas_index}}">
                             <li class="new_comment first_update">
-                            	<input type="text" value="Start Typing"/><br />
+                            	<input name="comment_text" type="text" value="Start Typing" order = "{{ideas_index}}"/><br />
                                 <span class="enter_to_submit">Push Enter to Submit</span>
                             </li><!-- .new_comment -->
                              
