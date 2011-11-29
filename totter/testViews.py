@@ -68,10 +68,13 @@ def add_rating(request):
     idea_id = request.matchdict['idea_id']
     rating_data = request.json_body
     
+    # Get the old rating, or make a new one if user never rated this post:
     old_rating = session.query(UserRating)\
         .filter(UserRating.rater==cur_user)\
-        .filter(UserRating.idea_id==idea_id).first() or UserRating(rater=cur_user, idea_id=idea_id)
+        .filter(UserRating.idea_id==idea_id).first()\
+        or UserRating(rater=cur_user, idea_id=idea_id)
     
+    # loves, likes track the change in the user's rating.
     loves = 0
     likes = 0
     # Handle unlikes/unloves first:
@@ -98,9 +101,11 @@ def add_rating(request):
             old_rating.loved = True
             loves = 1
     if likes == 1 and loves == 1:
-        # Client error.
-        pass
+        # Client error. User shouldn't be able to like and love at the same time. 
+        old_rating.liked = False
+        likes = 0
     session.merge(old_rating)
+    
     # Update aggregate count:
     if likes or loves: # User did something worth tracking.
         agg_rating = session.query(AggregateRating)\
@@ -108,7 +113,10 @@ def add_rating(request):
             
         agg_rating.liked += likes
         agg_rating.loved += loves
-        agg_rating.count += 1
+        agg_rating.count += likes + loves
+        # Case: User switches like for love: like=-1, love=1. count does nothing
+        # Case: User likes: like=1,love=0. Count increments.
+        # Case: User unlikes: like=-1,love=0. Count decrements.
         session.merge(agg_rating)
     
     session.flush()
