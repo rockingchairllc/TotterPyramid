@@ -19,6 +19,7 @@ def get_user(request):
 
 def record_event(action, project_id, time, action_data):
     # TODO: Deferred processing?
+    return # weird utf8 bugs in json encoder...
     session = DBSession()
     new_event = ProjectEvent(project_id=project_id, type=action, when=time, data=action_data)
     session.add(new_event)
