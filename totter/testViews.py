@@ -19,8 +19,9 @@ def get_user(request):
 
 def record_event(action, project_id, time, action_data):
     # TODO: Deferred processing?
-    #ProjectEvent(project_id=project_id, when=time, data=action_data)
-    pass
+    session = DBSession()
+    new_event = ProjectEvent(project_id=project_id, when=time, data=action_data)
+    session.add(new_event)
     
 @view_config(route_name='event_collection', request_method='GET', renderer='json')
 def get_event_list(request):
