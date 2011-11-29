@@ -32,12 +32,6 @@ Base = declarative_base()
 
 salt_generator = lambda : ''.join(random.choice([chr(x) for x in range(0x20,0x7F)]) for x in range(16))
 
-def convert_uuids(kwargs, arg_list):
-    for arg in arg_list:
-        if arg in kwargs:
-            if type(kwargs[arg]) == str and len(kwargs[arg]) == 32:
-                kwargs[arg] = uuid.UUID(hex=kwargs[arg])
-
 class User(Base):
     __tablename__ = 'Users'
     id = Column('UserUUID',UUID(),primary_key=True,default=uuid.uuid4)
@@ -53,10 +47,7 @@ class User(Base):
 
     def password_hash(self, password):
         return hashlib.md5(self.salt + hashlib.md5(password).hexdigest()).hexdigest()
-    
-    def __init__(self, *args, **kwargs):
-        convert_uuids(kwargs, ('id',))
-        Base.__init__(self, *args, **kwargs)
+
 
 participants = Table('Participants', Base.metadata,
     Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID')),
@@ -78,9 +69,6 @@ class Project(Base):
     participants = relationship(User, secondary=participants, 
         backref=backref('projects'))
         
-    def __init__(self, *args, **kwargs):
-        convert_uuids(kwargs, ('id', 'creator_id'))
-        Base.__init__(self, *args, **kwargs)
         
 class ProjectEvent(Base):
     __tablename__ = 'ProjectEvents'
@@ -104,10 +92,7 @@ class Idea(Base):
     author = relationship(User, backref=backref('ideas'))
     project = relationship(Project, backref=backref('ideas'))
     
-    def __init__(self, *args, **kwargs):
-        convert_uuids(kwargs, ('project_id','author_id'))
-        Base.__init__(self, *args, **kwargs)
-    
+
 
 class Comment(Base):
     __tablename__ = 'Comments'
@@ -121,10 +106,6 @@ class Comment(Base):
     
     author = relationship(User, backref=backref('comments'))
     idea = relationship(Idea, backref=backref('comments'))
-    
-    def __init__(self, *args, **kwargs):
-        convert_uuids(kwargs, ('author_id',))
-        Base.__init__(self, *args, **kwargs)
                 
 class UserRating(Base):
     __tablename__ = 'UserRatings'
@@ -140,9 +121,6 @@ class UserRating(Base):
     idea = relationship(Idea, backref=backref('user_ratings', lazy='dynamic'))
     rater = relationship(User, backref=backref('ratings'))
     
-    def __init__(self, *args, **kwargs):
-        convert_uuids(kwargs, ('user_id',))
-        Base.__init__(self, *args, **kwargs)
 
 class AggregateRating(Base):
     __tablename__ = 'AggregateRatings'
