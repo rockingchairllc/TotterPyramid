@@ -21,7 +21,7 @@ from zope.sqlalchemy import ZopeTransactionExtension
 from sqlalchemy.schema import Column
 import uuid
 
-from sqlalchemy_uuid import UUID
+from custom_types import UUID, JSONEncodedDict
 import string
 import random
 from datetime import datetime
@@ -75,7 +75,7 @@ class ProjectEvent(Base):
     id = Column('EventID', Integer, primary_key=True, nullable=False, autoincrement=True)
     project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), nullable=False, index=True)
     when = Column('When', DateTime, default=datetime.now, nullable=False, index=True)
-    event_data = Column('Data', Text)
+    event_data = Column('Data', JSONEncodedDict)
     
     project = relationship(Project, backref=backref('events', lazy='dynamic'))
 

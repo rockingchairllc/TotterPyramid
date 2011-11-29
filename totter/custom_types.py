@@ -1,11 +1,11 @@
 # From http://blog.sadphaeton.com/2009/01/19/sqlalchemy-recipeuuid-column.html
 
-from sqlalchemy import types
-from sqlalchemy.types import CHAR
+from sqlalchemy import types, Text
+from sqlalchemy.types import CHAR, VARCHAR
 from sqlalchemy.schema import Column
 import uuid
 import string
-
+import json
 class UUID(types.TypeDecorator):
     impl = CHAR
     def __init__(self):
@@ -35,6 +35,26 @@ class UUID(types.TypeDecorator):
  
     def is_mutable(self):
         return False
+        
+
+# From http://www.sqlalchemy.org/docs/core/types.html#marshal-json-strings
+# With modifications: VARCHAR => Text
+class JSONEncodedDict(TypeDecorator):
+    """Represents an immutable structure as a json-encoded string.
+    Usage::
+        JSONEncodedDict()
+    """
+    impl = Text
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            value = json.dumps(value)
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            value = json.loads(value)
+        return value
  
  
     

@@ -9,7 +9,7 @@ setup.py
 totter/__init__.py
 totter/facebook.py
 totter/models.py
-totter/sqlalchemy_uuid.py
+totter/custom_types.py
 totter/testViews.py
 totter/tests.py
 totter/user.py
