@@ -4,7 +4,7 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 	<script type="text/javascript">
 		function showComment(idx) {
-			alert($('#comments{{ideas_index}}'));
+			alert($('#comments{{ideas_index}}').children('.new_comment'));
 			$('#comments{{ideas_index}}').children('.new_comment').toggle();
 		}
 		function addIdea() {
