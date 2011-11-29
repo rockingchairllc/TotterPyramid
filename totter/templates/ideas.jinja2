@@ -5,7 +5,7 @@
 	<script type="text/javascript">
 		function showComment(idx) {
 			alert(idx);
-			$('.project_idea_comments{{ideas_index}}').children('.new_comment').toggle();
+			$('#comments{{ideas_index}}').children('.new_comment').toggle();
 		}
 		function addIdea() {
 			$('.add_idea').toggle();
@@ -160,7 +160,7 @@
                             September 18th at 9:30am
                         </div><!-- .comment_time -->
                          
-                        <ul class="project_idea_comments{{ideas_index}}">
+                        <ul class="project_idea_comments" id="comments{{ideas_index}}">
                             <li class="new_comment first_update">
                             	<input type="text" value="Start Typing"/><br />
                                 <span class="enter_to_submit">Push Enter to Submit</span>
