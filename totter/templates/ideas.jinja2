@@ -70,7 +70,7 @@
                     '</li><!-- .new_comment --><!-- Append all new comments to the ul.project_idea_comments --></ul><!-- .project_idea_comments --></div><!-- idea_body --></li>';
                 $('.project_ideas').prepend(prepare_data);    
                 //alert(prepare_data);
-                $('input[name='comment_text' order=new_id]').bind('keypress', function(e){
+                $('input[name=comment_text order=new_id]').bind('keypress', function(e){
 		        	if( e.keyCode==13 ){
 		                idx = $(this).attr("order");
 		                alert(idx);
