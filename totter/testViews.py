@@ -135,8 +135,8 @@ def add_idea(request):
     # Record event:
     record_event('add_idea', request.json_body['project_id'], datetime.now(), {
         'idea_url' : request.current_route_url() + '/' + str(new_idea.id),
-        'idea_first' : idea_author.first_name,
-        'idea_last' : idea_author.last_name,
+        'idea_first' : new_idea.author.first_name,
+        'idea_last' : new_idea.author.last_name,
         })
         
     return {'idea_id' : new_idea.id, 'ideas_count' : len(project.ideas)}
