@@ -12,7 +12,17 @@
 				$(this).bind('keypress', function(e){
 		        	if( e.keyCode==13 ){
 		                idx = $(this).attr("order");
-		                alert(idx);
+		                var prjId = "{{project.id}}";
+						var CommentData = JSON.stringify({'data': $(this).val(), 'project_id': prjId, 'Idea_id': idx });
+						$.ajax({
+							url:"{{request.application_url}}/project/{{project.id}}/idea/" + idea_id + "/comment",
+							type: "POST",
+							dataType: "json",
+							data: CommentData,
+							success: function(){
+								alert("ajax success");
+							}
+						});
 		            }
 	        	});
 			});
