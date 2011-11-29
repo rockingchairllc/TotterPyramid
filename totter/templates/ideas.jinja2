@@ -19,16 +19,15 @@
 							type: "POST",
 							dataType: "json",
 							data: CommentData,
-							success: function(){alert("success");}
+							success: onSuccess_Comment
 						});
 						
 						function onSuccess_Comment(){
 							alert("success");
-							var prepare_data;
-							prepare_data = '<li class="first_update"> <a href="#"> <img src="{{user.profile_picture}}?type=square" width="32" height="32" /> </a>' +
+							var m_data = '<li class="first_update"> <a href="#"> <img src="{{user.profile_picture}}?type=square" width="32" height="32" /> </a>' +
 											'<div class="comment_body"> <a href="#">{{user.first_name}}</a>'+$(this).val()+'</div></li>';
-							alert(prepare_data);
-							$('#comments'+idx).children('#new_comment').after(prepare_data);
+							alert(m_data);
+							$('#comments'+idx).children('#new_comment').after(m_data);
 						}
 		            }
 	        	});
