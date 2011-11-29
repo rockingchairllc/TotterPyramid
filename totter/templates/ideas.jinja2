@@ -5,8 +5,19 @@
 	<script type="text/javascript">
 		function showComment(idx) {
 			$('#comments'+idx).children('.new_comment').toggle();
-			alert($('#comments'+idx).id);
 		}
+
+		$(document).ready(function(){
+			$('input[name=comment_text]').each(function(){
+				$(this).bind('keypress', function(e){
+			        	if( e.keyCode==13 ){
+			                	idx = $(this).attr("order");
+			                	alert(idx);
+		            		}
+	        		});
+			});
+		});
+
 		function addIdea() {
 			$('.add_idea').toggle();
 		}
