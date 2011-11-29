@@ -13,7 +13,8 @@
 		        	if( e.keyCode==13 ){
 		                idx = $(this).attr("order");
 		                var prjId = "{{project.id}}";
-						var CommentData = JSON.stringify({'data': $(this).val(), 'project_id': prjId, 'Idea_id': idx });
+		                var cmtdata = $(this).val();
+						var CommentData = JSON.stringify({'data': cmtdata, 'project_id': prjId, 'Idea_id': idx });
 						$.ajax({
 							url:"{{request.application_url}}/project/{{project.id}}/idea/" + idx + "/comment",
 							type: "POST",
@@ -22,7 +23,7 @@
 							success: function(){
 								alert("success");
 								var m_data = '<li class="first_update"> <a href="#"> <img src="{{user.profile_picture}}?type=square" width="32" height="32" /> </a>' +
-												'<div class="comment_body"> <a href="#">{{user.first_name}}</a>'+$(this).val()+'</div></li>';
+												'<div class="comment_body"> <a href="#">{{user.first_name}}</a>' + cmtdata + '</div></li>';
 								alert(m_data);
 								$('#comments'+idx).children('#new_comment').after(m_data);	
 							}
