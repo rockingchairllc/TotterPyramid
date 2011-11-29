@@ -4,7 +4,6 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 	<script type="text/javascript">
 		function showComment(idx) {
-			alert($('#comments'+idx).children('.new_comment'));
 			$('#comments'+idx).children('.new_comment').toggle();
 		}
 		function addIdea() {
@@ -56,7 +55,7 @@
 	                '<a href="#" class="like_love" onClick="addRating(' + last_idx + ',' + new_id + ', 0, 1)">Like It</a> &bull; <a href="#" class="like_love" onClick="addRating(' + last_idx + ',' + new_id + ', 0, 2)">Love It</a>' + 
 	                '</div><!-- like_love --></div><!-- .idea_meta --><div class="idea_description">'+ $(".add_idea_modal textarea").val() +'</div><div class="comment_time">' +
                     '<a href="javascript:void(0)" class="comment_on_idea" onClick="showComment()">Comment</a>&#124;September 18th at 9:30am</div><!-- .comment_time -->' +
-                    '<ul class="project_idea_comments"><li class="new_comment first_update"><input type="text" value="Start Typing"  /><br /><span class="enter_to_submit">Push Enter to Submit</span>' +
+                    '<ul class="project_idea_comments" id="comments'+new_id+'"><li class="new_comment first_update"><input type="text" value="Start Typing"  /><br /><span class="enter_to_submit">Push Enter to Submit</span>' +
                     '</li><!-- .new_comment --><!-- Append all new comments to the ul.project_idea_comments --></ul><!-- .project_idea_comments --></div><!-- idea_body --></li>';
                 $('.project_ideas').prepend(prepare_data);    
                 //alert(prepare_data);
