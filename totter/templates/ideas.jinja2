@@ -5,6 +5,7 @@
 	<script type="text/javascript">
 		function showComment(idx) {
 			$('#comments'+idx).children('.new_comment').toggle();
+			alert($('#comments'+idx).children('.new_comment').id);
 		}
 		function addIdea() {
 			$('.add_idea').toggle();
