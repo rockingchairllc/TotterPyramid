@@ -46,7 +46,9 @@
 				success: onSuccess_addIdea
 			});
 			
-			function onSuccess_addIdea(last_idx, new_id){
+			function onSuccess_addIdea(data){
+				var last_idx = data.ideas_count;
+				var new_id = data.idea_id;
 				var prepare_data = '<li><div class="idea_author"><a href="#"><img src={{user.profile_picture}}?type=square"/></a></div>' +
                     			'<div class="idea_body"><div class="idea_meta"><div class="username"><a href="#">{{user.first_name}}</a></div>' +
 			                '<strong id="rate_value'+last_idx+'">Total Rating: 0</strong><div class="like_love">' +
