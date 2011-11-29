@@ -39,7 +39,7 @@ class UUID(types.TypeDecorator):
 
 # From http://www.sqlalchemy.org/docs/core/types.html#marshal-json-strings
 # With modifications: VARCHAR => Text
-class JSONEncodedDict(TypeDecorator):
+class JSONEncodedDict(types.TypeDecorator):
     """Represents an immutable structure as a json-encoded string.
     Usage::
         JSONEncodedDict()
