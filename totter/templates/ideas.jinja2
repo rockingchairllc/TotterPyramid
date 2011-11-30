@@ -45,7 +45,7 @@
 				value = value + 2
 				ratingData = JSON.stringify({'love': "true"});
 			}
-			alert("val:" + $(this).innerText());
+			alert("val:" + $(this).parent().innerText());
 			alert("name:" + $(this).attr("name"));
 			alert("class:" + $(this).attr("class"));
 			outText = 'Total Rating: ' + value;
