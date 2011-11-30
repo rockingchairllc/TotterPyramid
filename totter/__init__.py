@@ -63,6 +63,7 @@ def main(global_config, **settings):
     config.add_route('project_entity', '/project/{project_id}')
                     
     config.add_route('project_ideas', '/project/{project_id}/ideas')
+    config.add_route('project_people', '/project/{project_id}/people')
     
                     
     config.add_route('register', '/register')

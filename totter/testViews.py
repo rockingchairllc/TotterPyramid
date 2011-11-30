@@ -250,6 +250,23 @@ def project(request):
         'ideas_count': len(project.ideas), 
         'people_count': 1
     }
+@view_config(route_name='project_people', renderer='project_people.jinja2')
+def display_project_people(request):
+    user = get_user(request)
+    project_id = uuid.UUID(hex=request.matchdict['project_id'])
+    session = DBSession()
+    try:
+        project = session.query(Project).filter(Project.id==project_id).one()
+    except NoResultFound:
+        raise NotFound()
+    return {
+        'people' : [],
+        'project_id' : project_id,
+        'project' : project, 
+        'user' : user, 
+        'ideas_count': len(project.ideas), 
+        'people_count': 1,
+    }
 
 def login(request):
     return {}

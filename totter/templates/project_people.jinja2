@@ -1,0 +1,16 @@
+{% extends "project_base.jinja2" %}
+{% set active_page = "people" %}
+
+{% block scripts %}
+{% endblock %}
+{% block project_body %}
+<ul class="project_people">
+{% for person in people %}
+<li class="person">
+<img src="{{person.profile_picture}}"></img>
+<a href="{{person.profile_uri}}">{{person.first_name}} {{person.last_name}}</a>
+</li>
+{% endfor %}
+</ul><!-- .project_people -->
+
+{% endblock %}
