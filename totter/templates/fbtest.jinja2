@@ -1,10 +1,10 @@
-{% extends "base.jinja2" %}
-{% block scripts %}
-{% endblock %}
-{% block body %}	
-    <div class="login_register_wrap drop-shadow curved curved-vt-2">
-        <div id="fb-root"></div>
-        <script>
+ <html>
+    <head>
+      <title>My Facebook Login Page</title>
+    </head>
+    <body>
+      <div id="fb-root"></div>
+      <script>
         window.fbAsyncInit = function() {
           FB.init({
             appId      : '{{app_id}}',
@@ -19,8 +19,7 @@
            js.src = "//connect.facebook.net/en_US/all.js";
            d.getElementsByTagName('head')[0].appendChild(js);
          }(document));
-        </script>
-        <div class="fb-login-button">Login with Facebook</div>
-	</div><!-- .login_register_wrap -->
-{% endblock %}
-
+      </script>
+      <div class="fb-login-button">Login with Facebook</div>
+    </body>
+ </html>
