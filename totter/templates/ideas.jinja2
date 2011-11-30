@@ -214,9 +214,17 @@
                         <div class="username"><a href="#">{{project.ideas[ideas_index].author.first_name}}</a></div>
 	                    	<strong id="rate_value{{ideas_index}}" >Total Rating: {{project.ideas[ideas_index].total_rating}}</strong>
 	                        <div class="like_love">
-	                        	<a href="#" id="likeidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 1)">Like It</a> 
+	                        {% if ideas[ideas_index].user_rating.liked == TRUE %}
+	                        	<a href="#" id="likeidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 1)">Unlike It</a>
+	                        {% else %}
+	                        	 <a href="#" id="likeidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 1)">Like It</a>
+	               			{% endif %}         	 
 	                            &bull; 
-	                            <a href="#" id="loveidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 2)">Love It</a> 
+	                        {% if ideas[ideas_index].user_rating.loved == TRUE %}
+	                            <a href="#" id="loveidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 2)">Unlove It</a>
+	                        {% else %}
+	                        	<a href="#" id="loveidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 2)">Love It</a>
+	                       	{% endif %} 
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
                     	<div class="idea_description">{{project.ideas[ideas_index].data}}</div>
