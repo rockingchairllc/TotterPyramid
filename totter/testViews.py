@@ -178,7 +178,20 @@ def ideas(request):
     ideas = project.ideas
     idea_data = session.query(Idea, UserRating)\
         .outerjoin(UserRating, (Idea.id==UserRating.idea_id) & (UserRating.user_id==user.id))\
-        .filter(Idea.project_id == project.id).all()
+        .filter(Idea.project_id == project.id)
+    
+    sort = request.params.get('sort')
+    if sort == 'user':
+        idea_data = idea_data.order_by(Idea.author_id)
+    elif sort == 'rating':
+        # Use Python to sort it. 
+        pass
+    elif sort == 'date':
+        idea_data = idea_data.order_by(Idea.creation_time.desc()) # Most recent first
+    else:
+        logging.warn('Unrecognized sort: ' + str(sort))
+    
+    idea_data = idea_data.all()
     
     # Create a new field Idea.user_rating, that stores the IdeaRating for
     # the current user. We're taking advantage of SQLAlchemy's one-instance
@@ -186,7 +199,7 @@ def ideas(request):
     for i in range(len(idea_data)):
         idea, rating = idea_data[i]
         
-        # Also create a field for numeric rating:
+        # Compute total numeric rating:
         total_rating = 0
         if idea.aggregate_rating is not None:
             total_rating = idea.aggregate_rating.liked + idea.aggregate_rating.loved * 2
@@ -195,6 +208,11 @@ def ideas(request):
         idea_data[i]['idea'] = idea
         idea_data[i]['user_rating'] = rating or UserRating()
         idea_data[i]['total_rating'] = total_rating
+        
+    # Handle sort by rating:
+    if sort == 'rating':
+        # Descending (highest rating first)
+        idea_data.sort(key=lambda el:el['total_rating'], reverse=True)
     
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return {
