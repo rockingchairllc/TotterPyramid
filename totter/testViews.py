@@ -259,8 +259,16 @@ def display_project_people(request):
         project = session.query(Project).filter(Project.id==project_id).one()
     except NoResultFound:
         raise NotFound()
+        
+    people_bucket = {}
+    
+    for idea in project.ideas:
+        people_bucket[idea.author.id] = idea.author
+        for comment in idea.comments:
+            people_bucket[comment.author.id] = comment.author
+    
     return {
-        'people' : [],
+        'people' : people_bucket.values(),
         'project_id' : project_id,
         'project' : project, 
         'user' : user, 
