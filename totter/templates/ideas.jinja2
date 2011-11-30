@@ -45,10 +45,7 @@
 				value = value + 2
 				ratingData = JSON.stringify({'love': "true"});
 			}
-			var text = $(this).text();
-			alert("val:" + text);
 			alert("name:" + $(this).attr("name"));
-			alert("class:" + $(this).attr("class"));
 			outText = 'Total Rating: ' + value;
 			idText = "rate_value" + idx;
 			$('#'+idText).html(outText);
@@ -180,10 +177,10 @@
                         <div class="idea_meta">
                         <div class="username"><a href="#">{{project.ideas[ideas_index].author.first_name}}</a></div>
 	                    	<strong id="rate_value{{ideas_index}}" >Total Rating: {{project.ideas[ideas_index].total_rating}}</strong>
-	                        <div class="like_love">
-	                        	<a href="#" name="likeidea" class="like_love" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 1)">Like It</a> 
+	                        <div class="like_love" name="parent">
+	                        	<a href="#" name="likeidea" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 1)">Like It</a> 
 	                            &bull; 
-	                            <a href="#" name="loveidea" class="like_love" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 2)">Love It</a> 
+	                            <a href="#" name="loveidea" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 2)">Love It</a> 
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
                     	<div class="idea_description">{{project.ideas[ideas_index].data}}</div>
