@@ -19,7 +19,7 @@
         {% if event.type=="add_comment" %}
         {{event.data['commenter_first']}} {{event.data['commenter_last']}} 
             commented on
-            <a href="{{event.data['comment_uri']}}">{{event.data['idea_first']}} {{event.data['idea_last']}}'s idea.</a>
+            {{event.data['idea_first']}} {{event.data['idea_last']}}'s <a href="{{event.data['comment_uri']}}">idea.</a>
         {% elif event.type=="add_idea" %}
         {{event.data['idea_first']}} {{event.data['idea_last']}} posted a 
             <a href="{{event.data['idea_uri']}}">new idea.</a>
