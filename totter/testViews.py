@@ -8,7 +8,7 @@ from models import *
 from pyramid.i18n import TranslationStringFactory
 from datetime import datetime
 _ = TranslationStringFactory('totter')
-
+import logging
 def get_user(request):
     session = DBSession()
     uid_hex = authenticated_userid(request)
@@ -107,11 +107,13 @@ def add_rating(request):
         if old_rating.liked:
             old_rating.liked = False
             likes = -1
+    
     if likes == 1 and loves == 1:
         # Client error. User shouldn't be able to like and love at the same time. 
         old_rating.liked = False
         likes = 0
     session.merge(old_rating)
+    logging.warn('%s love: %d, like: %d' % (user.first_name, loves, likes))
     
     # Update aggregate count:
     if likes or loves: # User did something worth tracking.
