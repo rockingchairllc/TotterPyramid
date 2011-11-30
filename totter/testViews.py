@@ -76,6 +76,7 @@ def add_rating(request):
         .filter(UserRating.rater==cur_user)\
         .filter(UserRating.idea_id==idea_id).first()\
         or UserRating(rater=cur_user, idea_id=idea_id)
+    new_rating = UserRating(rater=cur_user, idea_id=idea_id)
         
     logging.warn('old rating loved: %d, liked: %d' % (old_rating.loved, old_rating.liked))
     
@@ -86,37 +87,37 @@ def add_rating(request):
     if 'like' in rating_data and not rating_data['like']:
         # Unliked the post.
         if old_rating.liked:
-            old_rating.liked = False
+            new_rating.liked = False
             likes = -1
     if 'love' in rating_data and not rating_data['love']:
         # Unloved the post.
         if old_rating.loved:
-            old_rating.loved = False
+            new_rating.loved = False
             loves = -1
             
     # Handle likes/loves:
     if 'like' in rating_data and rating_data['like']:
         # Liked the post.
         if not old_rating.liked:
-            old_rating.liked = True
+            new_rating.liked = True
             likes = 1
         if old_rating.loved:
-            old_rating.loved = False
+            new_rating.loved = False
             loves = -1
     if 'love' in rating_data and rating_data['love']:
         # Loved the post.
         if not old_rating.loved:
-            old_rating.loved = True
+            new_rating.loved = True
             loves = 1
         if old_rating.liked:
-            old_rating.liked = False
+            new_rating.liked = False
             likes = -1
     
     if likes == 1 and loves == 1:
         # Client error. User shouldn't be able to like and love at the same time. 
-        old_rating.liked = False
+        new_rating.liked = False
         likes = 0
-    session.merge(old_rating)
+    session.merge(new_rating)
     logging.warn('%s love: %d, like: %d' % (cur_user.first_name, loves, likes))
     
     # Update aggregate count:
@@ -212,6 +213,10 @@ def project(request):
         project = session.query(Project).filter(Project.id==project_id).one()
     except NoResultFound:
         raise NotFound()
+        
+    events = session.query(ProjectEvents)\
+        .filter(ProjectEvents.project_id==project_id)
+        #.filter(When 
     return {
         'project_id' : project_id,
         'project' : project, 
