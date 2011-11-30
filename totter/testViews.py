@@ -156,7 +156,7 @@ def add_idea(request):
         
     # Record event:
     record_event('add_idea', request.json_body['project_id'], datetime.now(), {
-        'idea_url' : request.current_route_url() + '/' + str(new_idea.id),
+        'idea_uri' : request.current_route_url() + '/' + str(new_idea.id),
         'idea_first' : new_idea.author.first_name,
         'idea_last' : new_idea.author.last_name,
         })
@@ -192,7 +192,10 @@ def ideas(request):
         if idea.aggregate_rating is not None:
             total_rating = idea.aggregate_rating.liked + idea.aggregate_rating.loved * 2
         
-        idea_ratings[i] = (idea_rating[0], idea_rating[1] or UserRating(), total_rating)
+        idea_ratings[i] = {}
+        idea_ratings[i]['idea'] = idea_rating[0]
+        idea_ratings[i]['user_rating'] = idea_rating[1] or UserRating()
+        idea_ratings[i]['total_rating'] = total_rating
     
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return {
