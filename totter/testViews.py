@@ -113,7 +113,7 @@ def add_rating(request):
         old_rating.liked = False
         likes = 0
     session.merge(old_rating)
-    logging.warn('%s love: %d, like: %d' % (user.first_name, loves, likes))
+    logging.warn('%s love: %d, like: %d' % (cur_user.first_name, loves, likes))
     
     # Update aggregate count:
     if likes or loves: # User did something worth tracking.
