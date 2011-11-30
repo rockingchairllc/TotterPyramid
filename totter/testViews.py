@@ -186,15 +186,13 @@ def ideas(request):
     for i in range(len(idea_ratings)):
         idea_rating = idea_ratings[i]
         idea = idea_rating[0]
-        if idea_rating[1] is None:
-            idea_rating[1] = UserRating() # This will be the field's default value.
         
         # Also create a field for numeric rating:
         total_rating = 0
         if idea.aggregate_rating is not None:
             total_rating = idea.aggregate_rating.liked + idea.aggregate_rating.loved * 2
         
-        idea_ratings[i] = (idea_rating[0], idea_rating[1], total_rating)
+        idea_ratings[i] = (idea_rating[0], idea_rating[1] or UserRating(), total_rating)
     
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return {
