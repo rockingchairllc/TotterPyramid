@@ -193,17 +193,20 @@ def ideas(request):
 
 @view_config(route_name='project_entity', renderer='project_overview.jinja2')
 def project(request):
-    user_info = {'user_name' : 'Francisco Saldana', 'user_image': 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/211801_1135710554_1230207683_q.jpg'}
-    project_data = {'project_title' : 'Grand Opening of Hotel LaRitz',
-            'author_name' : 'Francisco Saldana',
-            'idea_count' : 3,
-            'description' : 'We should plan something for the grand opening.',
-            'deadline' : 'None',
-            'updates' : [{'type' : 'Idea Added', 'who' : 'Jaime Ortega', 'when' : 'Wed 10/21/2011 at 10pm', 'what' : 'Yoga class.'},
-            {'type' : 'Comment', 'who' : 'Jeremy Smith', 'when' : 'Thurs 10/11/2011 at 2pm', 'what' : 'Tell me about it.'}]
+    user = get_user(request)
+    project_id = uuid.UUID(hex=request.matchdict['project_id'])
+    session = DBSession()
+    try:
+        project = session.query(Project).filter(Project.id==project_id).one()
+    except NoResultFound:
+        raise NotFound()
+    return {
+        'project' : project, 
+        'ideas': project.ideas, 
+        'user' : user, 
+        'ideas_count': len(project.ideas), 
+        'people_count': 1
     }
-    project_data.update(user_info)
-    return project_data
 
 def login(request):
     return {}
