@@ -48,7 +48,7 @@
 					$(loveobj).attr("order", "1");
 					$(loveobj).text("Love it");
 					value = value + 1
-					ratingData = JSON.stringify({'like': "true", 'love': "false"});
+					ratingData = JSON.stringify({'like': 1, 'love': 0});
 				}
 				else if (sw_value == "2" ) //now it's displayed text is "Unlike it"
 				{
@@ -57,7 +57,7 @@
 					$(loveobj).attr("order", "1");
 					$(loveobj).text("Love it");
 					value = value - 1
-					ratingData = JSON.stringify({'like': "false", 'love': "false"});
+					ratingData = JSON.stringify({'like': 0, 'love': 0});
 				}
 			}
 			else if (type == 2){
@@ -69,7 +69,7 @@
 					$(likeobj).attr("order", "1");
 					$(likeobj).text("Like it");
 					value = value + 2
-					ratingData = JSON.stringify({'like': "false", 'love': "true"});
+					ratingData = JSON.stringify({'like': 0, 'love': 1});
 				}
 				else if (sw_value == "2" ) //now it's displayed text is "Unlove it"
 				{
@@ -78,7 +78,7 @@
 					$(likeobj).attr("order", "1");
 					$(likeobj).text("Like it");
 					value = value - 2
-					ratingData = JSON.stringify({'like': "false", 'love': "false"});
+					ratingData = JSON.stringify({'like': 0, 'love': 0});
 				}
 			}
 			
@@ -91,7 +91,7 @@
 				dataType: "json",
 				data: ratingData,
 				success: function(){
-					alert("ajax success");
+					//alert("ajax success");
 				}
 			});
 		}
@@ -123,7 +123,7 @@
                 $('input[name=comment_text order=new_id]').bind('keypress', function(e){
 		        	if( e.keyCode==13 ){
 		                idx = $(this).attr("order");
-		                alert(idx);
+		                //alert(idx);
 		            }
 	        	});
 			}
