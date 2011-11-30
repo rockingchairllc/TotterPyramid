@@ -12,6 +12,7 @@
             cookie     : true,
             xfbml      : true
           });
+          console.log("this will be run once FB is initialized");
         };
         (function(d){
            var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
@@ -19,6 +20,7 @@
            js.src = "//connect.facebook.net/en_US/all.js";
            d.getElementsByTagName('head')[0].appendChild(js);
          }(document));
+         
       </script>
       <div>{{message}}</div>
       <div class="fb-login-button">Login with Facebook</div>
