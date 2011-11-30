@@ -121,7 +121,8 @@
                     '</li><!-- .new_comment --><!-- Append all new comments to the ul.project_idea_comments --></ul><!-- .project_idea_comments --></div><!-- idea_body --></li>';
                 $('.project_ideas').prepend(prepare_data);   
 				alert(new_id);
-				alert('test'+$('input[order=5]').val());
+				var temptxt = $('.project_ideas').children()[0].children('.idea_body').children('.project_idea_comments').children('new_comment').children('input[type=text]').val();
+				alert(temptxt);
                 $('input[order=new_id]').bind('keypress', function(e){
 		        	if( 1 ){
 		                idx = $(this).attr("order");
