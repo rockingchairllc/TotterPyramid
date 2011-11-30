@@ -118,7 +118,8 @@
                     '<a href="javascript:void(0)" class="comment_on_idea" onClick="showComment('+new_id+')">Comment</a>&#124;September 18th at 9:30am</div><!-- .comment_time -->' +
                     '<ul class="project_idea_comments" id="comments'+new_id+'"><li class="new_comment first_update"><input class="comment_text" type="text" value="Start Typing" order="'+new_id+'"/><br /><span class="enter_to_submit">Push Enter to Submit</span>' +
                     '</li><!-- .new_comment --><!-- Append all new comments to the ul.project_idea_comments --></ul><!-- .project_idea_comments --></div><!-- idea_body --></li>';
-                $('.project_ideas').prepend(prepare_data);   
+                $('.project_ideas').prepend(prepare_data);
+                alert($('#comments'+new_id));
 			}
 			addIdea();
 		}
@@ -196,4 +197,6 @@
                 </li>
             {% endfor %}
             </ul><!-- .project_ideas -->
+        </div><!-- .the_content -->
+	</div>  
 {%endblock %}
