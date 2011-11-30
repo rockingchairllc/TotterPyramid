@@ -171,7 +171,7 @@ def ideas(request):
     # the current user. We're taking advantage of SQLAlchemy's one-instance
     # per session feature, so that all project.idea entries have a user_rating field.
     for idea in ideas:
-        idea.user_rating = None # This will be the field's default value.
+        idea.user_rating = UserRating() # This will be the field's default value.
         
         # Also create a field for numeric rating:
         idea.total_rating = 0
