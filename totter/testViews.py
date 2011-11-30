@@ -191,7 +191,7 @@ def ideas(request):
     
 
 
-@view_config(route_name='project_entity', renderer='project.jinja2')
+@view_config(route_name='project_entity', renderer='project_overview.jinja2')
 def project(request):
     user_info = {'user_name' : 'Francisco Saldana', 'user_image': 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-snc4/211801_1135710554_1230207683_q.jpg'}
     project_data = {'project_title' : 'Grand Opening of Hotel LaRitz',
