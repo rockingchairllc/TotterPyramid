@@ -46,8 +46,7 @@
 				ratingData = JSON.stringify({'love': "true"});
 			}
 			alert("val:" + $(this).val());
-			alert("html:" + $(this).html());
-			alert("text:" + $(this).text());
+			alert("name:" + $(this).attr("name"));
 			outText = 'Total Rating: ' + value;
 			idText = "rate_value" + idx;
 			$('#'+idText).html(outText);
