@@ -9,30 +9,28 @@
 		}
 		
 		$(document).ready(function(){
-			$('input[name=comment_text]').each(function(){
-				$(this).bind('keypress', function(e){
-		        	if( e.keyCode==13 ){
-		                idx = $(this).attr("order");
-		                var prjId = "{{project.id}}";
-		                var cmtdata = $(this).val();
-						var CommentData = JSON.stringify({'data': cmtdata, 'project_id': prjId, 'Idea_id': idx });
-						$.ajax({
-							url:"{{request.application_url}}/project/{{project.id}}/idea/" + idx + "/comment",
-							type: "POST",
-							dataType: "json",
-							data: CommentData,
-							success: function(){
-								idx = idx - 1
-								var m_data = '<li class="first_update"> <a href="#"> <img src="{{user.profile_picture}}?type=square" width="32" height="32" /> </a>' +
-												'<div class="comment_body"> <a href="#">{{user.first_name}} </a>' + cmtdata + '</div></li>';
-								$('#comments'+idx).children('.new_comment').after(m_data);
-								showComment(idx);	
-								$('#comments'+idx).children('.new_comment').children('input[name=comment_text]').val('');
-							}
-						});
-		            }
-	        	});
-			});
+			$('.comment_text').bind('keypress', function(e){
+	        	if( e.keyCode==13 ){
+	                idx = $(this).attr("order");
+	                var prjId = "{{project.id}}";
+	                var cmtdata = $(this).val();
+					var CommentData = JSON.stringify({'data': cmtdata, 'project_id': prjId, 'Idea_id': idx });
+					$.ajax({
+						url:"{{request.application_url}}/project/{{project.id}}/idea/" + idx + "/comment",
+						type: "POST",
+						dataType: "json",
+						data: CommentData,
+						success: function(){
+							idx = idx - 1
+							var m_data = '<li class="first_update"> <a href="#"> <img src="{{user.profile_picture}}?type=square" width="32" height="32" /> </a>' +
+											'<div class="comment_body"> <a href="#">{{user.first_name}} </a>' + cmtdata + '</div></li>';
+							$('#comments'+idx).children('.new_comment').after(m_data);
+							showComment(idx);	
+							$('#comments'+idx).children('.new_comment').children('.comment_text').val('');
+						}
+					});
+	            }
+        	});
 		});
 		function addIdea() {
 			$('.add_idea').toggle();
@@ -117,36 +115,9 @@
 	                '<a href="#" name="likeidea" class="like_love" onClick="addRating(' + last_idx + ',' + new_id + ', 0, 1)">Like It</a> &bull; <a href="#" name="loveidea" class="like_love" onClick="addRating(' + last_idx + ',' + new_id + ', 0, 2)">Love It</a>' + 
 	                '</div><!-- like_love --></div><!-- .idea_meta --><div class="idea_description">'+ $(".add_idea_modal textarea").val() +'</div><div class="comment_time">' +
                     '<a href="javascript:void(0)" class="comment_on_idea" onClick="showComment('+new_id+')">Comment</a>&#124;September 18th at 9:30am</div><!-- .comment_time -->' +
-                    '<ul class="project_idea_comments" id="comments'+new_id+'"><li class="new_comment first_update"><input name="comment_text" type="text" value="Start Typing" order="'+new_id+'"/><br /><span class="enter_to_submit">Push Enter to Submit</span>' +
+                    '<ul class="project_idea_comments" id="comments'+new_id+'"><li class="new_comment first_update"><input class="comment_text" type="text" value="Start Typing" order="'+new_id+'"/><br /><span class="enter_to_submit">Push Enter to Submit</span>' +
                     '</li><!-- .new_comment --><!-- Append all new comments to the ul.project_idea_comments --></ul><!-- .project_idea_comments --></div><!-- idea_body --></li>';
                 $('.project_ideas').prepend(prepare_data);   
-				alert(new_id);
-				var temptxt = $('.project_ideas').children()[0].children('.idea_body').children('.project_idea_comments').children('new_comment').children('input[type=text]').val();
-				alert(temptxt);
-                $('input[order=new_id]').bind('keypress', function(e){
-		        	if( 1 ){
-		                idx = $(this).attr("order");
-		                alert(idx);
-		                alert(new_id);
-		                var prjId = "{{project.id}}";
-		                var cmtdata = $(this).val();
-						var CommentData = JSON.stringify({'data': cmtdata, 'project_id': prjId, 'Idea_id': idx });
-						$.ajax({
-							url:"{{request.application_url}}/project/{{project.id}}/idea/" + idx + "/comment",
-							type: "POST",
-							dataType: "json",
-							data: CommentData,
-							success: function(){
-								idx = idx - 1
-								var m_data = '<li class="first_update"> <a href="#"> <img src="{{user.profile_picture}}?type=square" width="32" height="32" /> </a>' +
-												'<div class="comment_body"> <a href="#">{{user.first_name}} </a>' + cmtdata + '</div></li>';
-								$('#comments'+idx).children('.new_comment').after(m_data);
-								showComment(idx);	
-								$('#comments'+idx).children('.new_comment').children('input[name=comment_text]').val('');
-							}
-						});
-		            }
-	        	});
 			}
 			addIdea();
 		}
@@ -196,7 +167,7 @@
                          
                         <ul class="project_idea_comments" id="comments{{ideas_index}}">
                             <li class="new_comment first_update">
-                            	<input name="comment_text" type="text" value="Start Typing" order = "{{idea_data[ideas_index].idea.id}}"/><br />
+                            	<input class="comment_text" type="text" value="Start Typing" order = "{{idea_data[ideas_index].idea.id}}"/><br />
                                 <span class="enter_to_submit">Push Enter to Submit</span>
                             </li><!-- .new_comment -->
                              
