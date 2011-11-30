@@ -45,8 +45,11 @@
 				value = value + 2
 				ratingData = JSON.stringify({'love': "true"});
 			}
+			
 			var objFind = "rate_value" + idx;
-			alert($("#"+objFind).parent().children(".like_love").children(a[name=likeidea]).val());
+			//alert($("#"+objFind).parent().children(".like_love").children(a[name=likeidea]).val());
+			objFind = "likeidea" + idx;
+			alert($('#' + objFind).val());
 			outText = 'Total Rating: ' + value;
 			idText = "rate_value" + idx;
 			$('#'+idText).html(outText);
@@ -179,7 +182,7 @@
                         <div class="username"><a href="#">{{project.ideas[ideas_index].author.first_name}}</a></div>
 	                    	<strong id="rate_value{{ideas_index}}" >Total Rating: {{project.ideas[ideas_index].total_rating}}</strong>
 	                        <div class="like_love">
-	                        	<a href="#" name="likeidea" class="like_love" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 1)">Like It</a> 
+	                        	<a href="#" id="likeidea{{ideas_index}}" class="like_love" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 1)">Like It</a> 
 	                            &bull; 
 	                            <a href="#" name="loveidea" class="like_love" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 2)">Love It</a> 
 	                        </div><!-- like_love -->
