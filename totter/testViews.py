@@ -75,7 +75,7 @@ def add_rating(request):
     old_rating = session.query(UserRating)\
         .filter(UserRating.rater==cur_user)\
         .filter(UserRating.idea_id==idea_id).first()
-    new_rating = UserRating(rater=cur_user, idea_id=idea_id)
+    new_rating = UserRating(user_id=cur_user.id, idea_id=idea_id)
         
     logging.warn('old rating loved: %d, liked: %d' % (old_rating.loved, old_rating.liked))
     
