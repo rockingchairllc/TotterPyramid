@@ -37,18 +37,19 @@
 			$('.add_idea').toggle();
 		}
 		function addRating(idx, idea_id, value, type) {
+			var tempdata;
 			if (type == 1) {
 				value = value + 1
 				ratingData = JSON.stringify({'like': "true"});
 				var objFind = "rate_value" + idx;
 				//alert($("#"+objFind).parent().children(".like_love").children(a[name=likeidea]).val());
 				objFind = "likeidea" + idx;
-				var switch;
-				switch = $('#' + objFind).attr("order");
-				alert(switch);
-				if (var == "1")
+				
+				tempdata = $('#' + objFind).attr("order");
+				alert(tempdata);
+				if (tempdata == "1")
 					$('#' + objFind).attr("order", "2");
-				elseif (var == "2" )
+				elseif (tempdata == "2" )
 					$('#' + objFind).attr("order", "1");
 			}
 			else if (type == 2){
