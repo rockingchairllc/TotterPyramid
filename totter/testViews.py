@@ -201,6 +201,7 @@ def project(request):
     except NoResultFound:
         raise NotFound()
     return {
+        'project_id' : project_id
         'project' : project, 
         'ideas': project.ideas, 
         'user' : user, 
