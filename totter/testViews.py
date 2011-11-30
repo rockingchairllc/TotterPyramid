@@ -6,7 +6,7 @@ from pyramid.security import authenticated_userid
 from pyramid.view import view_config
 from models import *
 from pyramid.i18n import TranslationStringFactory
-from datetime import datetime
+from datetime import datetime, timedelta
 _ = TranslationStringFactory('totter')
 import logging
 def get_user(request):
@@ -176,27 +176,29 @@ def ideas(request):
         
     # Create list of ideas with User's rating added:
     ideas = project.ideas
-    ratings = session.query(Idea, UserRating)\
-        .filter(Idea.project_id == project.id)\
-        .filter(UserRating.user_id == user.id)
-        
+    idea_ratings = session.query(Idea, UserRating)\
+        .outerjoin(UserRating, (Idea.id==UserRating.idea_id) & (UserRating.user_id==user.id))\
+        .filter(Idea.project_id == project.id).all()
+    
     # Create a new field Idea.user_rating, that stores the IdeaRating for
     # the current user. We're taking advantage of SQLAlchemy's one-instance
     # per session feature, so that all project.idea entries have a user_rating field.
-    for idea in ideas:
-        idea.user_rating = UserRating() # This will be the field's default value.
+    for i in range(len(idea_ratings)):
+        idea_rating = idea_ratings[i]
+        if idea_rating[1] is None:
+            idea_rating[1] = UserRating() # This will be the field's default value.
         
         # Also create a field for numeric rating:
-        idea.total_rating = 0
+        total_rating = 0
         if idea.aggregate_rating is not None:
-            idea.total_rating = idea.aggregate_rating.liked + idea.aggregate_rating.loved * 2
-    for idea, rating in ratings:
-        idea.user_rating = rating
+            total_rating = idea.aggregate_rating.liked + idea.aggregate_rating.loved * 2
+        
+        idea_ratings[i] = (idea_rating[0], idea_rating[1], total_rating)
     
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return {
         'project' : project, 
-        'ideas': project.ideas, 
+        'idea_data': idea_ratings, 
         'user' : user, 
         'ideas_count': len(project.ideas), 
         'people_count': 1
@@ -215,8 +217,9 @@ def project(request):
         raise NotFound()
         
     events = session.query(ProjectEvents)\
-        .filter(ProjectEvents.project_id==project_id)
-        #.filter(When 
+        .filter(ProjectEvents.project_id==project_id)\
+        .filter(ProjectEvents.when >= datetime.today() - timedelta(days=10))\
+        .limit(10)
     return {
         'project_id' : project_id,
         'project' : project, 
