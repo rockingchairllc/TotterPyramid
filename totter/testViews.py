@@ -185,6 +185,7 @@ def ideas(request):
     # per session feature, so that all project.idea entries have a user_rating field.
     for i in range(len(idea_ratings)):
         idea_rating = idea_ratings[i]
+        idea = idea_ratings[0]
         if idea_rating[1] is None:
             idea_rating[1] = UserRating() # This will be the field's default value.
         
@@ -216,13 +217,15 @@ def project(request):
     except NoResultFound:
         raise NotFound()
         
-    events = session.query(ProjectEvents)\
-        .filter(ProjectEvents.project_id==project_id)\
-        .filter(ProjectEvents.when >= datetime.today() - timedelta(days=10))\
-        .limit(10)
+    events = session.query(ProjectEvent)\
+        .filter(ProjectEvent.project_id==project_id)\
+        .filter(ProjectEvent.when >= datetime.today() - timedelta(days=10))\
+        .order_by(ProjectEvent.when.desc()).limit(10)
+    
     return {
         'project_id' : project_id,
         'project' : project, 
+        'events' : events,
         'ideas': project.ideas, 
         'user' : user, 
         'ideas_count': len(project.ideas), 
