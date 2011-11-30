@@ -22,7 +22,7 @@ def fbtest(request):
         name = profile['first_name'] + profile['last_name']
         message = 'Logged in as ' + name
     else:
-        name = '<not logged in>'
+        message = '<not logged in>'
     return {'message': message,
         'app_id' : request.registry.settings['facebook.app_id']}
     
