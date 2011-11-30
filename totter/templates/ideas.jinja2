@@ -109,7 +109,7 @@
 			});
 			
 			function onSuccess_addIdea(data){
-				var last_idx = data.ideas_count;
+				var last_idx = data.ideas_count - 1;
 				var new_id = data.idea_id;
 				var prepare_data = '<li><div class="idea_author"><a href="#"><img src={{user.profile_picture}}?type=square"/></a></div>' +
                     '<div class="idea_body"><div class="idea_meta"><div class="username"><a href="#">{{user.first_name}}</a></div>' +
@@ -168,7 +168,7 @@
                             September 18th at 9:30am
                         </div><!-- .comment_time -->
                          
-                        <ul class="project_idea_comments" id="comments{{ideas_index}}">
+                        <ul class="project_idea_comments" id="comments{{ideas_index+1}}">
                             <li class="new_comment first_update">
                             	<input class="comment_text" type="text" value="Start Typing" order = "{{idea_data[ideas_index].idea.id}}"/><br />
                                 <span class="enter_to_submit">Push Enter to Submit</span>
