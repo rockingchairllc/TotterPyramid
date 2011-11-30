@@ -74,9 +74,10 @@ def add_rating(request):
     # Get the old rating, or make a new one if user never rated this post:
     old_rating = session.query(UserRating)\
         .filter(UserRating.rater==cur_user)\
-        .filter(UserRating.idea_id==idea_id).first()
+        .filter(UserRating.idea_id==idea_id).first()\
+        or UserRating(rater=cur_user, idea_id=idea_id)
     new_rating = UserRating(user_id=cur_user.id, idea_id=idea_id)
-        
+    
     logging.warn('old rating loved: %d, liked: %d' % (old_rating.loved, old_rating.liked))
     
     # loves, likes track the change in the user's rating.
@@ -85,30 +86,30 @@ def add_rating(request):
     # Handle unlikes/unloves first:
     if 'like' in rating_data and not rating_data['like']:
         # Unliked the post.
-        if old_rating and old_rating.liked:
+        if old_rating.liked:
             new_rating.liked = False
             likes = -1
     if 'love' in rating_data and not rating_data['love']:
         # Unloved the post.
-        if old_rating and old_rating.loved:
+        if old_rating.loved:
             new_rating.loved = False
             loves = -1
             
     # Handle likes/loves:
     if 'like' in rating_data and rating_data['like']:
         # Liked the post.
-        if not old_rating or not old_rating.liked:
+        if not old_rating.liked:
             new_rating.liked = True
             likes = 1
-        if old_rating and old_rating.loved:
+        if old_rating.loved:
             new_rating.loved = False
             loves = -1
     if 'love' in rating_data and rating_data['love']:
         # Loved the post.
-        if not old_rating or not old_rating.loved:
+        if not old_rating.loved:
             new_rating.loved = True
             loves = 1
-        if old_rating and old_rating.liked:
+        if old_rating.liked:
             new_rating.liked = False
             likes = -1
     
