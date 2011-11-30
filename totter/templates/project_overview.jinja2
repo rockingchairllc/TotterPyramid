@@ -15,7 +15,7 @@
     <h2>Updates</h2>
     {% for event in events %}
     <li {% if loop.first %}class="first_update"{% endif %}{% if loop.last %}class="last_update"{% endif %}>
-        <span class="project_update_date">{event.when}</span><br />
+        <span class="project_update_date">{{event.when}}</span><br />
         {% if event.type=="add_comment" %}
         {{event.data['commenter_first']}} {{event.data['commenter_last']}} 
             commented on
