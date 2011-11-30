@@ -119,7 +119,7 @@
                     '<ul class="project_idea_comments" id="comments'+new_id+'"><li class="new_comment first_update"><input class="comment_text" type="text" value="Start Typing" order="'+new_id+'"/><br /><span class="enter_to_submit">Push Enter to Submit</span>' +
                     '</li><!-- .new_comment --><!-- Append all new comments to the ul.project_idea_comments --></ul><!-- .project_idea_comments --></div><!-- idea_body --></li>';
                 $('.project_ideas').prepend(prepare_data);
-                alert($('#comments'+new_id).children('.new_comment').children('.comment_text'));
+                $('#comments'+new_id).children('.new_comment').children('.comment_text').bind('keypress', submitkey_binding);
 			}
 			addIdea();
 		}
