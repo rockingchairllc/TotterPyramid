@@ -76,6 +76,8 @@ def add_rating(request):
         .filter(UserRating.rater==cur_user)\
         .filter(UserRating.idea_id==idea_id).first()\
         or UserRating(rater=cur_user, idea_id=idea_id)
+        
+    logging.warn('old rating loved: %d, liked: %d' % (old_rating.loved, old_rating.liked))
     
     # loves, likes track the change in the user's rating.
     loves = 0
