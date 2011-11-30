@@ -185,7 +185,7 @@ def ideas(request):
     # per session feature, so that all project.idea entries have a user_rating field.
     for i in range(len(idea_ratings)):
         idea_rating = idea_ratings[i]
-        idea = idea_ratings[0]
+        idea = idea_rating[0]
         if idea_rating[1] is None:
             idea_rating[1] = UserRating() # This will be the field's default value.
         
