@@ -40,8 +40,8 @@
 			var likeobj = "#likeidea" + idx;
 			var loveobj = "#loveidea" + idx;
 			if (type == 1) {
-				var switch = $(likeobj).attr("order");
-				if (switch == "1") //now it's displayed text is "Like it"
+				var sw_value = $(likeobj).attr("order");
+				if (sw_value == "1") //now it's displayed text is "Like it"
 				{ 
 					$(likeobj).attr("order", "2");
 					$(likeobj).text("Unlike it");
@@ -50,7 +50,7 @@
 					value = value + 1
 					ratingData = JSON.stringify({'like': "true", 'love': "false"});
 				}
-				else if (switch == "2" ) //now it's displayed text is "Unlike it"
+				else if (sw_value == "2" ) //now it's displayed text is "Unlike it"
 				{
 					$(likeobj).attr("order", "1");
 					$(likeobj).text("Like it");
@@ -61,8 +61,8 @@
 				}
 			}
 			else if (type == 2){
-				var switch = $(loveobj).attr("order");
-				if (switch == "1") //now it's displayed text is "Love it"
+				var sw_value = $(loveobj).attr("order");
+				if (sw_value == "1") //now it's displayed text is "Love it"
 				{ 
 					$(loveobj).attr("order", "2");
 					$(loveobj).text("Unlove it");
@@ -71,7 +71,7 @@
 					value = value + 2
 					ratingData = JSON.stringify({'like': "false", 'love': "true"});
 				}
-				else if (switch == "2" ) //now it's displayed text is "Unlove it"
+				else if (sw_value == "2" ) //now it's displayed text is "Unlove it"
 				{
 					$(loveobj).attr("order", "1");
 					$(loveobj).text("Love it");
