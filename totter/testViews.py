@@ -65,68 +65,67 @@ def add_rating(request):
     # 'love' : Boolean, True if user loved a post, False is she unloved it.
     
     session = DBSession()
-    cur_user = get_user(request)
-    idea_id = request.matchdict['idea_id']
-    rating_data = request.json_body
-    
-    # Get the old rating, or make a new one if user never rated this post:
-    old_rating = session.query(UserRating)\
-        .filter(UserRating.rater==cur_user)\
-        .filter(UserRating.idea_id==idea_id).first()\
-        or UserRating(rater=cur_user, idea_id=idea_id)
-    
-    # loves, likes track the change in the user's rating.
-    loves = 0
-    likes = 0
-    # Handle unlikes/unloves first:
-    if 'like' in rating_data and not rating_data['like']:
-        # Unliked the post.
-        if old_rating.liked:
-            old_rating.liked = False
-            likes = -1
-    if 'love' in rating_data and not rating_data['love']:
-        # Unloved the post.
-        if old_rating.loved:
-            old_rating.loved = False
-            loves = -1
-            
-    # Handle likes/loves:
-    if 'like' in rating_data and rating_data['like']:
-        # Liked the post.
-        if not old_rating.liked:
-            old_rating.liked = True
-            likes = 1
-        if old_rating.loved:
-            old_rating.loved = False
-            loves = -1
-    if 'love' in rating_data and rating_data['love']:
-        # Loved the post.
-        if not old_rating.loved:
-            old_rating.loved = True
-            loves = 1
-        if old_rating.liked:
-            old_rating.liked = False
-            likes = -1
-    if likes == 1 and loves == 1:
-        # Client error. User shouldn't be able to like and love at the same time. 
-        old_rating.liked = False
+    with session.begin():
+        cur_user = get_user(request)
+        idea_id = request.matchdict['idea_id']
+        rating_data = request.json_body
+        
+        # Get the old rating, or make a new one if user never rated this post:
+        old_rating = session.query(UserRating)\
+            .filter(UserRating.rater==cur_user)\
+            .filter(UserRating.idea_id==idea_id).first()\
+            or UserRating(rater=cur_user, idea_id=idea_id)
+        
+        # loves, likes track the change in the user's rating.
+        loves = 0
         likes = 0
-    session.merge(old_rating)
-    
-    # Update aggregate count:
-    if likes or loves: # User did something worth tracking.
-        agg_rating = session.query(AggregateRating)\
-            .filter(AggregateRating.idea_id==idea_id).first() or AggregateRating(idea_id=idea_id)
-            
-        agg_rating.liked += likes
-        agg_rating.loved += loves
-        agg_rating.count += likes + loves
-        # Case: User switches like for love: like=-1, love=1. count does nothing
-        # Case: User likes: like=1,love=0. Count increments.
-        # Case: User unlikes: like=-1,love=0. Count decrements.
-        session.merge(agg_rating)
-    
-    session.flush()
+        # Handle unlikes/unloves first:
+        if 'like' in rating_data and not rating_data['like']:
+            # Unliked the post.
+            if old_rating.liked:
+                old_rating.liked = False
+                likes = -1
+        if 'love' in rating_data and not rating_data['love']:
+            # Unloved the post.
+            if old_rating.loved:
+                old_rating.loved = False
+                loves = -1
+                
+        # Handle likes/loves:
+        if 'like' in rating_data and rating_data['like']:
+            # Liked the post.
+            if not old_rating.liked:
+                old_rating.liked = True
+                likes = 1
+            if old_rating.loved:
+                old_rating.loved = False
+                loves = -1
+        if 'love' in rating_data and rating_data['love']:
+            # Loved the post.
+            if not old_rating.loved:
+                old_rating.loved = True
+                loves = 1
+            if old_rating.liked:
+                old_rating.liked = False
+                likes = -1
+        if likes == 1 and loves == 1:
+            # Client error. User shouldn't be able to like and love at the same time. 
+            old_rating.liked = False
+            likes = 0
+        session.merge(old_rating)
+        
+        # Update aggregate count:
+        if likes or loves: # User did something worth tracking.
+            agg_rating = session.query(AggregateRating)\
+                .filter(AggregateRating.idea_id==idea_id).first() or AggregateRating(idea_id=idea_id)
+                
+            agg_rating.liked += likes
+            agg_rating.loved += loves
+            agg_rating.count += likes + loves
+            # Case: User switches like for love: like=-1, love=1. count does nothing
+            # Case: User likes: like=1,love=0. Count increments.
+            # Case: User unlikes: like=-1,love=0. Count decrements.
+            session.merge(agg_rating)
     return {}
     
 @view_config(route_name='idea_collection', request_method='POST', renderer='json')
