@@ -146,28 +146,28 @@
             	<li>
                 	<div class="idea_author">
                     	<a href="#">
-                            <img src={{idea_data[ideas_index].author.profile_picture}}?type=square" />
+                            <img src={{idea_data[ideas_index].idea.author.profile_picture}}?type=square" />
                         </a>
                     </div><!-- .idea_author -->
                     <div class="idea_body">
                         <div class="idea_meta">
-                        <div class="username"><a href="#">{{idea_data[ideas_index].author.first_name}}</a></div>
+                        <div class="username"><a href="#">{{idea_data[ideas_index].idea.author.first_name}}</a></div>
 	                    	<strong id="rate_value{{ideas_index}}" >Total Rating: {{idea_data[ideas_index].total_rating}}</strong>
 	                        <div class="like_love">
 	                        {% if idea_data[ideas_index].user_rating.liked == 1 %}
-	                        	<a href="#" id="likeidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].id}}, {{idea_data[ideas_index].total_rating}}, 1)">Unlike It</a>
+	                        	<a href="#" id="likeidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Unlike It</a>
 	                        {% else %}
-	                        	 <a href="#" id="likeidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].id}}, {{idea_data[ideas_index].total_rating}}, 1)">Like It</a>
+	                        	 <a href="#" id="likeidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Like It</a>
 	               			{% endif %}         	 
 	                            &bull; 
 	                        {% if idea_data[ideas_index].user_rating.loved == 1 %}
-	                            <a href="#" id="loveidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].id}}, {{idea_data[ideas_index].total_rating}}, 2)">Unlove It</a>
+	                            <a href="#" id="loveidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Unlove It</a>
 	                        {% else %}
-	                        	<a href="#" id="loveidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].id}}, {{idea_data[ideas_index].total_rating}}, 2)">Love It</a>
+	                        	<a href="#" id="loveidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Love It</a>
 	                       	{% endif %} 
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
-                    	<div class="idea_description">{{idea_data[ideas_index].data}}</div>
+                    	<div class="idea_description">{{idea_data[ideas_index].idea.data}}</div>
                         <div class="comment_time">
                             <a href="javascript:void(0)" class="comment_on_idea" onClick="showComment({{ideas_index}})">Comment</a> 
                             &#124; 
@@ -176,13 +176,13 @@
                          
                         <ul class="project_idea_comments" id="comments{{ideas_index}}">
                             <li class="new_comment first_update">
-                            	<input name="comment_text" type="text" value="Start Typing" order = "{{idea_data[ideas_index].id}}"/><br />
+                            	<input name="comment_text" type="text" value="Start Typing" order = "{{idea_data[ideas_index].idea.id}}"/><br />
                                 <span class="enter_to_submit">Push Enter to Submit</span>
                             </li><!-- .new_comment -->
                              
                             <!-- Append all new comments to the ul.project_idea_comments -->
                             
-                            {% for comment in idea_data[ideas_index].comments %}
+                            {% for comment in idea_data[ideas_index].idea.comments %}
 	                            {% if loop.first %} 
 	                            	<li class="first_update">
 	                            {% elif loop.last %}
