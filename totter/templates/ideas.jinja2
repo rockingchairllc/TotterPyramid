@@ -154,6 +154,7 @@
                         <div class="username"><a href="#">{{project.ideas[ideas_index].author.first_name}}</a></div>
 	                    	<strong id="rate_value{{ideas_index}}" >Total Rating: {{project.ideas[ideas_index].total_rating}}</strong>
 	                        <div class="like_love">
+	                        {{ideas[ideas_index].user_rating|pprint}}
 	                        {% if ideas[ideas_index].user_rating.liked == 1 %}
 	                        	<a href="#" id="likeidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 1)">Unlike It</a>
 	                        {% else %}
