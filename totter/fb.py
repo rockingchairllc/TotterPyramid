@@ -8,8 +8,8 @@ def facebook2(request):
                         request.registry.settings['facebook.app_id'],
                         request.registry.settings['facebook.secret']
     )
-    return {'app_id' : request.registry.settings['facebook.app_id']}
+    return {}
     
 def fbtest(request):
-    return {}
+    return {'app_id' : request.registry.settings['facebook.app_id']}
     
