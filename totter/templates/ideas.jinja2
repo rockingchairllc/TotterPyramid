@@ -177,7 +177,7 @@
                         <div class="idea_meta">
                         <div class="username"><a href="#">{{project.ideas[ideas_index].author.first_name}}</a></div>
 	                    	<strong id="rate_value{{ideas_index}}" >Total Rating: {{project.ideas[ideas_index].total_rating}}</strong>
-	                        <div class="like_love">
+	                        <div class="like_love" name="parent">
 	                        	<a href="#" name="likeidea" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 1)">Like It</a> 
 	                            &bull; 
 	                            <a href="#" name="loveidea" onClick="addRating({{ideas_index}}, {{project.ideas[ideas_index].id}}, {{project.ideas[ideas_index].total_rating}}, 2)">Love It</a> 
