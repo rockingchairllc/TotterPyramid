@@ -48,7 +48,7 @@
 					$(loveobj).attr("order", "1");
 					$(loveobj).text("Love it");
 					value = value + 1
-					ratingData = JSON.stringify({'like': "true", 'love': "false"});
+					ratingData = JSON.stringify({'like': "True", 'love': "False"});
 				}
 				else if (sw_value == "2" ) //now it's displayed text is "Unlike it"
 				{
@@ -57,7 +57,7 @@
 					$(loveobj).attr("order", "1");
 					$(loveobj).text("Love it");
 					value = value - 1
-					ratingData = JSON.stringify({'like': "false", 'love': "false"});
+					ratingData = JSON.stringify({'like': "False", 'love': "False"});
 				}
 			}
 			else if (type == 2){
@@ -69,7 +69,7 @@
 					$(likeobj).attr("order", "1");
 					$(likeobj).text("Like it");
 					value = value + 2
-					ratingData = JSON.stringify({'like': "false", 'love': "true"});
+					ratingData = JSON.stringify({'like': "False", 'love': "True"});
 				}
 				else if (sw_value == "2" ) //now it's displayed text is "Unlove it"
 				{
@@ -78,7 +78,7 @@
 					$(likeobj).attr("order", "1");
 					$(likeobj).text("Like it");
 					value = value - 2
-					ratingData = JSON.stringify({'like': "false", 'love': "false"});
+					ratingData = JSON.stringify({'like': "False", 'love': "False"});
 				}
 			}
 			
