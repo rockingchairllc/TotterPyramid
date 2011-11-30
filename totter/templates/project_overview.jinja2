@@ -24,7 +24,7 @@
         {{event.data['idea_first']}} {{event.data['idea_last']}} posted a 
             <a href="{{event.data['idea_uri']}}">new idea.</a>
         {% else %}
-        {{event.data|pprint}}
+            {{event.data|pprint}}
         {% endif %}
     </li>
     {% endfor %}
