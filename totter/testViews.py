@@ -69,6 +69,8 @@ def add_rating(request):
     idea_id = request.matchdict['idea_id']
     rating_data = request.json_body
     
+    logger.warn('Rating received ' + str(rating_data))
+    
     # Get the old rating, or make a new one if user never rated this post:
     old_rating = session.query(UserRating)\
         .filter(UserRating.rater==cur_user)\
