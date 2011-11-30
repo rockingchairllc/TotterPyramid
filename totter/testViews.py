@@ -176,31 +176,30 @@ def ideas(request):
         
     # Create list of ideas with User's rating added:
     ideas = project.ideas
-    idea_ratings = session.query(Idea, UserRating)\
+    idea_data = session.query(Idea, UserRating)\
         .outerjoin(UserRating, (Idea.id==UserRating.idea_id) & (UserRating.user_id==user.id))\
         .filter(Idea.project_id == project.id).all()
     
     # Create a new field Idea.user_rating, that stores the IdeaRating for
     # the current user. We're taking advantage of SQLAlchemy's one-instance
     # per session feature, so that all project.idea entries have a user_rating field.
-    for i in range(len(idea_ratings)):
-        idea_rating = idea_ratings[i]
-        idea = idea_rating[0]
+    for i in range(len(idea_data)):
+        idea, rating = idea_data[i]
         
         # Also create a field for numeric rating:
         total_rating = 0
         if idea.aggregate_rating is not None:
             total_rating = idea.aggregate_rating.liked + idea.aggregate_rating.loved * 2
         
-        idea_ratings[i] = {}
-        idea_ratings[i]['idea'] = idea_rating[0]
-        idea_ratings[i]['user_rating'] = idea_rating[1] or UserRating()
-        idea_ratings[i]['total_rating'] = total_rating
+        idea_data[i] = {}
+        idea_data[i]['idea'] = idea
+        idea_data[i]['user_rating'] = rating or UserRating()
+        idea_data[i]['total_rating'] = total_rating
     
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return {
         'project' : project, 
-        'idea_data': idea_ratings, 
+        'idea_data': idea_data, 
         'user' : user, 
         'ideas_count': len(project.ideas), 
         'people_count': 1
