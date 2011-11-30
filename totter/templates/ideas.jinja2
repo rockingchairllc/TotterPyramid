@@ -11,6 +11,7 @@
 		function submitkey_binding(e) {
 			if( e.keyCode==13 ){
                 idx = $(this).attr("order");
+                alert(idx);
                 var prjId = "{{project.id}}";
                 var cmtdata = $(this).val();
 				var CommentData = JSON.stringify({'data': cmtdata, 'project_id': prjId, 'Idea_id': idx });
