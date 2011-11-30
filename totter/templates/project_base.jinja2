@@ -18,7 +18,7 @@
             <div class="header">
             
                 <div class="user_info">
-                    <h4 class="username_first_name">Username</h4>
+                    <h4 class="username_first_name">{{user.first_name}}</h4>
                     <ul class="tool_tip drop-shadow">
                         <li><a href="#">Edit Profile</a></li>
                         <li><a href="#">User Link</a></li>
@@ -26,7 +26,7 @@
                         <li><a href="#">User Link</a></li>
                         <li><a href="#">User Link</a></li>
                     </ul>
-                    <img src="http://graph.facebook.com/12402757/picture?type=square" class="user_photo" />
+                    <img src="{{user.profile_picture}}" class="user_photo" />
                 </div><!-- .user_info -->
                            
                 <h1 class="logo">Totter</h1>
