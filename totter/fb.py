@@ -11,19 +11,20 @@ def facebook2(request):
     return {}
     
 def fbtest(request):
-    try:
-        fbuser = fb.get_user_from_cookie(request.cookies, 
-                            request.registry.settings['facebook.app_id'],
-                            request.registry.settings['facebook.secret']
-        )
-    except fb.GraphAPIError:
-        fbuser = None
+    fbuser = fb.get_user_from_cookie(request.cookies, 
+                        request.registry.settings['facebook.app_id'],
+                        request.registry.settings['facebook.secret']
+    )
+    
     message = ''
     if fbuser:
-        graph = fb.GraphAPI(fbuser["access_token"])
-        profile = graph.get_object("me")
-        name = profile['first_name'] + profile['last_name']
-        message = 'Logged in as ' + name
+        try:
+            graph = fb.GraphAPI(fbuser["access_token"])
+            profile = graph.get_object("me")
+            name = profile['first_name'] + profile['last_name']
+            message = 'Logged in as ' + name
+        except fb.GraphAPIError:
+            message = 'Logged out!'
     else:
         message = '<not logged in>'
     return {'message': message,
