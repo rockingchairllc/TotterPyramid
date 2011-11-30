@@ -3,9 +3,9 @@
 {# navigation_bar elements: (url, id, caption) #}
 {% set navigation_bar = [
     
-    ('/project/{{project_id}}/overview', 'overview', 'Overview'),
-    ('/project/{{project_id}}/ideas', 'ideas', 'Ideas'),
-    ('/project/{{project_id}}/people', 'people', 'People')
+    ('/project/project_id/overview', 'overview', 'Overview'),
+    ('/project/project_id/ideas', 'ideas', 'Ideas'),
+    ('/project/project_id/people', 'people', 'People')
 ] -%}
 
 {% set active_page = active_page|default('overview') -%}
@@ -18,6 +18,7 @@
                 
                 <div class="the_content">
                     <ul class="tabs">
+                        {# Build tabs from navigation_bar data. #}
                         {% for href, id, caption in navigation_bar %}
                         <li>
                             <a href="{{ href|e }}" {%if id == active_page %}class="active_tab"{% endif %%}>
