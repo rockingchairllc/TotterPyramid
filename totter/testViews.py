@@ -176,13 +176,13 @@ def ideas(request):
         
     # Create list of ideas with User's rating added:
     ideas = project.ideas
-    idea_data = session.query(Idea, UserRating)\
+    idea_data = session.query(Idea, UserRating, User)\
         .outerjoin(UserRating, (Idea.id==UserRating.idea_id) & (UserRating.user_id==user.id))\
         .filter(Idea.project_id == project.id)
     
     sort = request.params.get('sort')
     if sort == 'user':
-        idea_data = idea_data.order_by(Idea.author_id)
+        idea_data = idea_data.order_by(User.first_name)
     elif sort == 'rating':
         # Use Python to sort it. 
         pass
@@ -197,7 +197,7 @@ def ideas(request):
     # the current user. We're taking advantage of SQLAlchemy's one-instance
     # per session feature, so that all project.idea entries have a user_rating field.
     for i in range(len(idea_data)):
-        idea, rating = idea_data[i]
+        idea, rating, _ = idea_data[i]
         
         # Compute total numeric rating:
         total_rating = 0
