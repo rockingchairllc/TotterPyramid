@@ -96,11 +96,17 @@ def add_rating(request):
         if not old_rating.liked:
             old_rating.liked = True
             likes = 1
+        if old_rating.loved:
+            old_rating.loved = False
+            loves = -1
     if 'love' in rating_data and rating_data['love']:
         # Loved the post.
         if not old_rating.loved:
             old_rating.loved = True
             loves = 1
+        if old_rating.liked:
+            old_rating.liked = False
+            likes = -1
     if likes == 1 and loves == 1:
         # Client error. User shouldn't be able to like and love at the same time. 
         old_rating.liked = False
