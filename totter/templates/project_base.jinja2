@@ -21,7 +21,7 @@
                         {# Build tabs from navigation_bar data. #}
                         {% for href, id, caption in navigation_bar %}
                         <li>
-                            <a href="{{ href|e }}" {%if id == active_page %}class="active_tab"{% endif %%}>
+                            <a href="{{ href|e }}" {%if id == active_page %}class="active_tab"{% endif %}>
                             { caption|e }}
                             </a>
                         </li>
