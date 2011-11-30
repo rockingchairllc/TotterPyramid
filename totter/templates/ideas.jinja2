@@ -21,7 +21,6 @@
 					dataType: "json",
 					data: CommentData,
 					success: function(){
-						idx = idx - 1
 						var m_data = '<li class="first_update"> <a href="#"> <img src="{{user.profile_picture}}?type=square" width="32" height="32" /> </a>' +
 										'<div class="comment_body"> <a href="#">{{user.first_name}} </a>' + cmtdata + '</div></li>';
 						$('#comments'+idx).children('.new_comment').after(m_data);
@@ -168,7 +167,7 @@
                             September 18th at 9:30am
                         </div><!-- .comment_time -->
                          
-                        <ul class="project_idea_comments" id="comments{{ideas_index+1}}">
+                        <ul class="project_idea_comments" id="comments{{idea_data[ideas_index].idea.id}}">
                             <li class="new_comment first_update">
                             	<input class="comment_text" type="text" value="Start Typing" order = "{{idea_data[ideas_index].idea.id}}"/><br />
                                 <span class="enter_to_submit">Push Enter to Submit</span>
