@@ -69,7 +69,6 @@
                     </li>
                     {% endfor %}
                 </ul><!-- .tabs -->
-                
                 <ul class="project_stats">
                     <li>
                         People<br />
@@ -85,11 +84,16 @@
                     </li>
                     <button type="button" onClick="addIdea()" class="add_idea_button">Add Idea</button>
                 </ul><!-- .project_stats -->
-    {% endblock %}
-    {% block project_body %}
-    
-    {% endblock %}
+            {% endblock %}
+            {% block project_body %}
+            {% endblock %}
+            </div><!-- .the_content -->
+{% endblock %}
+
+{% block footer %}
+    {{ super() }}
     {% block project_footer %}
-                </div><!-- .the_content -->
+                
+                </div> <!-- .wrapper -->
     {% endblock %}
 {% endblock %}
