@@ -1,4 +1,4 @@
-{% extends "base.jinja2" %}
+{% extends "project_base.jinja2" %}
 
 {% block scripts %}
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
@@ -132,68 +132,7 @@
 	</script>
 {% endblock %}
 
-{% block body %}
-	<div class="wrapper drop-shadow curved curved-vt-2">
-    	<!-- Begin the Header -->
-        <div class="header">
-			<div class="user_info">
-                <h4 class="username_first_name">{{ user.first_name }}</h4>
-                <ul class="tool_tip drop-shadow">
-                    <li><a href="#">Edit Profile</a></li>
-                    <li><a href="#">User Link</a></li>
-                    <li><a href="#">User Link</a></li>
-                    <li><a href="#">User Link</a></li>
-                    <li><a href="#">User Link</a></li>
-                </ul>
-                <img src="http://graph.facebook.com/12402757/picture?type=square" class="user_photo" />
-            </div><!-- .user_info -->
-                       
-            <h1 class="logo">Totter</h1>
-                
-            <!-- Clear the float to prevent the header from collapsing -->
-            <div class="clearfloat"></div>
-                    
-		</div><!-- .header -->
-            
-        <!-- Add Idea and Modal Overlay -->
-        <div class="add_idea">
-            <div class="add_idea_overlay" onClick="addIdea()"></div>
-            <div class="add_idea_modal drop-shadow">
-                <h1>Add Idea</h1>
-                <textarea>Start typing your idea...</textarea>
-                <a href="javascript:void(0)" onClick="addIdea()">Cancel</a>
-                <button type="button" onClick="addIdea_to_project()">Add Idea</button>
-            </div><!-- idea_idea_modal -->
-        </div><!-- .add_idea -->
-        <!-- END Add Idea and Modal Overlay -->
-        
-        <!-- Begin the main content. -->
-        <h1 class="title">{{project.title}}</h1>
-        <h3>by <a href="#">{{user.first_name}}</a></h3>
-        
-        <div class="the_content">
-            <ul class="tabs">
-            	<li><a href="{{request.route_url('home')}}">Overview</a></li>
-                <li><a href="{{request.route_url('home')}}" class="active_tab">Ideas</a></li>
-                <li><a href="#">People</a></li>
-            </ul><!-- .tabs -->
-            
-            <ul class="project_stats">
-            	<li>
-                	People<br />
-                    <span class="project_stat">{{people_count}}</span>
-                </li>
-                <li>
-                	Ideas<br />
-                    <span class="project_stat">{{ideas_count}}</span>
-                </li>
-                <li>
-                	Deadline<br />
-                    <span class="project_stat">None</span>
-                </li>
-                <button type="button" onClick="addIdea()" class="add_idea_button">Add Idea</button>
-            </ul><!-- .project_stats -->
-            
+{% block project_body %}
             <div class="sort_by">
                 Sort by:<br />
                 <button type="button">Date</button>
