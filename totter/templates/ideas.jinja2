@@ -11,7 +11,6 @@
 		function submitkey_binding(e) {
 			if( e.keyCode==13 ){
                 idx = $(this).attr("order");
-                alert(idx);
                 var prjId = "{{project.id}}";
                 var cmtdata = $(this).val();
 				var CommentData = JSON.stringify({'data': cmtdata, 'project_id': prjId, 'Idea_id': idx });
@@ -36,9 +35,9 @@
 		function addIdea() {
 			$('.add_idea').toggle();
 		}
-		function addRating(idx, idea_id, value, type) {
-			var likeobj = "#likeidea" + idx;
-			var loveobj = "#loveidea" + idx;
+		function addRating(idea_id, value, type) {
+			var likeobj = "#likeidea" + idea_id;
+			var loveobj = "#loveidea" + idea_id;
 			if (type == 1) {
 				var sw_value = $(likeobj).attr("order");
 				if (sw_value == "1") //now it's displayed text is "Like it"
@@ -83,7 +82,7 @@
 			}
 			
 			outText = 'Total Rating: ' + value;
-			idText = "rate_value" + idx;
+			idText = "rate_value" + idea_id;
 			$('#'+idText).html(outText);
 			$.ajax({
 				url:"{{request.application_url}}/project/{{project.id}}/idea/" + idea_id + "/rating",
@@ -108,12 +107,11 @@
 			});
 			
 			function onSuccess_addIdea(data){
-				var last_idx = data.ideas_count - 1;
 				var new_id = data.idea_id;
 				var prepare_data = '<li><div class="idea_author"><a href="#"><img src={{user.profile_picture}}?type=square"/></a></div>' +
                     '<div class="idea_body"><div class="idea_meta"><div class="username"><a href="#">{{user.first_name}}</a></div>' +
-	                '<strong id="rate_value'+last_idx+'">Total Rating: 0</strong><div class="like_love">' +
-	                '<a href="#" name="likeidea" class="like_love" onClick="addRating(' + last_idx + ',' + new_id + ', 0, 1)">Like It</a> &bull; <a href="#" name="loveidea" class="like_love" onClick="addRating(' + last_idx + ',' + new_id + ', 0, 2)">Love It</a>' + 
+	                '<strong id="rate_value'+new_id+'">Total Rating: 0</strong><div class="like_love">' +
+	                '<a href="#" name="likeidea{{new_id}}" order="1" onClick="addRating(' + new_id + ', 0, 1)">Like It</a> &bull; <a href="#" name="loveidea{{new_id}}" order="1" onClick="addRating(' + new_id + ', 0, 2)">Love It</a>' + 
 	                '</div><!-- like_love --></div><!-- .idea_meta --><div class="idea_description">'+ $(".add_idea_modal textarea").val() +'</div><div class="comment_time">' +
                     '<a href="javascript:void(0)" class="comment_on_idea" onClick="showComment('+new_id+')">Comment</a>&#124;September 18th at 9:30am</div><!-- .comment_time -->' +
                     '<ul class="project_idea_comments" id="comments'+new_id+'"><li class="new_comment first_update"><input class="comment_text" type="text" value="Start Typing" order="'+new_id+'"/><br /><span class="enter_to_submit">Push Enter to Submit</span>' +
@@ -145,18 +143,18 @@
                     <div class="idea_body">
                         <div class="idea_meta">
                         <div class="username"><a href="#">{{idea_data[ideas_index].idea.author.first_name}}</a></div>
-	                    	<strong id="rate_value{{ideas_index}}" >Total Rating: {{idea_data[ideas_index].total_rating}}</strong>
+	                    	<strong id="rate_value{{idea_data[ideas_index].idea.id}}" >Total Rating: {{idea_data[ideas_index].total_rating}}</strong>
 	                        <div class="like_love">
 	                        {% if idea_data[ideas_index].user_rating.liked == 1 %}
-	                        	<a href="#" id="likeidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Unlike It</a>
+	                        	<a href="#" id="likeidea{{idea_data[ideas_index].idea.id}}" order="2" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Unlike It</a>
 	                        {% else %}
-	                        	 <a href="#" id="likeidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Like It</a>
+	                        	 <a href="#" id="likeidea{{idea_data[ideas_index].idea.id}}" order="1" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Like It</a>
 	               			{% endif %}         	 
 	                            &bull; 
 	                        {% if idea_data[ideas_index].user_rating.loved == 1 %}
-	                            <a href="#" id="loveidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Unlove It</a>
+	                            <a href="#" id="loveidea{{idea_data[ideas_index].idea.id}}" order="2" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Unlove It</a>
 	                        {% else %}
-	                        	<a href="#" id="loveidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Love It</a>
+	                        	<a href="#" id="loveidea{{idea_data[ideas_index].idea.id}" order="1" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Love It</a>
 	                       	{% endif %} 
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
