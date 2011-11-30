@@ -22,7 +22,7 @@
                         {% for href, id, caption in navigation_bar %}
                         <li>
                             <a href="{{ href|e }}" {%if id == active_page %}class="active_tab"{% endif %}>
-                            { caption|e }}
+                            {{ caption|e }}
                             </a>
                         </li>
                         {% endfor %}
