@@ -11,10 +11,13 @@ def facebook2(request):
     return {}
     
 def fbtest(request):
-    fbuser = fb.get_user_from_cookie(request.cookies, 
-                        request.registry.settings['facebook.app_id'],
-                        request.registry.settings['facebook.secret']
-    )
+    try:
+        fbuser = fb.get_user_from_cookie(request.cookies, 
+                            request.registry.settings['facebook.app_id'],
+                            request.registry.settings['facebook.secret']
+        )
+    except fb.GraphAPIError:
+        fbuser = None
     message = ''
     if fbuser:
         graph = fb.GraphAPI(fbuser["access_token"])
