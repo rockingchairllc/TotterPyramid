@@ -37,24 +37,49 @@
 			$('.add_idea').toggle();
 		}
 		function addRating(idx, idea_id, value, type) {
-			var tempdata;
+			var likeobj = '#likeidea" + idx;
+			var loveobj = "#loveidea" + idx;
 			if (type == 1) {
-				value = value + 1
-				ratingData = JSON.stringify({'like': "true"});
-				var objFind = "rate_value" + idx;
-				//alert($("#"+objFind).parent().children(".like_love").children(a[name=likeidea]).val());
-				objFind = "likeidea" + idx;
-				
-				tempdata = $('#' + objFind).attr("order");
-				alert(tempdata);
-				if (tempdata == "1")
-					$('#' + objFind).attr("order", "2");
-				else if (tempdata == "2" )
-					$('#' + objFind).attr("order", "1");
+				var switch = $(likeobj).attr("order");
+				if (var == "1") //now it's displayed text is "Like it"
+				{ 
+					$(likeobj).attr("order", "2");
+					$(likeobj).text("Unlike it");
+					$(loveobj).attr("order", "1");
+					$(loveobj).text("Love it");
+					value = value + 1
+					ratingData = JSON.stringify({'like': "true", 'love': "false"});
+				}
+				else if (var == "2" ) //now it's displayed text is "Unlike it"
+				{
+					$(likeobj).attr("order", "1");
+					$(likeobj).text("Like it");
+					$(loveobj).attr("order", "1");
+					$(loveobj).text("Love it");
+					value = value - 1
+					ratingData = JSON.stringify({'like': "false", 'love': "false"});
+				}
 			}
 			else if (type == 2){
-				value = value + 2
-				ratingData = JSON.stringify({'love': "true"});
+				var switch = $(loveobj).attr("order");
+				if (var == "1") //now it's displayed text is "Love it"
+				{ 
+					$(loveobj).attr("order", "2");
+					$(loveobj).text("Unlove it");
+					$(likeobj).attr("order", "1");
+					$(likeobj).text("Like it");
+					value = value + 2
+					ratingData = JSON.stringify({'like': "false", 'love': "true"});
+				}
+				else if (var == "2" ) //now it's displayed text is "Unlove it"
+				{
+					$(loveobj).attr("order", "1");
+					$(loveobj).text("Love it");
+					$(likeobj).attr("order", "1");
+					$(likeobj).text("Like it");
+					value = value - 2
+					ratingData = JSON.stringify({'like': "false", 'love': "false"});
+				}
 			}
 			
 			outText = 'Total Rating: ' + value;
