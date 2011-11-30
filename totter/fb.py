@@ -11,5 +11,18 @@ def facebook2(request):
     return {}
     
 def fbtest(request):
-    return {'app_id' : request.registry.settings['facebook.app_id']}
+    fbuser = fb.get_user_from_cookie(request.cookies, 
+                        request.registry.settings['facebook.app_id'],
+                        request.registry.settings['facebook.secret']
+    )
+    message = ''
+    if fbuser:
+        graph = fb.GraphAPI(fbuser["access_token"])
+        profile = graph.get_object("me")
+        name = profile['first_name'] + profile['last_name']
+        message = 'Logged in as ' + name
+    else:
+        name = '<not logged in>'
+    return {'message': message,
+        'app_id' : request.registry.settings['facebook.app_id']}
     
