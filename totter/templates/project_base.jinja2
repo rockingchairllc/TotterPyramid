@@ -5,7 +5,7 @@
     
     (request.route_url('project_entity', project_id=project_id), 'overview', 'Overview'),
     (request.route_url('project_ideas', project_id=project_id), 'ideas', 'Ideas'),
-    ('/project/project_id/people', 'people', 'People')
+    (request.route_url('project_people', project_id=project_id), 'people', 'People')
 ] -%}
 
 {% set active_page = active_page|default('overview') -%}
