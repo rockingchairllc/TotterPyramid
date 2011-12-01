@@ -198,7 +198,7 @@ def ideas(request):
     # the current user. We're taking advantage of SQLAlchemy's one-instance
     # per session feature, so that all project.idea entries have a user_rating field.
     for i in range(len(idea_data)):
-        idea, rating, _ = idea_data[i]
+        idea, rating = idea_data[i]
         
         # Compute total numeric rating:
         total_rating = 0
