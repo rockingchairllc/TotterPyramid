@@ -126,13 +126,13 @@
 		function SortBy(sort_type){
 			if (sort_type == 1) { //sort by date
 				//alert("{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="date"');
-				window.location = "{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="date"';
+				window.location = "{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort=date';
 			}
 			else if (sort_type == 2) { //sort by Rating
-				window.location = "{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="rating"';
+				window.location = "{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort=rating';
 			}
 			else if (sort_type == 3) { //sort by User
-				window.location = "{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="user"';
+				window.location = "{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort=user';
 			}
 		} 
 	</script>
