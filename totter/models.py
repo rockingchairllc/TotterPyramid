@@ -113,9 +113,9 @@ class UserRating(Base):
     idea_id = Column('IdeaID', Integer, ForeignKey('Ideas.IdeaID'), primary_key=True)
     user_id = Column('UserUUID', UUID(), ForeignKey('Users.UserUUID'), primary_key=True)
     type = Column('Type', Enum('like/love', 'star'))
-    liked = Column('Liked', Boolean, nullable=False)
-    loved = Column('Loved', Boolean, nullable=False)
-    stars = Column('Stars', Integer, nullable=False)
+    liked = Column('Liked', Boolean, nullable=False, default='0')
+    loved = Column('Loved', Boolean, nullable=False, default='0')
+    stars = Column('Stars', Integer, nullable=False, default='0')
     modified = Column('LastModified', DateTime, default=datetime.now)
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     
