@@ -176,8 +176,9 @@ def ideas(request):
         
     # Create list of ideas with User's rating added:
     ideas = project.ideas
-    idea_data = session.query(Idea, UserRating, User)\
+    idea_data = session.query(Idea, UserRating)\
         .outerjoin(UserRating, (Idea.id==UserRating.idea_id) & (UserRating.user_id==user.id))\
+        .join(User, (Idea.author_id==User.id))\
         .filter(Idea.project_id == project.id)
     
     sort = request.params.get('sort')
