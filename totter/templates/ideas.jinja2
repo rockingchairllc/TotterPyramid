@@ -122,15 +122,26 @@
 			}
 			addIdea();
 		}
+		
+		function SortBy(prjId, sort_type){
+			if (sort_type == 1) { //sort by date
+				alert("{{request.application_url}}/project/{{project.id}}/ideas/?" + 'sort="date"');
+				//window.location = "{{request.application_url}}/project/{{project.id}}/ideas/?" + 'sort="date"';
+			}
+			else if (sort_type == 2) { //sort by Rating
+			}
+			else if (sort_type == 3) { //sort by User
+			}
+		} 
 	</script>
 {% endblock %}
 
 {% block project_body %}
             <div class="sort_by">
                 Sort by:<br />
-                <button type="button">Date</button>
-                <button type="button">Rating</button>
-                <button type="button">User</button>
+                <button type="button" onclick="SortBy(1)">Date</button>
+                <button type="button" onclick="SortBy(2)">Rating</button>
+                <button type="button" onclick="SortBy(3)">User</button>
             </div><!-- .sort_by -->
             
             <ul class="project_ideas">
