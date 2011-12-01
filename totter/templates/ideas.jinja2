@@ -123,7 +123,7 @@
 			addIdea();
 		}
 		
-		function SortBy(prjId, sort_type){
+		function SortBy(sort_type){
 			if (sort_type == 1) { //sort by date
 				alert("{{request.application_url}}/project/{{project.id}}/ideas/?" + 'sort="date"');
 				//window.location = "{{request.application_url}}/project/{{project.id}}/ideas/?" + 'sort="date"';
