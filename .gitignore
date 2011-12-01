@@ -1,2 +1,7 @@
 *.pyc
 development.ini
+# Mac OS X Hidden Files
+.DS_Store
+
+# Windows Hidden Files
+Thumbs.db
