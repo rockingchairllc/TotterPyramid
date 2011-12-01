@@ -20,7 +20,6 @@
 					dataType: "json",
 					data: CommentData,
 					success: function(){
-						idx = idx - 1
 						var m_data = '<li class="first_update"> <a href="#"> <img src="{{user.profile_picture}}?type=square" width="32" height="32" /> </a>' +
 										'<div class="comment_body"> <a href="#">{{user.first_name}} </a>' + cmtdata + '</div></li>';
 						$('#comments'+idx).children('.new_comment').after(m_data);
@@ -36,9 +35,10 @@
 		function addIdea() {
 			$('.add_idea').toggle();
 		}
-		function addRating(idx, idea_id, value, type) {
-			var likeobj = "#likeidea" + idx;
-			var loveobj = "#loveidea" + idx;
+		function addRating(idea_id, value, type) {
+			var ratingData;
+			var likeobj = "#likeidea" + idea_id;
+			var loveobj = "#loveidea" + idea_id;
 			if (type == 1) {
 				var sw_value = $(likeobj).attr("order");
 				if (sw_value == "1") //now it's displayed text is "Like it"
@@ -83,7 +83,7 @@
 			}
 			
 			outText = 'Total Rating: ' + value;
-			idText = "rate_value" + idx;
+			idText = "rate_value" + idea_id;
 			$('#'+idText).html(outText);
 			$.ajax({
 				url:"{{request.application_url}}/project/{{project.id}}/idea/" + idea_id + "/rating",
@@ -108,29 +108,42 @@
 			});
 			
 			function onSuccess_addIdea(data){
-				var last_idx = data.ideas_count;
 				var new_id = data.idea_id;
 				var prepare_data = '<li><div class="idea_author"><a href="#"><img src={{user.profile_picture}}?type=square"/></a></div>' +
                     '<div class="idea_body"><div class="idea_meta"><div class="username"><a href="#">{{user.first_name}}</a></div>' +
-	                '<strong id="rate_value'+last_idx+'">Total Rating: 0</strong><div class="like_love">' +
-	                '<a href="#" name="likeidea" class="like_love" onClick="addRating(' + last_idx + ',' + new_id + ', 0, 1)">Like It</a> &bull; <a href="#" name="loveidea" class="like_love" onClick="addRating(' + last_idx + ',' + new_id + ', 0, 2)">Love It</a>' + 
+	                '<strong id="rate_value'+new_id+'">Total Rating: 0</strong><div class="like_love">' +
+	                '<a href="#" id="likeidea'+new_id+'" order="1" onClick="addRating(' + new_id + ', 0, 1)">Like It</a> &bull; <a href="#" id="loveidea'+new_id+'" order="1" onClick="addRating(' + new_id + ', 0, 2)">Love It</a>' + 
 	                '</div><!-- like_love --></div><!-- .idea_meta --><div class="idea_description">'+ $(".add_idea_modal textarea").val() +'</div><div class="comment_time">' +
                     '<a href="javascript:void(0)" class="comment_on_idea" onClick="showComment('+new_id+')">Comment</a>&#124;September 18th at 9:30am</div><!-- .comment_time -->' +
                     '<ul class="project_idea_comments" id="comments'+new_id+'"><li class="new_comment first_update"><input class="comment_text" type="text" value="Start Typing" order="'+new_id+'"/><br /><span class="enter_to_submit">Push Enter to Submit</span>' +
                     '</li><!-- .new_comment --><!-- Append all new comments to the ul.project_idea_comments --></ul><!-- .project_idea_comments --></div><!-- idea_body --></li>';
-                $('.project_ideas').prepend(prepare_data);   
+                $('.project_ideas').prepend(prepare_data);
+                $('#comments'+new_id).children('.new_comment').children('.comment_text').bind('keypress', submitkey_binding);
 			}
 			addIdea();
 		}
+		
+		function SortBy(sort_type){
+			if (sort_type == 1) { //sort by date
+				//alert("{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="date"');
+				window.location = "{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="date"';
+			}
+			else if (sort_type == 2) { //sort by Rating
+				window.location = "{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="rating"';
+			}
+			else if (sort_type == 3) { //sort by User
+				window.location = "{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="user"';
+			}
+		} 
 	</script>
 {% endblock %}
 
 {% block project_body %}
             <div class="sort_by">
                 Sort by:<br />
-                <button type="button">Date</button>
-                <button type="button">Rating</button>
-                <button type="button">User</button>
+                <button type="button" onClick="SortBy(1)">Date</button>
+                <button type="button" onClick="SortBy(2)">Rating</button>
+                <button type="button" onClick="SortBy(3)">User</button>
             </div><!-- .sort_by -->
             
             <ul class="project_ideas">
@@ -144,29 +157,29 @@
                     <div class="idea_body">
                         <div class="idea_meta">
                         <div class="username"><a href="#">{{idea_data[ideas_index].idea.author.first_name}}</a></div>
-	                    	<strong id="rate_value{{ideas_index}}" >Total Rating: {{idea_data[ideas_index].total_rating}}</strong>
+	                    	<strong id="rate_value{{idea_data[ideas_index].idea.id}}" >Total Rating: {{idea_data[ideas_index].total_rating}}</strong>
 	                        <div class="like_love">
 	                        {% if idea_data[ideas_index].user_rating.liked == 1 %}
-	                        	<a href="#" id="likeidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Unlike It</a>
+	                        	<a href="#" id="likeidea{{idea_data[ideas_index].idea.id}}" order="2" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Unlike It</a>
 	                        {% else %}
-	                        	 <a href="#" id="likeidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Like It</a>
+	                        	<a href="#" id="likeidea{{idea_data[ideas_index].idea.id}}" order="1" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Like It</a>
 	               			{% endif %}         	 
 	                            &bull; 
 	                        {% if idea_data[ideas_index].user_rating.loved == 1 %}
-	                            <a href="#" id="loveidea{{ideas_index}}" order="2" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Unlove It</a>
+	                            <a href="#" id="loveidea{{idea_data[ideas_index].idea.id}}" order="2" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Unlove It</a>
 	                        {% else %}
-	                        	<a href="#" id="loveidea{{ideas_index}}" order="1" onClick="addRating({{ideas_index}}, {{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Love It</a>
+	                        	<a href="#" id="loveidea{{idea_data[ideas_index].idea.id}}" order="1" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Love It</a>
 	                       	{% endif %} 
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
                     	<div class="idea_description">{{idea_data[ideas_index].idea.data}}</div>
                         <div class="comment_time">
-                            <a href="javascript:void(0)" class="comment_on_idea" onClick="showComment({{ideas_index}})">Comment</a> 
+                            <a href="javascript:void(0)" class="comment_on_idea" onClick="showComment({{idea_data[ideas_index].idea.id}})">Comment</a> 
                             &#124; 
                             September 18th at 9:30am
                         </div><!-- .comment_time -->
                          
-                        <ul class="project_idea_comments" id="comments{{ideas_index}}">
+                        <ul class="project_idea_comments" id="comments{{idea_data[ideas_index].idea.id}}">
                             <li class="new_comment first_update">
                             	<input class="comment_text" type="text" value="Start Typing" order = "{{idea_data[ideas_index].idea.id}}"/><br />
                                 <span class="enter_to_submit">Push Enter to Submit</span>
@@ -196,4 +209,6 @@
                 </li>
             {% endfor %}
             </ul><!-- .project_ideas -->
+        </div><!-- .the_content -->
+	</div>  
 {%endblock %}
