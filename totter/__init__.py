@@ -7,7 +7,7 @@ from pyramid.session import UnencryptedCookieSessionFactoryConfig
 
 from totter.models import initialize_sql
 from totter.user import groupfinder
-from totter.routes import ProjectFactory
+from totter.routes import RootFactory
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
@@ -18,7 +18,7 @@ def main(global_config, **settings):
     authz_policy = ACLAuthorizationPolicy()
     session_factory = UnencryptedCookieSessionFactoryConfig('89az9*l&uw')
     config = Configurator(settings=settings,
-                          root_factory='totter.user.RootFactory',
+                          root_factory=RootFactory,
                           authentication_policy=authn_policy,
                           authorization_policy=authz_policy,
                           session_factory=session_factory)
@@ -53,10 +53,10 @@ def main(global_config, **settings):
     config.add_route('logout', '/logout')
     config.add_view('totter.user.logout', route_name='logout')
 
-    config.add_route('project_entity', '/project/{project_id}', factory=ProjectFactory, traverse='/{project_id}')
+    config.add_route('project_entity', '/project/{project_id}', factory=RootFactory, traverse='/project/{project_id}')
                     
-    config.add_route('project_ideas', '/project/{project_id}/ideas', factory=ProjectFactory, traverse='/{project_id}')
-    config.add_route('project_people', '/project/{project_id}/people', factory=ProjectFactory, traverse='/{project_id}')
+    config.add_route('project_ideas', '/project/{project_id}/ideas', factory=RootFactory, traverse='/project/{project_id}')
+    config.add_route('project_people', '/project/{project_id}/people', factory=RootFactory, traverse='/project/{project_id}')
     
     config.add_route('register', '/register')
     config.add_view('totter.user.register',

@@ -12,7 +12,6 @@ import requests, urlparse
 from models import *
 import logging 
 import uuid
-
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -35,12 +34,6 @@ def get_user(request, allow_anon=False):
 ## TODO: Anon => Auth User
 ## We should associate the Anonymous privs with the authed user privs.
 ## If an authenticated user has project key/id he gets full privs on that project.
-
-class RootFactory(object):
-    __acl__ = [ (Allow, Everyone, 'view'),
-                (Allow, 'group:users', 'post') ]
-    def __init__(self, request):
-        pass
 
 def groupfinder(userid, request):
     # "Groups" based on projects user's allowed to post to.

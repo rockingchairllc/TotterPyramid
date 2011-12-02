@@ -9,7 +9,7 @@ from sqlalchemy import String, Text, CHAR
 from sqlalchemy import ForeignKey, Table, Enum
 from pyramid.security import ALL_PERMISSIONS, Allow, Everyone
 
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, StatementError
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -57,7 +57,6 @@ participants = Table('Participants', Base.metadata,
 )
 
 class Project(Base):
-    
     __tablename__ = 'Projects'
     id = Column('ProjectUUID', UUID(),primary_key=True,default=uuid.uuid4)
     description = Column('ProjectDescription', Text)
@@ -73,6 +72,9 @@ class Project(Base):
     participants = relationship(User, secondary=participants, 
         backref=backref('projects'))
         
+    @property
+    def __name__(self):
+        return str(self.id)
     @property
     def __acl__(self):
         return [
