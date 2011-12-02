@@ -81,6 +81,7 @@ class Project(Base):
             (Allow, str(self.creator_id), 'edit'),
             (Allow, 'group:ro-'+str(self.id), 'view'),
             (Allow, 'group:rw-'+str(self.id), ['post', 'view']),
+            ('Deny', 'system.Everyone', 'view'),
         ]
 
 class ProjectUpdate(Base):
