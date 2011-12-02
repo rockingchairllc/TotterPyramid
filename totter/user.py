@@ -155,7 +155,7 @@ def login(request):
 
 @view_config(context=Forbidden, xhr=True, renderer='json')
 def xhr_forbidden(request):
-    pass
+    raise Forbidden
 
 def logout(request):
     headers = forget(request)
