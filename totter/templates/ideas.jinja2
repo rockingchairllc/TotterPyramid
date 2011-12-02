@@ -176,7 +176,7 @@
                         <div class="comment_time">
                             <a href="javascript:void(0)" class="comment_on_idea" onClick="showComment({{idea_data[ideas_index].idea.id}})">Comment</a> 
                             &#124; 
-                            September 18th at 9:30am
+                            {{idea_data[ideas_index].idea.creation_time | timefmt}}
                         </div><!-- .comment_time -->
                          
                         <ul class="project_idea_comments" id="comments{{idea_data[ideas_index].idea.id}}">
