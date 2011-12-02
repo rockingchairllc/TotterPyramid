@@ -411,6 +411,10 @@ div.like_love {font-weight: bold; text-align: right;
     display: None;
 }
 
+.unlike, .unlove {
+    font-style: italic;
+}
+
 
 /* Stars */
 ul.idea_meta li {display: inline-block; border: none; padding-bottom: 0px; margin-top: -25px;}

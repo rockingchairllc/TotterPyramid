@@ -33,66 +33,6 @@
 		$(document).ready(function(){
 			$('.comment_text').bind('keypress', submitkey_binding);
 		});
-		function addRating(idea_id, value, type) {
-			var ratingData;
-			var likeobj = "#likeidea" + idea_id;
-			var loveobj = "#loveidea" + idea_id;
-			if (type == 1) {
-				var sw_value = $(likeobj).attr("order");
-				if (sw_value == "1") //now it's displayed text is "Like it"
-				{ 
-					$(likeobj).attr("order", "2");
-					$(likeobj).text("Unlike it");
-					$(loveobj).attr("order", "1");
-					$(loveobj).text("Love it");
-					value = value + 1;
-					ratingData = JSON.stringify({'like': 1, 'love': 0});
-				}
-				else if (sw_value == "2" ) //now it's displayed text is "Unlike it"
-				{
-					$(likeobj).attr("order", "1");
-					$(likeobj).text("Like it");
-					$(loveobj).attr("order", "1");
-					$(loveobj).text("Love it");
-					value = value - 1;
-					ratingData = JSON.stringify({'like': 0, 'love': 0});
-				}
-			}
-			else if (type == 2) {
-				var sw_value = $(loveobj).attr("order");
-				if (sw_value == "1") //now it's displayed text is "Love it"
-				{ 
-					$(loveobj).attr("order", "2");
-					$(loveobj).text("Unlove it");
-					$(likeobj).attr("order", "1");
-					$(likeobj).text("Like it");
-					value = value + 2;
-					ratingData = JSON.stringify({'like': 0, 'love': 1});
-				}
-				else if (sw_value == "2" ) //now it's displayed text is "Unlove it"
-				{
-					$(loveobj).attr("order", "1");
-					$(loveobj).text("Love it");
-					$(likeobj).attr("order", "1");
-					$(likeobj).text("Like it");
-					value = value - 2;
-					ratingData = JSON.stringify({'like': 0, 'love': 0});
-				}
-			}
-			
-			outText = 'Total Rating: ' + value;
-			idText = "rate_value" + idea_id;
-			//$('#'+idText).html(outText);
-			$.ajax({
-				url:"{{request.application_url}}/project/{{project.id}}/idea/" + idea_id + "/rating",
-				type: "POST",
-				dataType: "json",
-				data: ratingData,
-				success: function(data){
-				    $('#'+idText).html('Total Rating: ' + data.total_rating);
-				}
-			});
-		}
 		
 		
 		function setLiked(context, liked) {
@@ -194,10 +134,10 @@
                         <div class="username"><a href="#">{{idea_data[ideas_index].idea.author.first_name}}</a></div>
 	                    	<strong id="total_rating_{{idea_id}}" >Total Rating: {{idea_data[ideas_index].total_rating}}</strong>
 	                        <div class="like_love" id="like_love_{{idea_id}}">
-                                <a class="like {% if liked %}hidden{% endif %}" onClick="like('#like_love_{{idea_id}}', {{idea_id}})">Like It</a>
+                                <a class="like {% if liked %}hidden{% endif %}" onClick="like('#like_love_{{idea_id}}', {{idea_id}})">Like It (+1)</a>
                                 <a class="unlike {% if not liked %}hidden{% endif %}"onClick="unlike('#like_love_{{idea_id}}', {{idea_id}})">Unlike It</a>
                                 &bull;
-                                <a class="love {% if loved %}hidden{% endif %}" onClick="love('#like_love_{{idea_id}}', {{idea_id}})">Love It</a>
+                                <a class="love {% if loved %}hidden{% endif %}" onClick="love('#like_love_{{idea_id}}', {{idea_id}})">Love It (+2)</a>
                                 <a class="unlove {% if not loved %}hidden{% endif %}" onClick="unlove('#like_love_{{idea_id}}', {{idea_id}})">Unlove It</a>
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
