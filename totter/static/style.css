@@ -286,6 +286,15 @@ Project Page
 	background: rgba(0,0,0,.6);
 }
 
+.add_idea .hidden {
+    display: None;
+}
+.add_idea .throbber {
+}
+
+.add_idea .shown {
+    display: block;
+}
 ul.tabs {
 	padding-bottom: 4px;
 	border-bottom: 1px solid #2471BE;

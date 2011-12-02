@@ -26,12 +26,17 @@
 				success: onSuccess_addIdea
 			});
 			
+			$(".add_idea .throbber").removeClass('hidden');
+			$(".add_idea button").addClass('hidden');
+			
 			function onSuccess_addIdea(data){
 			    // Successfully added our idea to the serverside.
 			    var new_id = data.idea_id;
 				$('.project_ideas').load(location.href + " .project_ideas>*", function() {
 				    addIdea();
 				    $('html,body').animate({scrollTop: $("#idea_"+new_id).offset().top},'fast');
+				    $(".add_idea .throbber").addClass('hidden');
+			        $(".add_idea button").removeClass('hidden');
 				});
 				
 				/*
@@ -85,6 +90,10 @@
                     <h1>Add Idea</h1>
                     <textarea>Start typing your idea...</textarea>
                     <a href="javascript:void(0)" onClick="addIdea()">Cancel</a>
+                    <div class="throbber hidden">
+                        <span>Posting...</span>
+                        <img src="{{request.static_url('totter:static/images/throbber.gif')}}"/>
+                    </div>
                     <button type="button" onClick="addIdea_to_project()">Add Idea</button>
                 </div><!-- idea_idea_modal -->
             </div><!-- .add_idea -->
