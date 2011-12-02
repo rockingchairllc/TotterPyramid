@@ -1,11 +1,15 @@
-# From http://blog.sadphaeton.com/2009/01/19/sqlalchemy-recipeuuid-column.html
 
 from sqlalchemy import types, Text
 from sqlalchemy.types import CHAR, VARCHAR
 from sqlalchemy.schema import Column
+
 import uuid
 import string
 import json
+
+## UUID:
+# From http://blog.sadphaeton.com/2009/01/19/sqlalchemy-recipeuuid-column.html
+# With modification: Accept reasonable hex strings.
 class UUID(types.TypeDecorator):
     impl = CHAR
     def __init__(self):
