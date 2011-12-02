@@ -9,7 +9,40 @@
 ] -%}
 
 {% set active_page = active_page|default('overview') -%}
-
+{% block scripts %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script type="text/javascript">
+        function addIdea() {
+			$('.add_idea').toggle();
+		}
+	    function addIdea_to_project() {
+			var prjId = "{{project.id}}";
+			var IdeaData = JSON.stringify({'data': $(".add_idea_modal textarea").val(), 'project_id': prjId });
+			$.ajax({
+				url:"{{request.application_url}}/project/{{project.id}}/idea",
+				type: "POST",
+				dataType: "json",
+				data: IdeaData,
+				success: onSuccess_addIdea
+			});
+			
+			function onSuccess_addIdea(data){
+				var new_id = data.idea_id;
+				var prepare_data = '<li><div class="idea_author"><a href="#"><img src={{user.profile_picture}}?type=square"/></a></div>' +
+                    '<div class="idea_body"><div class="idea_meta"><div class="username"><a href="#">{{user.first_name}}</a></div>' +
+	                '<strong id="rate_value'+new_id+'">Total Rating: 0</strong><div class="like_love">' +
+	                '<a href="#" id="likeidea'+new_id+'" order="1" onClick="addRating(' + new_id + ', 0, 1)">Like It</a> &bull; <a href="#" id="loveidea'+new_id+'" order="1" onClick="addRating(' + new_id + ', 0, 2)">Love It</a>' + 
+	                '</div><!-- like_love --></div><!-- .idea_meta --><div class="idea_description">'+ $(".add_idea_modal textarea").val() +'</div><div class="comment_time">' +
+                    '<a href="javascript:void(0)" class="comment_on_idea" onClick="showComment('+new_id+')">Comment</a>&#124;September 18th at 9:30am</div><!-- .comment_time -->' +
+                    '<ul class="project_idea_comments" id="comments'+new_id+'"><li class="new_comment first_update"><input class="comment_text" type="text" value="Start Typing" order="'+new_id+'"/><br /><span class="enter_to_submit">Push Enter to Submit</span>' +
+                    '</li><!-- .new_comment --><!-- Append all new comments to the ul.project_idea_comments --></ul><!-- .project_idea_comments --></div><!-- idea_body --></li>';
+                $('.project_ideas').prepend(prepare_data);
+                $('#comments'+new_id).children('.new_comment').children('.comment_text').bind('keypress', submitkey_binding);
+			}
+			addIdea();
+		}
+</script>
+{% endblock %}
 {% block body %}
 	<div class="wrapper drop-shadow curved curved-vt-2">
             {% block user_header %}
