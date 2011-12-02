@@ -38,3 +38,12 @@ if not json_available or '\\/' not in json.dumps('/'):
         return json.dumps(*args, **kwargs).replace('/', '\\/')
 else:
     _tojson_filter = json.dumps
+
+### Date formatting ###
+from datetime import datetime
+def timefmt(*args, **kwargs):
+    # Takes strftime arguments
+    if not isinstance(args[0], datetime):
+        raise RuntimeError('Not instance of datetime.')
+    # Prints December 02 at 09:00 PM
+    return args[0].strftime('%B %d at %I:%M %p')
