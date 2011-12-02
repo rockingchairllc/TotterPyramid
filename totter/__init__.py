@@ -31,13 +31,13 @@ def main(global_config, **settings):
                     renderer='mytemplate.jinja2')
 
     config.add_route('create_project', '/project/new')
-    config.add_view('totter.testViews.create',
+    config.add_view('totter.project_views.create',
                     route_name='create_project',
                     renderer='create.jinja2',
                     permission='edit')
                     
     config.add_route('access', '/access')
-    config.add_view('totter.testViews.enterKey',
+    config.add_view('totter.project_views.enterKey',
                     route_name='access',
                     renderer='enterKey.jinja2')
                                         
