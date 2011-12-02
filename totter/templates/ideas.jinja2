@@ -136,6 +136,7 @@
 			}
 		} 
 	</script>
+	
 {% endblock %}
 
 {% block project_body %}
@@ -151,7 +152,7 @@
             	<li>
                 	<div class="idea_author">
                     	<a href="#">
-                            <img src={{idea_data[ideas_index].idea.author.profile_picture}}?type=square" />
+                            <img src="{{idea_data[ideas_index].idea.author.profile_picture}}" />
                         </a>
                     </div><!-- .idea_author -->
                     <div class="idea_body">
@@ -173,38 +174,40 @@
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
                     	<div class="idea_description">{{idea_data[ideas_index].idea.data}}</div>
-                        <div class="comment_time">
-                            <a href="javascript:void(0)" class="comment_on_idea" onClick="showComment({{idea_data[ideas_index].idea.id}})">Comment</a> 
-                            &#124; 
-                            September 18th at 9:30am
-                        </div><!-- .comment_time -->
-                         
-                        <ul class="project_idea_comments" id="comments{{idea_data[ideas_index].idea.id}}">
-                            <li class="new_comment first_update">
-                            	<input class="comment_text" type="text" value="Start Typing" order = "{{idea_data[ideas_index].idea.id}}"/><br />
-                                <span class="enter_to_submit">Push Enter to Submit</span>
-                            </li><!-- .new_comment -->
+                    	<div>
+                            <div class="comment_time">
+                                <a href="javascript:void(0)" class="comment_on_idea" onClick="showComment({{idea_data[ideas_index].idea.id}})">Comment</a> 
+                                &#124; 
+                                {{idea_data[ideas_index].idea.creation_time | timefmt}}
+                            </div><!-- .comment_time -->
                              
-                            <!-- Append all new comments to the ul.project_idea_comments -->
-                            
-                            {% for comment in idea_data[ideas_index].idea.comments %}
-	                            {% if loop.first %} 
-	                            	<li class="first_update">
-	                            {% elif loop.last %}
-	                            	<li class="last_update">
-	                            {% else %}
-	                            	<li>
-	                            {% endif %}	
-	                            	<a href="#">
-	                                	<img src="{{comment.author.profile_picture}}?type=square" width="32" height="32" />
-	                                </a>
-	                                <div class="comment_body">
-	                                    <a href="#">{{comment.author.first_name}}</a>
-	                                    {{comment.data}} 
-	                                </div>
-							{% endfor %}
-	          
-                        </ul><!-- .project_idea_comments -->
+                            <ul class="project_idea_comments" id="comments{{idea_data[ideas_index].idea.id}}">
+                                <li class="new_comment first_update">
+                                    <input class="comment_text" type="text" value="Start Typing" order = "{{idea_data[ideas_index].idea.id}}"/><br />
+                                    <span class="enter_to_submit">Push Enter to Submit</span>
+                                </li><!-- .new_comment -->
+                                 
+                                <!-- Append all new comments to the ul.project_idea_comments -->
+                                
+                                {% for comment in idea_data[ideas_index].idea.comments %}
+                                    {% if loop.first %} 
+                                        <li class="first_update">
+                                    {% elif loop.last %}
+                                        <li class="last_update">
+                                    {% else %}
+                                        <li>
+                                    {% endif %}	
+                                        <a href="#">
+                                            <img src="{{comment.author.profile_picture}}?type=square" width="32" height="32" />
+                                        </a>
+                                        <div class="comment_body">
+                                            <a href="#">{{comment.author.first_name}}</a>
+                                            {{comment.data}} 
+                                        </div>
+                                {% endfor %}
+                  
+                            </ul><!-- .project_idea_comments -->
+                        </div>
                     </div><!-- idea_body -->
                 </li>
             {% endfor %}
