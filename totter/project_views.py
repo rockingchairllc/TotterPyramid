@@ -178,8 +178,6 @@ def ideas(request):
         idea_data = session.query(Idea)\
             .join(User, (Idea.author_id==User.id))\
             .filter(Idea.project_id == project.id)
-        # Create the 2-tuple that we'd get with a normal user:
-        idea_data = zip(idea_data, [None]*len(idea_data))
             
     
     sort = request.params.get('sort')
@@ -194,6 +192,10 @@ def ideas(request):
         logging.warn('Unrecognized sort: ' + str(sort))
     
     idea_data = idea_data.all()
+    
+    if user is None:
+        # Create the 2-tuple that we'd get with a normal user:
+        idea_data = zip(idea_data, [None]*len(idea_data))
     
     # Create a new field Idea.user_rating, that stores the IdeaRating for
     # the current user. We're taking advantage of SQLAlchemy's one-instance
