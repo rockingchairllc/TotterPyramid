@@ -145,7 +145,10 @@ def add_rating(request):
         session.merge(agg_rating)
     
     session.flush()
-    return {'total_rating' : agg_rating.liked + agg_rating.loved * 2}
+    return {
+        'total_rating' : agg_rating.liked + agg_rating.loved * 2, 
+        'rating' : {'loved' : new_rating.loved or 0, 'liked' : new_rating.liked or 0}
+    }
     
 @view_config(route_name='idea_collection', request_method='POST', renderer='json', xhr=True, permission='post')
 def add_idea(request):

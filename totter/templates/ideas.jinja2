@@ -45,7 +45,7 @@
 					$(likeobj).text("Unlike it");
 					$(loveobj).attr("order", "1");
 					$(loveobj).text("Love it");
-					value = value + 1
+					value = value + 1;
 					ratingData = JSON.stringify({'like': 1, 'love': 0});
 				}
 				else if (sw_value == "2" ) //now it's displayed text is "Unlike it"
@@ -54,11 +54,11 @@
 					$(likeobj).text("Like it");
 					$(loveobj).attr("order", "1");
 					$(loveobj).text("Love it");
-					value = value - 1
+					value = value - 1;
 					ratingData = JSON.stringify({'like': 0, 'love': 0});
 				}
 			}
-			else if (type == 2){
+			else if (type == 2) {
 				var sw_value = $(loveobj).attr("order");
 				if (sw_value == "1") //now it's displayed text is "Love it"
 				{ 
@@ -66,7 +66,7 @@
 					$(loveobj).text("Unlove it");
 					$(likeobj).attr("order", "1");
 					$(likeobj).text("Like it");
-					value = value + 2
+					value = value + 2;
 					ratingData = JSON.stringify({'like': 0, 'love': 1});
 				}
 				else if (sw_value == "2" ) //now it's displayed text is "Unlove it"
@@ -75,7 +75,7 @@
 					$(loveobj).text("Love it");
 					$(likeobj).attr("order", "1");
 					$(likeobj).text("Like it");
-					value = value - 2
+					value = value - 2;
 					ratingData = JSON.stringify({'like': 0, 'love': 0});
 				}
 			}
@@ -90,6 +90,66 @@
 				data: ratingData,
 				success: function(data){
 				    $('#'+idText).html('Total Rating: ' + data.total_rating);
+				}
+			});
+		}
+		
+		
+		function setLiked(context, liked) {
+		    if (liked) {
+                context.find(".like").addClass('hidden');
+                context.find(".unlike").removeClass('hidden');
+            } else {
+                context.find(".unlike").addClass('hidden');
+                context.find(".like").removeClass('hidden');
+            }                
+        }
+        
+        function setLoved(context, loved) {
+            if (loved) {
+                context.find(".love").addClass('hidden');
+                context.find(".unlove").removeClass('hidden');
+            } else {
+                context.find(".unlove").addClass('hidden');
+                context.find(".love").removeClass('hidden');
+            }
+        }
+        
+        // context is some jquery selector '.foo' '#bar' that has the widget underneath it.
+        // idea_id is the id of the idea being liked/disliked/loved/unloved.
+        
+		function unlike(selector, idea_id) {
+		    send_rating($(selector), idea_id, {'like' : 0});
+		}
+		function unlove(selector, idea_id) {
+		    send_rating($(selector), idea_id, {'love' : 0});
+		}
+		
+		function like(selector, idea_id) {
+		    send_rating($(selector), idea_id, {'like' : 1});
+		}
+		function love(selector, idea_id) {
+		    send_rating($(selector), idea_id, {'love' : 1});
+		}
+		
+		function send_rating(context, idea_id, rating) {
+		    $.ajax({
+				url:"{{request.application_url}}/project/{{project.id}}/idea/" + idea_id + "/rating",
+				type: "POST",
+				dataType: "json",
+				data: JSON.stringify(rating),
+				success: function(data) {
+				    if (data.rating['liked'])
+    				    setLiked(context, true);
+    				else
+    				    setLiked(context, false);
+    				    
+    				if (data.rating['loved'])
+    				    setLoved(context, true);
+    				else
+    				    setLoved(context, false);
+    				    
+    			    $('#total_rating_' + idea_id).html('Total Rating: ' + data.total_rating);
 				}
 			});
 		}
@@ -128,20 +188,17 @@
                     </div><!-- .idea_author -->
                     <div class="idea_body">
                         <div class="idea_meta">
+                        {% set liked = idea_data[ideas_index].user_rating.liked %}
+                        {% set loved = idea_data[ideas_index].user_rating.loved %}
+                        {% set idea_id = idea_data[ideas_index].idea.id %}
                         <div class="username"><a href="#">{{idea_data[ideas_index].idea.author.first_name}}</a></div>
-	                    	<strong id="rate_value{{idea_data[ideas_index].idea.id}}" >Total Rating: {{idea_data[ideas_index].total_rating}}</strong>
-	                        <div class="like_love">
-	                        {% if idea_data[ideas_index].user_rating.liked == 1 %}
-	                        	<a id="likeidea{{idea_data[ideas_index].idea.id}}" order="2" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Unlike It</a>
-	                        {% else %}
-	                        	<a id="likeidea{{idea_data[ideas_index].idea.id}}" order="1" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Like It</a>
-	               			{% endif %}         	 
-	                            &bull; 
-	                        {% if idea_data[ideas_index].user_rating.loved == 1 %}
-	                            <a id="loveidea{{idea_data[ideas_index].idea.id}}" order="2" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Unlove It</a>
-	                        {% else %}
-	                        	<a id="loveidea{{idea_data[ideas_index].idea.id}}" order="1" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Love It</a>
-	                       	{% endif %} 
+	                    	<strong id="total_rating_{{idea_id}}" >Total Rating: {{idea_data[ideas_index].total_rating}}</strong>
+	                        <div class="like_love" id="like_love_{{idea_id}}">
+                                <a class="like {% if liked %}hidden{% endif %}" onClick="like('#like_love_{{idea_id}}', {{idea_id}})">Like It</a>
+                                <a class="unlike {% if not liked %}hidden{% endif %}"onClick="unlike('#like_love_{{idea_id}}', {{idea_id}})">Unlike It</a>
+                                &bull;
+                                <a class="love {% if loved %}hidden{% endif %}" onClick="love('#like_love_{{idea_id}}', {{idea_id}})">Love It</a>
+                                <a class="unlove {% if not loved %}hidden{% endif %}" onClick="unlove('#like_love_{{idea_id}}', {{idea_id}})">Unlove It</a>
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
                     	<div class="idea_description">{{idea_data[ideas_index].idea.data}}</div>

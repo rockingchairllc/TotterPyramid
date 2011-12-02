@@ -407,6 +407,10 @@ div.like_love {font-weight: bold; text-align: right;
 	top: 65px;
 }
 
+.like_love .hidden {
+    display: None;
+}
+
 
 /* Stars */
 ul.idea_meta li {display: inline-block; border: none; padding-bottom: 0px; margin-top: -25px;}
