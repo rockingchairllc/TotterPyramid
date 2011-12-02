@@ -53,11 +53,15 @@ def main(global_config, **settings):
     config.add_route('logout', '/logout')
     config.add_view('totter.user.logout', route_name='logout')
 
-    config.add_route('project_entity', '/project/{project_id}', factory=RootFactory, traverse='/project/{project_id}')
+    config.add_route('project_entity', '/project/{project_id}/', factory=RootFactory, traverse='/project/{project_id}')
                     
     config.add_route('project_ideas', '/project/{project_id}/ideas', factory=RootFactory, traverse='/project/{project_id}')
     config.add_route('project_people', '/project/{project_id}/people', factory=RootFactory, traverse='/project/{project_id}')
     
+    # "Magical" append slash not found view. Appends a slash when there's a route that matches the slash-ended url.
+    config.add_view('pyramid.view.append_slash_notfound_view',
+                context='pyramid.httpexceptions.HTTPNotFound')
+                
     config.add_route('register', '/register')
     config.add_view('totter.user.register',
                     route_name='register',

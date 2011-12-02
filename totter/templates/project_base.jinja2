@@ -3,9 +3,9 @@
 {# navigation_bar elements: (url, id, caption) #}
 {% set navigation_bar = [
     
-    (request.route_url('project_entity', project_id=project_id), 'overview', 'Overview'),
-    (request.route_url('project_ideas', project_id=project_id), 'ideas', 'Ideas'),
-    (request.route_url('project_people', project_id=project_id), 'people', 'People')
+    (request.model_url(context), 'overview', 'Overview'),
+    (request.model_url(context, 'ideas'), 'ideas', 'Ideas'),
+    (request.model_url(context, 'people'), 'people', 'People')
 ] -%}
 
 {% set active_page = active_page|default('overview') -%}
