@@ -38,7 +38,7 @@ def get_user(request, allow_anon=False):
 
 class RootFactory(object):
     __acl__ = [ (Allow, Everyone, 'view'),
-                (Allow, 'group:users', 'edit') ]
+                (Allow, 'group:users', 'post') ]
     def __init__(self, request):
         pass
 
