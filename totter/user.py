@@ -91,9 +91,7 @@ def project_access(request):
                 headers = remember(request, 'PROJECT')
             else:
                 logging.info('Authorization approved, adding project to participants.')
-                user = session.query(User).filter(User.id==user_id).one()
-                if project not in user.projects:
-                    session.execute(participants.insert((project.id, user.id)))
+                merge_anon_user_projects(request, user_id)
         else:
             logging.info('Authorization approved, setting access cookie.')
             # Create temporary project access cookie.
@@ -107,7 +105,14 @@ def project_access(request):
     else:
         # Just render the form.
         return {'project_id' : request.matchdict.get('project_id')}
-    
+
+def merge_anon_user_projects(request, user_id):
+    session = DBSession()
+    user = session.query(User).filter(User.id==user_id).one()
+    projects = request.session['project_id']
+    for project in projects:
+        if project not in user.projects:
+            session.execute(participants.insert((project, user.id)))
 
 def login(request):
     login_url = request.route_url('login', request)
@@ -129,6 +134,7 @@ def login(request):
                 headers = remember(request, user.id.hex)
                 user.last_login = datetime.now()
                 session.flush()
+                merge_anon_user_projects(request, user.id)
                 return HTTPFound(location = came_from, headers = headers)
             else:
                 message = 'invalid_password'
@@ -177,6 +183,7 @@ def register(request):
         except IntegrityError:
             message = "Email '%s' already taken" % login
         else:
+            merge_anon_user_projects(request, user.id)
             headers = remember(request, user.id.hex)
             return HTTPFound(location = came_from, headers = headers)            
 
@@ -225,6 +232,7 @@ def facebook(request):
         try:
             logging.info('Mapped user found!')
             user = session.query(User).filter_by(email=profile['email']).one()
+            merge_anon_user_projects(request, user.id)
         except NoResultFound,e:
             logging.info('Creating facebook user.')
             user = User(
@@ -236,6 +244,8 @@ def facebook(request):
                 salt = salt_generator(),
             )
             session.add(user)
+            session.flush()
+            merge_anon_user_projects(request, user.id)
         login = user.email
         headers = remember(request, user.id.hex)
         url = request.referer if request.referer else request.application_url
