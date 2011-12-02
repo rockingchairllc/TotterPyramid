@@ -120,6 +120,7 @@
             <ul class="project_ideas">
             {% for ideas_index in range(ideas_count) %}
             	<li>
+            	    <a name="idea_{{idea_data[ideas_index].idea.id}}" id="idea_{{idea_data[ideas_index].idea.id}}"></a>
                 	<div class="idea_author">
                     	<a href="#">
                             <img src={{idea_data[ideas_index].idea.author.profile_picture}}?type=square" />
