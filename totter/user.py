@@ -114,6 +114,8 @@ def merge_anon_user_projects(request, user_id):
         if project not in user.projects:
             session.execute(participants.insert((project, user.id)))
 
+@view_config(context=Forbidden, renderer="login.jinja2")
+@view_config(route_name='login', renderer="login.jinja2")
 def login(request):
     login_url = request.route_url('login', request)
     referrer = request.url
@@ -150,6 +152,10 @@ def login(request):
         )
     fail_result[message] = True
     return fail_result
+
+@view_config(context=Forbidden, xhr=True, renderer='json')
+def xhr_forbidden(request):
+    pass
 
 def logout(request):
     headers = forget(request)

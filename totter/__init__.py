@@ -35,19 +35,8 @@ def main(global_config, **settings):
                     route_name='create_project',
                     renderer='create.jinja2',
                     permission='edit')
-                    
-    config.add_route('access', '/access')
-    config.add_view('totter.project_views.enterKey',
-                    route_name='access',
-                    renderer='enterKey.jinja2')
                                         
     config.add_route('login', '/login')
-    config.add_view('totter.user.login',
-                    route_name='login',
-                    renderer='login.jinja2')
-    config.add_view('totter.user.login',
-                    context='pyramid.httpexceptions.HTTPForbidden',
-                    renderer='login.jinja2')
 
     config.add_route('facebook', '/facebook')
     config.add_view('totter.user.facebook',
