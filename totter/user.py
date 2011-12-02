@@ -3,7 +3,7 @@ from pyramid.security import Everyone
 from pyramid.security import remember
 from pyramid.security import forget
 from pyramid.security import authenticated_userid
-from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPFound, HTTPForbidden
 from pyramid.exceptions import Forbidden
 from pyramid.view import view_config
 from datetime import datetime
@@ -155,7 +155,7 @@ def login(request):
 
 @view_config(context=Forbidden, xhr=True, renderer='json')
 def xhr_forbidden(request):
-    raise Forbidden
+    return HTTPForbidden()
 
 def logout(request):
     headers = forget(request)
