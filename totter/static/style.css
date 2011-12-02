@@ -453,7 +453,7 @@ ul.star_tool_tip li a:hover {text-decoration: none;}
 .comment_time {font-size: 12px; padding: 5px 0;}
 
 ul.project_idea_comments .new_comment {
-	display: none;
+	display: list-item;
 	height: 50px;
 	padding-bottom: 15px;
 	padding-top: 2px;
@@ -486,3 +486,7 @@ ul.project_idea_comments li {
 }
 ul.project_idea_comments li img {float: left; position: relative; top: -5px;}
 .comment_body {margin-left: 40px;}
+
+ul.project_idea_comments li.existing_comments {
+    padding: 0;
+}
