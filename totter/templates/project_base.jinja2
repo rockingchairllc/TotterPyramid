@@ -15,7 +15,7 @@
             {% block user_header %}
             <!-- Begin the Header -->
             <div class="header">
-            
+                {% if user %}
                 <div class="user_info">
                     <h4 class="username_first_name">{{user.first_name}}</h4>
                     <ul class="tool_tip drop-shadow">
@@ -27,7 +27,7 @@
                     </ul>
                     <img src="{{user.profile_picture}}" class="user_photo" />
                 </div><!-- .user_info -->
-                           
+                {% endif %}
                 <h1 class="logo">Totter</h1>
                 
                 <!-- Clear the float to prevent the header from collapsing -->

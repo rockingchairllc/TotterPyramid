@@ -16,7 +16,7 @@ import uuid
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
-def get_user(request, allow_anon=True):
+def get_user(request, allow_anon=False):
     session = DBSession()
     user_id = authenticated_userid(request)
     if user_id == 'PROJECT':

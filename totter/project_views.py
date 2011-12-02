@@ -169,10 +169,18 @@ def ideas(request):
         
     # Create list of ideas with User's rating added:
     ideas = project.ideas
-    idea_data = session.query(Idea, UserRating)\
-        .outerjoin(UserRating, (Idea.id==UserRating.idea_id) & (UserRating.user_id==user.id))\
-        .join(User, (Idea.author_id==User.id))\
-        .filter(Idea.project_id == project.id)
+    if user:
+        idea_data = session.query(Idea, UserRating)\
+            .outerjoin(UserRating, (Idea.id==UserRating.idea_id) & (UserRating.user_id==user.id))\
+            .join(User, (Idea.author_id==User.id))\
+            .filter(Idea.project_id == project.id)
+    else:
+        idea_data = session.query(Idea)\
+            .join(User, (Idea.author_id==User.id))\
+            .filter(Idea.project_id == project.id)
+        # Create the 2-tuple that we'd get with a normal user:
+        idea_data = zip(idea_data, [None]*len(idea_data))
+            
     
     sort = request.params.get('sort')
     if sort == 'user':
