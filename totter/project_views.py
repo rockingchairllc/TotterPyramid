@@ -131,9 +131,10 @@ def add_rating(request):
     logging.warn('%s love: %d, like: %d' % (cur_user.first_name, loves, likes))
     
     # Update aggregate count:
-    if likes or loves: # User did something worth tracking.
-        agg_rating = session.query(AggregateRating)\
+    agg_rating = session.query(AggregateRating)\
             .filter(AggregateRating.idea_id==idea_id).first() or AggregateRating(idea_id=idea_id)
+    if likes or loves: # User did something worth tracking.
+        
             
         agg_rating.liked += likes
         agg_rating.loved += loves
@@ -144,7 +145,7 @@ def add_rating(request):
         session.merge(agg_rating)
     
     session.flush()
-    return {}
+    return {'total_rating' : agg_rating.liked + agg_rating.loved * 2}
     
 @view_config(route_name='idea_collection', request_method='POST', renderer='json', xhr=True, permission='post')
 def add_idea(request):
