@@ -11,9 +11,8 @@
 {% set active_page = active_page|default('overview') -%}
 
 {% block body %}
-    {% block project_header %}
 	<div class="wrapper drop-shadow curved curved-vt-2">
-            
+            {% block user_header %}
             <!-- Begin the Header -->
             <div class="header">
             
@@ -36,6 +35,9 @@
                 
 			</div><!-- .header -->
             
+            
+            {% endblock %}
+            {% block project_header %}
             <!-- Add Idea and Modal Overlay -->
             <div class="add_idea">
                 <div class="add_idea_overlay" onClick="addIdea()"></div>
