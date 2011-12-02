@@ -26,7 +26,7 @@ def get_event_list(request):
     
     return {}
 
-@view_config(route_name='comment_collection', request_method='POST', renderer='json', permission='post')
+@view_config(route_name='comment_collection', request_method='POST', renderer='json', xhr=True, permission='post')
 def add_comment(request):
     # Add comment request body is JSON-encoded with parameters:
     # 'data' : The comment text.
@@ -51,7 +51,7 @@ def add_comment(request):
     return {'comment_id' : new_comment.id}
     
     
-@view_config(route_name='rating_collection', request_method='POST', renderer='json', permission='post')
+@view_config(route_name='rating_collection', request_method='POST', renderer='json', xhr=True, permission='post')
 def add_rating(request):
     # Add rating request body is JSON-encoded with parameters:
     # 'like' : Boolean, True if user Liked a post, False if he unliked it.
@@ -129,7 +129,7 @@ def add_rating(request):
     session.flush()
     return {}
     
-@view_config(route_name='idea_collection', request_method='POST', renderer='json', permission='post')
+@view_config(route_name='idea_collection', request_method='POST', renderer='json', xhr=True, permission='post')
 def add_idea(request):
     # Idea request body is JSON encoded with parameters:
     # 'data' : The idea text
