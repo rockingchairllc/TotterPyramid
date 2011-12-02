@@ -2,20 +2,13 @@
 #from totter.models import MyModel
 import uuid
 from pyramid.exceptions import NotFound
-from pyramid.security import authenticated_userid
 from pyramid.view import view_config
 from models import *
 from pyramid.i18n import TranslationStringFactory
 from datetime import datetime, timedelta
 _ = TranslationStringFactory('totter')
 import logging
-def get_user(request):
-    session = DBSession()
-    uid_hex = authenticated_userid(request)
-    if uid_hex is None:
-        return session.query(User).filter(User.email=='test@rockingchairllc.com').one()
-    user_id = uuid.UUID(hex=uid_hex)
-    return session.query(User).filter(User.id==user_id).one()
+from user import get_user
 
 def record_event(action, project_id, time, action_data):
     # TODO: Deferred processing?
@@ -227,7 +220,7 @@ def ideas(request):
     
 
 
-@view_config(route_name='project_entity', renderer='project_overview.jinja2')
+@view_config(route_name='project_entity', renderer='project_overview.jinja2', permission='view')
 def project(request):
     user = get_user(request)
     project_id = uuid.UUID(hex=request.matchdict['project_id'])

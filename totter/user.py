@@ -4,6 +4,8 @@ from pyramid.security import remember
 from pyramid.security import forget
 from pyramid.security import authenticated_userid
 from pyramid.httpexceptions import HTTPFound
+from pyramid.exceptions import Forbidden
+from pyramid.view import view_config
 from datetime import datetime
 import facebook as fb
 import requests, urlparse
@@ -14,6 +16,26 @@ import uuid
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
+def get_user(request, allow_anon=True):
+    session = DBSession()
+    user_id = authenticated_userid(request)
+    if user_id == 'PROJECT':
+        if allow_anon:
+            # Return 'fake' anonymous user.
+            return session.query(User).filter(User.email=='test@rockingchairllc.com').one()
+        else:
+            return None
+    else:
+        return session.query(User).filter(User.id==user_id).one()
+
+## We actually have three login scenarios to cover:
+## If an anonymous user has project key/id, he gets view privs on that project.
+## Anonymous users have no privs without having "logged in" with a key/id pair.
+## Anonymous => Authenticated User?
+## TODO: Anon => Auth User
+## We should associate the Anonymous privs with the authed user privs.
+## If an authenticated user has project key/id he gets full privs on that project.
+
 class RootFactory(object):
     __acl__ = [ (Allow, Everyone, 'view'),
                 (Allow, 'group:users', 'edit') ]
@@ -21,12 +43,71 @@ class RootFactory(object):
         pass
 
 def groupfinder(userid, request):
+    # "Groups" based on projects user's allowed to post to.
     session = DBSession()
     try:
-        user = session.query(User).filter(User.id==uuid.UUID(hex=userid)).one()
-        return ['group:users']
-    except:
+        if userid == 'PROJECT':
+            logging.info('loading groups for anonymous authenticated user.')
+            groups = ['group:anonymous']
+            project_list = request.session.get('project_id', [])
+            for project_id in project_list:
+                groups += ['group:ro-' + project_id] 
+            return groups
+        else:
+            user = session.query(User).filter(User.id==userid).one()
+            groups = ['group:users']
+            for project in user.projects:
+                groups += ['group:rw-' + str(project.id)]
+            return groups
+    except NoResultFound,e:
         return None
+
+@view_config(context=Forbidden, route_name="project_entity", renderer="enter_key.jinja2")
+def project_access(request):
+    if 'project_id' in request.params:
+        # Attempt login.
+        project_id = request.params.get('project_id')
+        project_key = request.params.get('project_key')
+        logging.info('Attempting to authenticate user for project ' + project_id)
+        session = DBSession()
+        try: 
+            project = session.query(Project).filter(Project.id==project_id).one()
+        except NoResultFound,e:
+            return {'not_found' : True, 'project_id' : project_id}
+        
+        if project.key != project_key:
+            logging.info('Invalid authentication, access denied to: ' + project_id)
+            return {'access_denied' : True, 'project_id' : project_id}
+        
+        
+        # Add project to user's access list.
+        headers = None
+        if authenticated_userid(request):
+            user_id = authenticated_userid(request)
+            if user_id == 'PROJECT':
+                logging.info('Authorization approved, appending to access cookie.')
+                # User still anonymous, has creds for another project.
+                request.session['project_id'] = request.session.get('project_id',[]) + [str(project.id)]
+                headers = remember(request, 'PROJECT')
+            else:
+                logging.info('Authorization approved, adding project to participants.')
+                user = session.query(User).filter(User.id==user_id).one()
+                if project not in user.projects:
+                    session.execute(participants.insert((project.id, user.id)))
+        else:
+            logging.info('Authorization approved, setting access cookie.')
+            # Create temporary project access cookie.
+            request.session['project_id'] = [str(project.id)]
+            headers = remember(request, 'PROJECT')
+            
+            
+        # Redirect to project page:
+        return HTTPFound(location=request.route_url('project_entity', project_id=str(project.id)), 
+            headers=headers)
+    else:
+        # Just render the form.
+        return {'project_id' : request.matchdict.get('project_id')}
+    
 
 def login(request):
     login_url = request.route_url('login', request)
@@ -108,6 +189,7 @@ def register(request):
         came_from = came_from,
         user = authenticated_userid(request),
         )
+        
 
 def facebook(request):
     # Our handler for facebook stuff.

@@ -1,0 +1,23 @@
+{% extends "base.jinja2" %}
+{% block body %}
+	<div class="login_register_wrap drop-shadow curved curved-vt-2">
+            <h1>Welcome to Totter</h1>
+            {% if access_denied -%}<font color="red"> Invalid Project Key. </font> {% endif %}
+            {% if not_found -%}<font color="red"> Unknown project. Is Project ID correct? </font> {% endif %}
+            <form id="loginForm" method="post" action="{{request.current_route_url()}}">
+                <fieldset>
+                    {% if project_id %}
+                    <input type="text" id="user_name" name="project_id" value="{{project_id}}" /><br />
+                    {% else %}
+                    <input type="text" id="user_name" name="project_id" value="Project ID" /><br />
+                    {% endif %}
+                    <input type="text" id="user_password" name="project_key" value="Project Key" /><br />
+					<input type="submit" id="loginSubmit" value="View Project" /><br />
+                </fieldset>
+            </form>
+            
+	</div><!-- .login_register_wrap -->
+	<div class="footer wrapper">
+
+<div class="footer wrapper">
+{% endblock %}

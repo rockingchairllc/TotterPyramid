@@ -7,10 +7,10 @@ from sqlalchemy import Unicode
 from sqlalchemy import DateTime
 from sqlalchemy import String, Text, CHAR
 from sqlalchemy import ForeignKey, Table, Enum
-
+from pyramid.security import ALL_PERMISSIONS, Allow, Everyone
 
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.ext.declarative import declarative_base
 
 from sqlalchemy.orm import scoped_session
@@ -50,14 +50,16 @@ class User(Base):
 
 
 participants = Table('Participants', Base.metadata,
-    Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID')),
-    Column('UserUUID', UUID(), ForeignKey('Users.UserUUID'))
+    Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), primary_key=True),
+    Column('UserUUID', UUID(), ForeignKey('Users.UserUUID'), primary_key=True)
 )
+
 class Project(Base):
+    
     __tablename__ = 'Projects'
     id = Column('ProjectUUID', UUID(),primary_key=True,default=uuid.uuid4)
     description = Column('ProjectDescription', Text)
-    urlName = Column('URLName', String(128), unique=True)
+    url_name = Column('URLName', String(128), unique=True)
     title = Column('ProjectTitle', String(128))
     key = Column('ProjectKey', String(128))
     creator_id = Column('CreatorUUID',UUID(), ForeignKey('Users.UserUUID'))
@@ -68,6 +70,14 @@ class Project(Base):
     creator = relationship(User, backref=backref('created_projects'))
     participants = relationship(User, secondary=participants, 
         backref=backref('projects'))
+        
+    @property
+    def __acl__(self):
+        return [
+            (Allow, str(self.creator_id), 'edit'),
+            (Allow, 'group:ro-'+str(self.id), 'view'),
+            (Allow, 'group:rw-'+str(self.id), ['post', 'view']),
+        ]
         
         
 class ProjectEvent(Base):
