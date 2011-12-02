@@ -25,7 +25,11 @@ def get_user(request, allow_anon=False):
         else:
             return None
     else:
-        return session.query(User).filter(User.id==user_id).one()
+        try:
+            return session.query(User).filter(User.id==user_id).one()
+        except NoResultFound:
+            logging.warn('Invalid user received: ' + str(user_id))
+            return None
 
 ## We actually have three login scenarios to cover:
 ## If an anonymous user has project key/id, he gets view privs on that project.
@@ -102,7 +106,7 @@ def project_access(request):
 def merge_anon_user_projects(request, user_id):
     session = DBSession()
     user = session.query(User).filter(User.id==user_id).one()
-    projects = request.session['project_id']
+    projects = request.session.get('project_id', [])
     for project in projects:
         if project not in user.projects:
             session.execute(participants.insert((project, user.id)))
