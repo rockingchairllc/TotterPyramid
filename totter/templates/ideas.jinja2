@@ -29,8 +29,11 @@
 						var m_data = '<li class="last_update"> <a href="#"> <img src="{{user.profile_picture}}" width="32" height="32" /> </a>' +
 										'<div class="comment_body"> <a href="#">{{user.first_name}} </a>' + cmtdata + '</div></li>';
 						sibling = $('#comments'+idx).find('.last_update');
-						sibling.removeClass('last_update');
-						sibling.after(m_data);
+						
+						if (sibling.length > 0) {
+                            sibling.removeClass('last_update');
+                        }
+                        $('#comments'+idx).find('ul.existing_comments').append(m_data);
 						//showComment(idx);	
 						$('#comments'+idx).children('.new_comment').children('.comment_text').val('');
 					}
