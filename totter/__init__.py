@@ -75,7 +75,7 @@ def main(global_config, **settings):
                     renderer='register.jinja2')
                     
     config.add_route('stars', '/project/{project_id}/stars')
-    config.add_view('totter.testViews.stars',
+    config.add_view('totter.project_views.stars',
                     route_name='stars',
                     renderer='stars.jinja2')
                     
