@@ -1,8 +1,6 @@
 # template.py 
 # Our template helpers
 
-
-
 ## Stolen from flask's jinja extensions
 # This is the function we use for the tojinja filter
 

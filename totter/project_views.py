@@ -6,6 +6,7 @@ from pyramid.view import view_config
 from models import *
 from pyramid.i18n import TranslationStringFactory
 from datetime import datetime, timedelta
+from template import timefmt
 _ = TranslationStringFactory('totter')
 import logging
 from user import get_user
@@ -50,7 +51,7 @@ def add_comment(request):
         })
     return {'comment_id' : new_comment.id}
     
-@view_config(route_name='project_update', request_method='POST', renderer='json', xhr=True, permission='post')
+@view_config(route_name='project_update', request_method='POST', renderer='json', xhr=True, permission='edit')
 def add_update(request):
     # Add comment request body is JSON-encoded with parameters:
     # 'data' : The comment text.
@@ -63,7 +64,7 @@ def add_update(request):
     session.flush()
     
     # Record event:
-    return {'update_id' : new_update.id}
+    return {'id' : new_update.id, 'when' : timefmt(new_update.when), 'data' : new_update.data}
     
     
     
@@ -257,9 +258,9 @@ def project(request):
         raise NotFound()
         
     updates = session.query(ProjectUpdate)\
-        .filter(ProjectEvent.project_id==project_id)\
-        .filter(ProjectEvent.when >= datetime.today() - timedelta(days=10))\
-        .order_by(ProjectEvent.when.desc()).limit(10)
+        .filter(ProjectUpdate.project_id==project_id)\
+        .filter(ProjectUpdate.when >= datetime.today() - timedelta(days=10))\
+        .order_by(ProjectUpdate.when.desc()).limit(10).all()
     
     return {
         'project_id' : project_id,

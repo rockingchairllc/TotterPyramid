@@ -109,7 +109,10 @@ def merge_anon_user_projects(request, user_id):
     projects = request.session.get('project_id', [])
     for project in projects:
         if project not in user.projects:
-            session.execute(participants.insert((project, user.id)))
+            try: 
+                session.execute(participants.insert((project, user.id)))
+            except IntegrityError:
+                continue
 
 @view_config(context=Forbidden, renderer="login.jinja2")
 @view_config(route_name='login', renderer="login.jinja2")
@@ -130,7 +133,7 @@ def login(request):
         try:
             user = session.query(User).filter(User.email==login).one()
             if user.password_hash(password) == user.salted_password_hash:
-                headers = remember(request, user.id.hex)
+                headers = remember(request, str(user.id))
                 user.last_login = datetime.now()
                 session.flush()
                 merge_anon_user_projects(request, user.id)
@@ -188,7 +191,7 @@ def register(request):
             message = "Email '%s' already taken" % login
         else:
             merge_anon_user_projects(request, user.id)
-            headers = remember(request, user.id.hex)
+            headers = remember(request, str(user.id))
             return HTTPFound(location = came_from, headers = headers)            
 
     return dict(
@@ -251,7 +254,7 @@ def facebook(request):
             session.flush()
             merge_anon_user_projects(request, user.id)
         login = user.email
-        headers = remember(request, user.id.hex)
+        headers = remember(request, str(user.id))
         url = request.referer if request.referer else request.application_url
         return HTTPFound(location = url, headers = headers) 
     elif 'error' in request.params:
