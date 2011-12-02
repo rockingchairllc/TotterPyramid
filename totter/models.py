@@ -48,7 +48,9 @@ class User(Base):
     def password_hash(self, password):
         return hashlib.md5(self.salt + hashlib.md5(password).hexdigest()).hexdigest()
 
-
+    def default_profile_url(request):
+        return request.static_url('totter:static/images/default_profile.jpg')
+        
 participants = Table('Participants', Base.metadata,
     Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), primary_key=True),
     Column('UserUUID', UUID(), ForeignKey('Users.UserUUID'), primary_key=True)

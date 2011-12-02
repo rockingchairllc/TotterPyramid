@@ -176,6 +176,7 @@ def register(request):
             last_name = lastname,
             salt = salt_generator(),
         )
+        user.profile_picture = user.default_profile_url(request)
         user.salted_password_hash = user.password_hash(password)
         try:
             session.add(user)
