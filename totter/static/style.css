@@ -185,7 +185,7 @@ User Info Section
 	padding-right: 13px; 
 	background: url(images/options_arrow_down.png) center right no-repeat; 
 }
-.user_photo {padding-right: 5px;}
+.user_photo {padding-right: 5px; float: right;}
 
 /* User links tool tip */
 .user_info ul {
