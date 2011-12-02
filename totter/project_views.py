@@ -50,6 +50,22 @@ def add_comment(request):
         })
     return {'comment_id' : new_comment.id}
     
+@view_config(route_name='project_update', request_method='POST', renderer='json', xhr=True, permission='post')
+def add_update(request):
+    # Add comment request body is JSON-encoded with parameters:
+    # 'data' : The comment text.
+    session = DBSession()
+    project_id = request.matchdict['project_id']
+    update_text = request.json_body['data']
+    cur_user = get_user(request)
+    new_update = ProjectUpdate(project_id=project_id, data=update_text)
+    session.add(new_update)
+    session.flush()
+    
+    # Record event:
+    return {'update_id' : new_update.id}
+    
+    
     
 @view_config(route_name='rating_collection', request_method='POST', renderer='json', xhr=True, permission='post')
 def add_rating(request):
@@ -240,7 +256,7 @@ def project(request):
     except NoResultFound:
         raise NotFound()
         
-    events = session.query(ProjectEvent)\
+    updates = session.query(ProjectUpdate)\
         .filter(ProjectEvent.project_id==project_id)\
         .filter(ProjectEvent.when >= datetime.today() - timedelta(days=10))\
         .order_by(ProjectEvent.when.desc()).limit(10)
@@ -248,12 +264,13 @@ def project(request):
     return {
         'project_id' : project_id,
         'project' : project, 
-        'events' : events,
+        'updates' : updates,
         'ideas': project.ideas, 
         'user' : user, 
         'ideas_count': len(project.ideas), 
         'people_count': 1
     }
+    
 @view_config(route_name='project_people', renderer='project_people.jinja2', permission='view')
 def display_project_people(request):
     user = get_user(request)

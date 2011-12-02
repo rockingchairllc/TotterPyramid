@@ -1,8 +1,53 @@
 {% extends "project_base.jinja2" %}
 {% set active_page = "overview" %}
 
+{% block scripts %}
+{{ super() }}
+<script type="text/javascript">
+function addUpdate() {
+    $('.add_update').toggle();
+}
+function addIdea_to_project() {
+    var prjId = "{{project.id}}";
+    var IdeaData = JSON.stringify({'data': $(".add_update_modal textarea").val(), 'project_id': prjId });
+    $.ajax({
+        url:"{{request.application_url}}/project/{{project.id}}/idea",
+        type: "POST",
+        dataType: "json",
+        data: IdeaData,
+        success: onSuccess_addIdea
+    });
+    
+    function onSuccess_addIdea(data){
+        var new_id = data.idea_id;
+        var prepare_data = '<li><div class="idea_author"><a href="#"><img src={{user.profile_picture}}?type=square"/></a></div>' +
+            '<div class="idea_body"><div class="idea_meta"><div class="username"><a href="#">{{user.first_name}}</a></div>' +
+            '<strong id="rate_value'+new_id+'">Total Rating: 0</strong><div class="like_love">' +
+            '<a href="#" id="likeidea'+new_id+'" order="1" onClick="addRating(' + new_id + ', 0, 1)">Like It</a> &bull; <a href="#" id="loveidea'+new_id+'" order="1" onClick="addRating(' + new_id + ', 0, 2)">Love It</a>' + 
+            '</div><!-- like_love --></div><!-- .idea_meta --><div class="idea_description">'+ $(".add_idea_modal textarea").val() +'</div><div class="comment_time">' +
+            '<a href="javascript:void(0)" class="comment_on_idea" onClick="showComment('+new_id+')">Comment</a>&#124;September 18th at 9:30am</div><!-- .comment_time -->' +
+            '<ul class="project_idea_comments" id="comments'+new_id+'"><li class="new_comment first_update"><input class="comment_text" type="text" value="Start Typing" order="'+new_id+'"/><br /><span class="enter_to_submit">Push Enter to Submit</span>' +
+            '</li><!-- .new_comment --><!-- Append all new comments to the ul.project_idea_comments --></ul><!-- .project_idea_comments --></div><!-- idea_body --></li>';
+        $('.project_ideas').prepend(prepare_data);
+        $('#comments'+new_id).children('.new_comment').children('.comment_text').bind('keypress', submitkey_binding);
+    }
+    addUpdate();
+}
+</script>
 
+{% endblock %}
 {% block project_body %}
+<div class="add_idea add_update">
+    <div class="add_idea_overlay add_update_overlay" onClick="addUpdate()"></div>
+    <div class="add_idea_modal add_update_modal drop-shadow">
+        <h1>Add Update</h1>
+        <textarea>Start typing your update...</textarea>
+        <a href="javascript:void(0)" onClick="addUpdate()">Cancel</a>
+        <button type="button" onClick="addUpdate_to_project()">Add Update</button>
+    </div><!-- idea_idea_modal -->
+</div><!-- .add_idea -->
+            
+
 <div class="project_description">
     <h2>Description</h2>
     <p>
@@ -11,20 +56,14 @@
 </div><!-- .project_description -->
 
 <ul class="project_updates">
-    <h2>Updates</h2>
-    {% for event in events %}
+    <div class="updates_header">
+        <h2>Updates</h2>
+        <button type="button" onClick="addUpdate()" class="add_update_button">Add Update</button>
+    </div> <!-- .updates_header -->
+    {% for update in updates %}
     <li {% if loop.first %}class="first_update"{% endif %}{% if loop.last %}class="last_update"{% endif %}>
         <span class="project_update_date">{{event.when}}</span><br />
-        {% if event.type=="add_comment" %}
-        {{event.data['commenter_first']}} {{event.data['commenter_last']}} 
-            commented on
-            {{event.data['idea_first']}} {{event.data['idea_last']}}'s <a href="{{event.data['comment_uri']}}">idea.</a>
-        {% elif event.type=="add_idea" %}
-        {{event.data['idea_first']}} {{event.data['idea_last']}} posted a 
-            <a href="{{event.data['idea_uri']}}">new idea.</a>
-        {% else %}
-            {{event.data|pprint}}
-        {% endif %}
+            {{update.data}}
     </li>
     {% endfor %}
 </ul><!-- .project_updates -->

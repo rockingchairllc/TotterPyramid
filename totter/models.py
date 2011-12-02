@@ -82,7 +82,14 @@ class Project(Base):
             (Allow, 'group:ro-'+str(self.id), 'view'),
             (Allow, 'group:rw-'+str(self.id), ['post', 'view']),
         ]
-        
+
+class ProjectUpdate(Base):
+    __tablename__ = 'ProjectUpdates'
+    id = Column('UpdateID', Integer, primary_key=True, nullable=False, autoincrement=True)
+    project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), nullable=False, index=True)
+    when = Column('When', DateTime, default=datetime.now, nullable=False, index=True)
+    data = Column('Data', JSONEncodedDict)
+    project = relationship(Project, backref=backref('updates', lazy='dynamic'))
         
 class ProjectEvent(Base):
     __tablename__ = 'ProjectEvents'

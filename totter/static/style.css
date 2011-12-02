@@ -285,6 +285,7 @@ Project Page
 	display: block;
 	background: rgba(0,0,0,.6);
 }
+
 ul.tabs {
 	padding-bottom: 4px;
 	border-bottom: 1px solid #2471BE;
@@ -343,6 +344,20 @@ ul.project_updates li.first_update {border-top: none;}
 ul.project_updates li.last_update {border-bottom: none;}
 span.project_update_date {font-weight: bold;}
 
+div.updates_header {
+    overflow: hidden;
+}
+
+div.updates_header h2 {
+    display: inline;
+    position: relative;
+    top: .4em;
+    left: .1em;
+}
+
+div.updates_header button {
+    float: right;
+}
 
 /******************************************************************************************************************************************************
 Project Idea Page
