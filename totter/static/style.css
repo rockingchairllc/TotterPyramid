@@ -416,6 +416,8 @@ div.like_love {font-weight: bold; text-align: right;
 }
 
 
+
+
 /* Stars */
 ul.idea_meta li {display: inline-block; border: none; padding-bottom: 0px; margin-top: -25px;}
 .star, .star_active {
@@ -450,25 +452,37 @@ ul.star_tool_tip li a:hover {text-decoration: none;}
 
 .comment_time {font-size: 12px; padding: 5px 0;}
 
-.new_comment {
+ul.project_idea_comments .new_comment {
 	display: none;
 	height: 50px;
 	padding-bottom: 15px;
+	padding-top: 2px;
 }
+
 .enter_to_submit {
 	font-size: 10px;
 	position: absolute;
 	bottom: 0;
 	right: 3px;
 }
+
+.enter_to_submit.hidden {
+    display: none;
+}
+
+.project_idea_comments .throbber img {
+    float: right;
+}
+
 ul.project_idea_comments {
 	background: #efefef;
-	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
 ul.project_idea_comments li {
 	padding: 15px 0;
 	border-top: 1px solid #fff;
 	border-bottom: 1px solid #ccc;
 }
-ul.project_idea_comments li img {float: left;}
+ul.project_idea_comments li img {float: left; position: relative; top: -5px;}
 .comment_body {margin-left: 40px;}
