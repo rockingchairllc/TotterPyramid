@@ -131,15 +131,15 @@
 	                    	<strong id="rate_value{{idea_data[ideas_index].idea.id}}" >Total Rating: {{idea_data[ideas_index].total_rating}}</strong>
 	                        <div class="like_love">
 	                        {% if idea_data[ideas_index].user_rating.liked == 1 %}
-	                        	<a href="#" id="likeidea{{idea_data[ideas_index].idea.id}}" order="2" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Unlike It</a>
+	                        	<a id="likeidea{{idea_data[ideas_index].idea.id}}" order="2" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Unlike It</a>
 	                        {% else %}
-	                        	<a href="#" id="likeidea{{idea_data[ideas_index].idea.id}}" order="1" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Like It</a>
+	                        	<a id="likeidea{{idea_data[ideas_index].idea.id}}" order="1" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 1)">Like It</a>
 	               			{% endif %}         	 
 	                            &bull; 
 	                        {% if idea_data[ideas_index].user_rating.loved == 1 %}
-	                            <a href="#" id="loveidea{{idea_data[ideas_index].idea.id}}" order="2" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Unlove It</a>
+	                            <a id="loveidea{{idea_data[ideas_index].idea.id}}" order="2" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Unlove It</a>
 	                        {% else %}
-	                        	<a href="#" id="loveidea{{idea_data[ideas_index].idea.id}}" order="1" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Love It</a>
+	                        	<a id="loveidea{{idea_data[ideas_index].idea.id}}" order="1" onClick="addRating({{idea_data[ideas_index].idea.id}}, {{idea_data[ideas_index].total_rating}}, 2)">Love It</a>
 	                       	{% endif %} 
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
