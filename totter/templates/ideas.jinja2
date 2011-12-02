@@ -136,7 +136,6 @@
 			}
 		} 
 	</script>
-	
 {% endblock %}
 
 {% block project_body %}
@@ -174,7 +173,7 @@
 	                        </div><!-- like_love -->
                         </div><!-- .idea_meta -->
                     	<div class="idea_description">{{idea_data[ideas_index].idea.data}}</div>
-                    	<div>
+                    	<div class="comment_block">
                             <div class="comment_time">
                                 <a href="javascript:void(0)" class="comment_on_idea" onClick="showComment({{idea_data[ideas_index].idea.id}})">Comment</a> 
                                 &#124; 
@@ -183,7 +182,9 @@
                              
                             <ul class="project_idea_comments" id="comments{{idea_data[ideas_index].idea.id}}">
                                 <li class="new_comment first_update">
+                                    <form>
                                     <input class="comment_text" type="text" value="Start Typing" order = "{{idea_data[ideas_index].idea.id}}"/><br />
+                                    </form>
                                     <span class="enter_to_submit">Push Enter to Submit</span>
                                 </li><!-- .new_comment -->
                                  
@@ -202,12 +203,12 @@
                                         </a>
                                         <div class="comment_body">
                                             <a href="#">{{comment.author.first_name}}</a>
-                                            {{comment.data}} 
+                                            <span>{{comment.data}}</span> 
                                         </div>
                                 {% endfor %}
                   
                             </ul><!-- .project_idea_comments -->
-                        </div>
+                        </div> <!-- .comment_block -->
                     </div><!-- idea_body -->
                 </li>
             {% endfor %}
