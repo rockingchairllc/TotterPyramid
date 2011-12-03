@@ -293,8 +293,12 @@ def display_project_people(request):
         for comment in idea.comments:
             people_bucket[comment.author.id] = comment.author
     
+    # Sort by first last name
+    people_data = people_bucket.values()
+    people_data.sort(key=lambda user: user.first_name + ' ' + user.last_name)
+    
     return {
-        'people' : people_bucket.values(),
+        'people' : people_data,
         'project_id' : project_id,
         'project' : project, 
         'user' : user, 
