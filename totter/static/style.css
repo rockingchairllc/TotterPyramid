@@ -522,8 +522,7 @@ ul.project_idea_comments li img {
     font-size: 12px;
     word-wrap: break-word;
 }
-textarea.comment_text {
-    font-size: 12px;
+.comment_input {
     height: 15px;
     left: 14px;
     margin: 0;

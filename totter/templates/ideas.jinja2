@@ -46,9 +46,9 @@
 		}
 		$(document).ready(function(){
 		    console.log('document.ready');
-			$('textarea.comment_text').live('keypress', submitkey_binding);
+			$('.comment_input').live('keypress', submitkey_binding);
 			
-			$('textarea.comment_text').autoResize({max_width : 100, min_height:'original'});
+			$('.comment_input').autoResize({max_width : 100, min_height:'original', extraSpace: 10});
 		});
 		
 		
@@ -191,7 +191,7 @@
 							    </ul>
 							</li>
 							<li class="new_comment first_update">
-                            	<textarea class="comment_text" type="text" order="{{idea_data[ideas_index].idea.id}}">Start Typing</textarea><br />
+                            	<textarea class="comment_text comment_input" type="text" order="{{idea_data[ideas_index].idea.id}}">Start Typing</textarea><br />
                                 <span class="enter_to_submit default">Push Enter to Submit</span>
                                 <span class="enter_to_submit throbber hidden">Posting...<img src="{{request.static_url('totter:static/images/throbber.gif')}}"/></span>
                             </li><!-- .new_comment -->
