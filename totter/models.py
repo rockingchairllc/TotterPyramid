@@ -56,6 +56,14 @@ participants = Table('Participants', Base.metadata,
     Column('UserUUID', UUID(), ForeignKey('Users.UserUUID'), primary_key=True)
 )
 
+def project_exists(*filter_params):
+    from sqlalchemy.sql.expression import select, exists
+    session = DBSession()
+    project_query = session.query(Project).filter_by(*filter_params)
+    project_exists_select = select((exists(project_query.statement),))
+    engine = Base.metadata.bind
+    return engine.execute(project_exists_select).scalar()
+
 class Project(Base):
     __tablename__ = 'Projects'
     id = Column('ProjectUUID', UUID(),primary_key=True,default=uuid.uuid4)
