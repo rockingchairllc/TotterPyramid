@@ -159,18 +159,15 @@
                                 <a class="unlove {% if not loved %}hidden{% endif %}" onClick="unlove('#like_love_{{idea_id}}', {{idea_id}})">Unlove It</a>
                             </div><!-- like_love -->
                         </div>
-                        </div><!-- .idea_meta -->
-                    	<div class="idea_description">{{idea_data[ideas_index].idea.data}}</div>
                         <div class="comment_time">
-                        <!--
-                            <a href="javascript:void(0)" class="comment_on_idea" onClick="showComment({{idea_data[ideas_index].idea.id}})">Comment</a> 
-                            &#124; 
-                        -->
                             {{idea_data[ideas_index].idea.creation_time | timefmt}}
                         </div><!-- .comment_time -->
+                        </div><!-- .idea_meta -->
+                    	<div class="idea_description">{{idea_data[ideas_index].idea.data}}</div>
+                        
                          
                         <ul class="project_idea_comments" id="comments{{idea_data[ideas_index].idea.id}}">
-                            
+                            <li class="list_title">Comments:</li>
                             <li class="existing_comments">
                                 <ul class="existing_comments">
                                 <!-- Append all new comments to the ul.project_idea_comments -->
