@@ -1,0 +1,40 @@
+{% extends "base.jinja2" %}
+
+{% block scripts %}
+{% endblock %}
+{% block body %}
+	<div class="wrapper drop-shadow curved curved-vt-2">
+            {% block user_header %}
+            <!-- Begin the Header -->
+            <div class="header">
+                {% if user %}
+                <div class="user_info">
+                    <h4 class="username_first_name">{{user.first_name}}</h4>
+                    <ul class="tool_tip drop-shadow">
+                        <li><a href="#">Edit Profile</a></li>
+                        <li><a href="#">User Link</a></li>
+                        <li><a href="#">User Link</a></li>
+                        <li><a href="#">User Link</a></li>
+                        <li><a href="#">User Link</a></li>
+                    </ul>
+                    <img src="{{user.profile_picture}}" class="user_photo" />
+                </div><!-- .user_info -->
+                {% endif %}
+                <h1 class="logo">Totter</h1>
+                
+                <!-- Clear the float to prevent the header from collapsing -->
+                <div class="clearfloat"></div>
+                
+			</div><!-- .header -->
+			{% endblock %}
+            {% block page_body %}
+            {% endblock %}
+{% endblock %}
+
+{% block footer %}
+    {{ super() }}
+    {% block page_footer %}
+    
+    </div> <!-- .wrapper -->
+    {% endblock %}
+{% endblock %}
