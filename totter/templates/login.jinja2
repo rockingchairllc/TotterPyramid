@@ -11,6 +11,22 @@
         searchBox.blur(function(){  
             if($(this).attr("value") == "") $(this).attr("value", searchBoxDefault);  
         });
+        
+        var fakePassword = $("#fakepassword");
+        var realPassword = $("#realpassword");
+        var passwordDefault = "Password";
+        fakePassword.focus(function(){  
+            
+            fakePassword.addClass("hidden");
+            realPassword.removeClass("hidden");
+            realPassword.focus();
+        });  
+        realPassword.blur(function(){  /*
+            if($(this).attr("value") == "") {
+                $(this).attr("value", passwordDefault);  
+                $(this).attr("type", "text");
+            }*/
+        });
     });
 </script>
 {% endblock %}
@@ -23,9 +39,10 @@
             <form id="loginForm" method='post' action="{{request.route_url('login')}}">
                 <fieldset>
                     <input type="hidden" name="came_from" value="{{came_from}}"/>
-                    <input type="text" name='login' value="{{ login if login else 'Email' }}" /><br />
-                    
-                    Password: <input type="password" id='logpass' name='password' value="{{ password }}" /><br />
+                    <input type="text" class="login_field" name='login' value="{{ login if login else 'Email' }}" /><br />
+                    <input type="text" class="login_field" id="fakepassword" name="_" value="Password" />
+                    <input type="password" class="login_field hidden" id="realpassword" name="password" value="" />
+                    <br />
 				    <a href="#ForgotPassword" class="forgot_password">Forgot Password?</a>
                     
                     <div class="remember_me">
