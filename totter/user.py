@@ -264,6 +264,8 @@ def facebook(request):
         login = user.email
         headers = remember(request, str(user.id))
         url = request.referer if request.referer else request.application_url
+        logging.info('request.referrer' + str(request.referer))
+        logging.info('request.application_url: ' + str(request.application_url))
         return HTTPFound(location = url, headers = headers) 
     elif 'error' in request.params:
         # The user denied our request to use their fb creds.
