@@ -25,7 +25,7 @@ def main(global_config, **settings):
     config.include('pyramid_jinja2')
     config.add_static_view('static', 'totter:static', cache_max_age=3600)
     config.scan()
-    config.add_route('login', '/')
+    config.add_route('home', '/')
 
     config.add_route('create_project', '/project/new')
     config.add_view('totter.project_views.create',

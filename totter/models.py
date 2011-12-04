@@ -51,6 +51,18 @@ class User(Base):
     def default_profile_url(self, request):
         return request.static_url('totter:static/images/default_profile.jpg')
         
+    @property
+    def __name__(self):
+        return str(self.id)
+        
+    @property
+    def __acl__(self):
+        return [
+            (Allow, str(self.id), 'personal'),
+            (Allow, 'group:users', 'friends'),
+            ('Deny', 'system.Everyone', 'view'),
+        ]
+        
 participants = Table('Participants', Base.metadata,
     Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), primary_key=True),
     Column('UserUUID', UUID(), ForeignKey('Users.UserUUID'), primary_key=True)
@@ -120,8 +132,8 @@ class Idea(Base):
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     data = Column('IdeaData', Text)
     
-    author = relationship(User, backref=backref('ideas'))
-    project = relationship(Project, backref=backref('ideas'))
+    author = relationship(User, backref=backref('ideas', lazy='dynamic'))
+    project = relationship(Project, backref=backref('ideas', lazy='dynamic'))
     
 
 
@@ -130,6 +142,7 @@ class Comment(Base):
     id = Column('CommentID', Integer, 
         primary_key=True, nullable=False, autoincrement=True)
     idea_id = Column('IdeaID', Integer, ForeignKey('Ideas.IdeaID'))
+    project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'))
     author_id = Column('AuthorUUID', UUID(), ForeignKey('Users.UserUUID'))
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
@@ -137,6 +150,7 @@ class Comment(Base):
     
     author = relationship(User, backref=backref('comments'))
     idea = relationship(Idea, backref=backref('comments'))
+    project = relationship(Project, backref=backref('comments', lazy='dynamic'))
                 
 class UserRating(Base):
     __tablename__ = 'UserRatings'
@@ -194,6 +208,7 @@ def populate():
     test_comment = Comment(data="This is a test comment.")
     test_comment.author = test_user
     test_comment.idea = test_idea
+    test_comment.project = test_project
     session.add(test_comment)
     session.flush()
     transaction.commit()

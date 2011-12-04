@@ -114,8 +114,10 @@ def merge_anon_user_projects(request, user_id):
             except IntegrityError:
                 continue
 
+
 @view_config(context=Forbidden, renderer="login.jinja2")
 @view_config(route_name='login', renderer="login.jinja2")
+@view_config(route_name='home', renderer="login.jinja2")
 def login(request):
     login_url = request.route_url('login', request)
     referrer = request.url
@@ -248,6 +250,7 @@ def facebook(request):
                 first_name = profile['first_name'],
                 last_name = profile['last_name'],
                 facebook_id = profile['id'],
+                profile_picture = profile['pic_square'],
                 salt = salt_generator(),
             )
             session.add(user)

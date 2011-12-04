@@ -34,8 +34,9 @@ def add_comment(request):
     session = DBSession()
     comment_text = request.json_body['data']
     idea_id = request.matchdict['idea_id']
+    project_id = request.matchdict['project_id']
     cur_user = get_user(request)
-    new_comment = Comment(idea_id=idea_id, data=comment_text)
+    new_comment = Comment(project_id=project_id, idea_id=idea_id, data=comment_text)
     new_comment.author = cur_user
     session.add(new_comment)
     session.flush()
@@ -175,7 +176,7 @@ def add_idea(request):
         'idea_last' : new_idea.author.last_name,
         })
         
-    return {'idea_id' : new_idea.id, 'ideas_count' : len(project.ideas)}
+    return {'idea_id' : new_idea.id, 'ideas_count' : project.ideas.count()}
 
 @view_config(route_name='project_ideas', renderer='ideas.jinja2', permission='view')
 def ideas(request):
@@ -189,7 +190,6 @@ def ideas(request):
         raise NotFound()
         
     # Create list of ideas with User's rating added:
-    ideas = project.ideas
     if user:
         idea_data = session.query(Idea, UserRating)\
             .outerjoin(UserRating, (Idea.id==UserRating.idea_id) & (UserRating.user_id==user.id))\
@@ -245,7 +245,7 @@ def ideas(request):
         'project_id' : project_id,
         'idea_data': idea_data, 
         'user' : user, 
-        'ideas_count': len(project.ideas), 
+        'ideas_count': len(idea_data), 
         'people_count': 1
     }
     
@@ -270,9 +270,9 @@ def project(request):
         'project_id' : project_id,
         'project' : project, 
         'updates' : updates,
-        'ideas': project.ideas, 
+        'ideas': project.ideas.all(), 
         'user' : user, 
-        'ideas_count': len(project.ideas), 
+        'ideas_count': project.ideas.count(), 
         'people_count': 1
     }
     
@@ -288,7 +288,7 @@ def display_project_people(request):
         
     people_bucket = {}
     
-    for idea in project.ideas:
+    for idea in project.ideas.all():
         people_bucket[idea.author.id] = idea.author
         for comment in idea.comments:
             people_bucket[comment.author.id] = comment.author
@@ -302,7 +302,7 @@ def display_project_people(request):
         'project_id' : project_id,
         'project' : project, 
         'user' : user, 
-        'ideas_count': len(project.ideas), 
+        'ideas_count': project.ideas.count(), 
         'people_count': 1,
     }
 
