@@ -241,7 +241,7 @@ def facebook(request):
         
         logging.info('Got facebook access token')
         graph = fb.GraphAPI(fb_params['access_token'])
-        profile = graph.get_object("me")
+        profile = graph.get_object("me", fields=('email', 'third_party_id', 'first_name', 'last_name'))
         session = DBSession()
         try:
             logging.info('Mapped user found!')
@@ -249,7 +249,6 @@ def facebook(request):
             merge_anon_user_projects(request, user.id)
         except NoResultFound,e:
             logging.info('Creating facebook user.')
-            logging.info(graph.get_connections('me', 'picture'))
             user = User(
                 id = uuid.uuid4(),
                 email = profile['email'],
