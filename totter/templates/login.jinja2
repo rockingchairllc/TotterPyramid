@@ -15,17 +15,16 @@
         var fakePassword = $("#fakepassword");
         var realPassword = $("#realpassword");
         var passwordDefault = "Password";
-        fakePassword.focus(function(){  
-            
+        fakePassword.focus(function(){
             fakePassword.addClass("hidden");
             realPassword.removeClass("hidden");
             realPassword.focus();
         });  
-        realPassword.blur(function(){  /*
+        realPassword.blur(function(){  
             if($(this).attr("value") == "") {
-                $(this).attr("value", passwordDefault);  
-                $(this).attr("type", "text");
-            }*/
+                fakePassword.removeClass("hidden");
+                realPassword.addClass("hidden");
+            }
         });
     });
 </script>
@@ -39,21 +38,23 @@
             <form id="loginForm" method='post' action="{{request.route_url('login')}}">
                 <fieldset>
                     <input type="hidden" name="came_from" value="{{came_from}}"/>
-                    <input type="text" class="login_field" name='login' value="{{ login if login else 'Email' }}" /><br />
-                    <input type="text" class="login_field" id="fakepassword" name="_" value="Password" />
-                    <input type="password" class="login_field hidden" id="realpassword" name="password" value="" />
-                    <br />
-				    <a href="#ForgotPassword" class="forgot_password">Forgot Password?</a>
+                    <input type="text" class="login_field " name='login' value="{{ login if login else 'Email' }}" />
+                    <input type="text" class="login_field password" id="fakepassword" name="_" value="Password" />
+                    <input type="password" class="login_field password hidden" id="realpassword" name="password" value="" />
                     
-                    <div class="remember_me">
-                    	<input type="checkbox" name='remember' />
-                        <label>Remember me</label>
-					</div><!-- .remember_me -->
-                    <input type="submit" name='form.submitted' class="login_btn" value="Login" />
+				    <a href="#ForgotPassword" class="forgot_password">Forgot Password?</a>
+				    
+                    <div class="login_options">
+                        <div class="remember_me">
+                            <input type="checkbox" name='remember' />
+                            <label class="login_text">Remember me</label>
+                        </div><!-- .remember_me -->
+                        <input type="submit" name='form.submitted' class="login_btn" value="Login" />
+                    </div>
                 </fieldset>
             </form>
 			
-            <h3 class="register">New here?  
+            <h3 class="register login_text">New here?  
                 <a href="{{request.route_url('register')}}" class="register_btn">Register</a></h3>
         
             <div class="fb_login">

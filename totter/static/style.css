@@ -2,6 +2,9 @@
 body {
     background-color: #DBEEFF;
     font-size: 16px;
+    background: url("/static/images/ws_Cloud_Birds_1680x1050.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 h1 {
     font-size: 1.8em;
@@ -36,6 +39,7 @@ input[type="text"], textarea {
     box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.3) inset;
     font-size: 16px;
     margin: 10px 0;
+    margin-bottom: 0;
     padding: 5px;
     width: 98%;
 }
@@ -49,13 +53,19 @@ input[type="text"], textarea {
     padding: 5px;
     width: 98%;
 }
+.login_field.password {
+    margin-bottom: 0;
+}
 
 .login_field.hidden {
     display: none;
 }
 
+.login_text {
+    font-size: 14px;
+}
+
 input[type="text"]:focus, textarea:focus {
-    box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.3) inset;
 }
 
 /* Button and Submit Inputs */
@@ -232,21 +242,33 @@ ul.footer_links li a {
 .login_register_wrap form {
     padding-bottom: 10px;
 }
+
+
+.login_options {
+    clear: both;
+    padding-top: 17px;
+}
+
+.fb_login {
+    margin: 10px;
+}
+
 .forgot_password {
     font-size: 11px;
-    position: absolute;
-    right: 45px;
-    top: 245px;
+    float: right;
 }
 div.remember_me {
     font-size: 11px;
-    left: 50px;
-    position: absolute;
-    top: 275px;
+    float: left;
+    margin-top: 8px;
 }
 #loginForm input[type="submit"] {
-    margin: 15px 0 0 180px;
+    float: right;
+    display: inline;
+    margin: 0;
+    
     width: 75px;
+    
 }
 .register {
     padding: 10px 0;
