@@ -116,7 +116,10 @@ def merge_anon_user_projects(request, user_id):
 
 @view_config(route_name='home', renderer="login.jinja2")
 def landing(request):
-    return HTTPFound(location=request.route_url('login'))
+    if get_user(request):
+        return HTTPFound(location=request.route_url('dashboard'))
+    else:
+        return HTTPFound(location=request.route_url('login'))
     
 @view_config(context=Forbidden, renderer="login.jinja2")
 @view_config(route_name='login', renderer="login.jinja2")
