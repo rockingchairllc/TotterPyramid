@@ -56,7 +56,9 @@ def show_dashboard(request):
             'title' : project.title, 
             'url' : request.route_url('project_entity', project_id=project.id)
         }
-        if participation.access_time:
+        if project.creator_id == user.id: # We add these to created_projects below.
+            continue
+        if participation.access_time: 
             other_projects += [project_data]
         else:
             invited_projects += [project_data]
