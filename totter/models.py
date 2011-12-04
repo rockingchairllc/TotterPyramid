@@ -202,7 +202,7 @@ def populate():
         key="test_key_1234")
     test_project.creator = test_user
     #test_project.participants.append(test_user)
-    session.add(Participation(user_id=test_user.id, project_id=test_project.id, access_time=datetime.now()))
+    session.add(Participation(user=test_user, project=test_project, access_time=datetime.now()))
     session.add(test_project)
     
     test_idea = Idea(data="This is a test idea")
