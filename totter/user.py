@@ -114,10 +114,12 @@ def merge_anon_user_projects(request, user_id):
             except IntegrityError:
                 continue
 
-
+@view_config(route_name='home', renderer="login.jinja2")
+def landing(request):
+    return HTTPFound(location=request.route_url('login'))
+    
 @view_config(context=Forbidden, renderer="login.jinja2")
 @view_config(route_name='login', renderer="login.jinja2")
-@view_config(route_name='home', renderer="login.jinja2")
 def login(request):
     login_url = request.route_url('login', request)
     referrer = request.url
