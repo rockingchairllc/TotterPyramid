@@ -25,10 +25,7 @@ def main(global_config, **settings):
     config.include('pyramid_jinja2')
     config.add_static_view('static', 'totter:static', cache_max_age=3600)
     config.scan()
-    config.add_route('home', '/')
-    config.add_view('totter.views.my_view',
-                    route_name='home',
-                    renderer='mytemplate.jinja2')
+    config.add_route('login', '/')
 
     config.add_route('create_project', '/project/new')
     config.add_view('totter.project_views.create',
@@ -80,6 +77,8 @@ def main(global_config, **settings):
     config.add_route('idea_entity', '/project/{project_id}/idea/{idea_id}')
     config.add_route('rating_collection', '/project/{project_id}/idea/{idea_id}/rating')
     config.add_route('event_collection', '/project/{project_id}/event')
-                    
+    
+    config.add_route('user_entity', '/user/{user_id}/', factory=RootFactory, traverse='/user/{user_id}')
+    
     return config.make_wsgi_app()
 
