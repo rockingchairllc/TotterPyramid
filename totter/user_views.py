@@ -3,6 +3,7 @@ from models import *
 from pyramid.exceptions import NotFound
 from user import get_user
 import logging
+from pyramid.httpexceptions import HTTPFound
 
 @view_config(route_name='user_entity', renderer="other_user.jinja2", permission='friends') 
 def show_userpage(request):
