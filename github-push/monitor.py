@@ -17,6 +17,7 @@ class PTmp(ProcessEvent):
         print "Remove: %s" %  os.path.join(event.path, event.name)
 
 if __name__ == "__main__":
+    os.remove('/tmp/totter-git-request')
     notifier = Notifier(wm, PTmp())
     wdd = wm.add_watch('/tmp', pyinotify.ALL_EVENTS, rec=False)
     while True:  # loop forever
