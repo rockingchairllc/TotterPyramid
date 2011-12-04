@@ -266,6 +266,10 @@ def project(request):
         .filter(ProjectUpdate.when >= datetime.today() - timedelta(days=10))\
         .order_by(ProjectUpdate.when.desc()).limit(10).all()
     
+    # Update user access time:
+    if user:
+        session.merge(Participation(user_id=user.id, project_id=project.id, access_time=datetime.now()))
+    
     return {
         'project_id' : project_id,
         'project' : project, 

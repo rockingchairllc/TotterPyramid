@@ -110,7 +110,7 @@ def merge_anon_user_projects(request, user_id):
     for project in projects:
         if project not in user.projects:
             try: 
-                session.execute(participants.insert((project, user.id)))
+                session.merge(Participation(project_id=project.id, user_id=user.id, access_time=datetime.now()))
             except IntegrityError:
                 continue
 

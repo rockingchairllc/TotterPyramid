@@ -20,7 +20,7 @@ from sqlalchemy.orm import relationship, backref
 from zope.sqlalchemy import ZopeTransactionExtension
 from sqlalchemy.schema import Column
 import uuid
-
+from sets import ImmutableSet
 from custom_types import UUID, JSONEncodedDict
 import string
 import random
@@ -45,6 +45,8 @@ class User(Base):
     salted_password_hash = Column('SaltedPasswordHash', CHAR(32)) # MD5(Salt+MD5(Password), nullable=False)
     salt = Column('Salt', CHAR(16), default=salt_generator, nullable=False)
 
+    projects = relationship('Project', backref=backref('participants', collection_class=set), secondary='Participants', collection_class=set)
+    
     def password_hash(self, password):
         return hashlib.md5(self.salt + hashlib.md5(password).hexdigest()).hexdigest()
 
@@ -62,12 +64,16 @@ class User(Base):
             (Allow, 'group:users', 'friends'),
             ('Deny', 'system.Everyone', 'view'),
         ]
-        
-participants = Table('Participants', Base.metadata,
-    Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), primary_key=True),
-    Column('UserUUID', UUID(), ForeignKey('Users.UserUUID'), primary_key=True)
-)
 
+class Participation(Base):
+    __tablename__ = 'Participants'
+    project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), primary_key=True)
+    user_id = Column('UserUUID', UUID(), ForeignKey('Users.UserUUID'), primary_key=True)
+    access_time = Column('AccessTime', DateTime, nullable=True)
+    
+    user = relationship(User, uselist=False)
+    project = relationship('Project', uselist=False)
+    
 def project_exists(*filter_params):
     from sqlalchemy.sql.expression import select, exists
     session = DBSession()
@@ -89,9 +95,7 @@ class Project(Base):
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     
     creator = relationship(User, backref=backref('created_projects'))
-    participants = relationship(User, secondary=participants, 
-        backref=backref('projects'))
-        
+    
     @property
     def __name__(self):
         return str(self.id)
@@ -197,7 +201,8 @@ def populate():
     test_project = Project(description="This is the project description.", title="This is the project title",
         key="test_key_1234")
     test_project.creator = test_user
-    test_project.participants.append(test_user)
+    #test_project.participants.append(test_user)
+    session.add(Participation(user_id=test_user.id, project_id=test_project.id, access_time=datetime.now()))
     session.add(test_project)
     
     test_idea = Idea(data="This is a test idea")

@@ -37,3 +37,44 @@ def show_userpage(request):
         'shared_project_count' : len(project_data),
         'projects' : project_data
     }
+    
+@view_config(route_name="dashboard", renderer="dashboard.jinja2")
+def show_dashboard(request):
+    user = get_user(request)
+    if not user:
+        return HTTPFound(location=request.route_url('login'))
+    
+    # Get the projects the user participates in, and data about that participation.
+    session = DBSession()
+    participations = session.query(Participation).filter(Participation.user_id==user.id)
+    
+    invited_projects = []
+    other_projects = []
+    for participation in participations:
+        project = participation.project
+        project_data = {
+            'title' : project.title, 
+            'url' : request.route_url('project_entity', project_id=project.id)
+        }
+        if participation.access_time:
+            other_projects += [project_data]
+        else:
+            invited_projects += [project_data]
+    
+    # Get information about projects user has created.
+    created_projects = session.query(Project).filter(Project.creator_id==user.id)
+    created_projects = [
+        {'title' : project.title, 'url' : request.route_url('project_entity', project_id=project.id)}
+        for project in created_projects
+    ]
+    
+        
+    
+    return {
+        'user' : user,
+        'learn_more_link' : request.route_url('home'),
+        'created_projects' : created_projects,
+        'invited_projects' : invited_projects,
+        'other_projects' : other_projects
+    }
+
