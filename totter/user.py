@@ -241,7 +241,7 @@ def facebook(request):
         
         logging.info('Got facebook access token')
         graph = fb.GraphAPI(fb_params['access_token'])
-        profile = graph.get_object("me", fields=('email', 'third_party_id', 'first_name', 'last_name'))
+        profile = graph.get_object("me", fields='email,first_name,last_name,third_party_id')
         session = DBSession()
         try:
             logging.info('Mapped user found!')
