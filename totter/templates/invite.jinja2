@@ -7,7 +7,7 @@
 <fb:name uid="$user" firstnameonly="true" shownetwork="false"/> wants to know what your Favorite Games are!
 <fb:req-choice url="{{add_url}}" label="Add Favorite Games to your profile!"/>
 
-<fb:request-form action="http://apps.facebook.com/apps/application.php?id=252211568169520" method="POST" invite="true" type="Favorite Games" content="<?php echo htmlentities($content);?>">
+<fb:request-form action="http://apps.facebook.com/apps/application.php?id=252211568169520" method="POST" invite="true" type="Favorite Games" content="">
 <fb:multi-friend-selector max="20" actiontext="Here are your friends who haven't added Favorite Games to their profile. Invite them to share their Favorite Games today!" showborder="true" rows="5"></fb:request-form>
 
 {% endblock %}
