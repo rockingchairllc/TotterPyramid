@@ -365,12 +365,9 @@ def create(request):
 def invite(request):
     project_id = request.matchdict['project_id']
     user = get_user(request)
-    add_url = 'http://www.facebook.com/add.php?api_key=%s&next=%s' % (
-        request.registry.settings['facebook.app_id'],
-        request.route_url('project_entity', project_id=project_id)
-    )
+    
     return {'user' : user, 
-    'add_url' :  add_url,
+    'fb_app_id' : request.registry.settings['facebook.app_id'],
     'project_url' : request.route_url('project_entity', project_id=project_id)}
     
 def enterKey(request):
