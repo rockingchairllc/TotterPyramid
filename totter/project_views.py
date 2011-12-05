@@ -8,6 +8,7 @@ from models import *
 from pyramid.i18n import TranslationStringFactory
 from datetime import datetime, timedelta
 from template import timefmt
+from urllib import urlencode
 _ = TranslationStringFactory('totter')
 import logging
 from user import get_user
@@ -364,7 +365,13 @@ def create(request):
 def invite(request):
     project_id = request.matchdict['project_id']
     user = get_user(request)
-    return {'user' : user, 'project_url' : request.route_url('project_entity', project_id=project_id)}
+    add_url = 'http://www.facebook.com/add.php?api_key=%s&next=%s' % (
+        request.registry.settings['facebook.app_id'],
+        request.route_url('project_entity', project_id=project_id)
+    )
+    return {'user' : user, 
+    'add_url' :  add_url,
+    'project_url' : request.route_url('project_entity', project_id=project_id)}
     
 def enterKey(request):
     return {}
