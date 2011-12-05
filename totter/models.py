@@ -21,7 +21,7 @@ from zope.sqlalchemy import ZopeTransactionExtension
 from sqlalchemy.schema import Column
 import uuid
 from sets import ImmutableSet
-from custom_types import UUID, JSONEncodedDict
+from custom_types import UUID, JSONEncodedDict, HTMLUnicode, HTMLUnicodeText
 import string
 import random
 from datetime import datetime
@@ -35,10 +35,10 @@ salt_generator = lambda : ''.join(random.choice([chr(x) for x in range(0x20,0x7F
 class User(Base):
     __tablename__ = 'Users'
     id = Column('UserUUID',UUID(),primary_key=True,default=uuid.uuid4)
-    email = Column('Email', String(256), unique=True, nullable=False)
-    first_name = Column('FirstName', String(128))
-    last_name = Column('LastName', String(128))
-    profile_picture = Column('ProfilePicture', String(512), nullable=True)
+    email = Column('Email', HTMLUnicode(256), unique=True, nullable=False)
+    first_name = Column('FirstName', HTMLUnicode(128))
+    last_name = Column('LastName', HTMLUnicode(128))
+    profile_picture = Column('ProfilePicture', HTMLUnicode(512), nullable=True)
     facebook_id = Column('FacebookID', Integer, nullable=True)
     registration_date = Column('RegistrationDate', DateTime, default=datetime.now)
     last_login = Column('LastLogin', DateTime, nullable=True) 
@@ -86,9 +86,9 @@ class Project(Base):
     __tablename__ = 'Projects'
     id = Column('ProjectUUID', UUID(),primary_key=True,default=uuid.uuid4)
     description = Column('ProjectDescription', Text)
-    url_name = Column('URLName', String(128), unique=True)
-    title = Column('ProjectTitle', String(128))
-    key = Column('ProjectKey', String(128))
+    url_name = Column('URLName', HTMLUnicode(128), unique=True)
+    title = Column('ProjectTitle', HTMLUnicode(128))
+    key = Column('ProjectKey', HTMLUnicode(128))
     creator_id = Column('CreatorUUID',UUID(), ForeignKey('Users.UserUUID'))
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     deadline = Column('Deadline', DateTime, nullable=True)
@@ -121,7 +121,7 @@ class ProjectEvent(Base):
     id = Column('EventID', Integer, primary_key=True, nullable=False, autoincrement=True)
     project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), nullable=False, index=True)
     when = Column('When', DateTime, default=datetime.now, nullable=False, index=True)
-    type = Column('EventType', String(32), nullable=False)
+    type = Column('EventType', HTMLUnicode(32), nullable=False)
     data = Column('Data', JSONEncodedDict)
     
     project = relationship(Project, backref=backref('events', lazy='dynamic'))
@@ -134,7 +134,7 @@ class Idea(Base):
     author_id = Column('AuthorUUID', UUID(), ForeignKey('Users.UserUUID'))
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
-    data = Column('IdeaData', Text)
+    data = Column('IdeaData', HTMLUnicodeText)
     
     author = relationship(User, backref=backref('ideas', lazy='dynamic'))
     project = relationship(Project, backref=backref('ideas', lazy='dynamic'))
@@ -150,7 +150,7 @@ class Comment(Base):
     author_id = Column('AuthorUUID', UUID(), ForeignKey('Users.UserUUID'))
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
-    data = Column('CommentData', Text)
+    data = Column('CommentData', HTMLUnicodeText)
     
     author = relationship(User, backref=backref('comments'))
     idea = relationship(Idea, backref=backref('comments'))
@@ -194,23 +194,23 @@ def populate():
     import hashlib
     salt = salt_generator()
     password_data = hashlib.md5(salt + hashlib.md5('password1234').hexdigest()).hexdigest()
-    test_user = User(first_name='Tester', last_name='McTesterton', salted_password_hash=password_data, salt=salt, email='test@rockingchairllc.com', 
-    profile_picture='http://linux-engineer.net/blog/public/test.jpg')
+    test_user = User(first_name=u'Tester', last_name=u'McTesterton', salted_password_hash=password_data, salt=salt, email=u'test@rockingchairllc.com', 
+    profile_picture=u'http://linux-engineer.net/blog/public/test.jpg')
     session.add(test_user)
     
-    test_project = Project(description="This is the project description.", title="This is the project title",
-        key="test_key_1234")
+    test_project = Project(description=u"This is the project description.", title=u"This is the project title",
+        key=u"test_key_1234")
     test_project.creator = test_user
     #test_project.participants.append(test_user)
     session.add(Participation(user=test_user, project=test_project, access_time=datetime.now()))
     session.add(test_project)
     
-    test_idea = Idea(data="This is a test idea")
+    test_idea = Idea(data=u"This is a test idea")
     test_idea.author = test_user
     test_idea.project = test_project
     session.add(test_idea)
     
-    test_comment = Comment(data="This is a test comment.")
+    test_comment = Comment(data=u"This is a test comment.")
     test_comment.author = test_user
     test_comment.idea = test_idea
     test_comment.project = test_project

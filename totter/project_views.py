@@ -43,7 +43,7 @@ def add_comment(request):
     
     # Record event:
     idea_author = session.query(Idea).filter(Idea.id==idea_id).one().author
-    record_event('add_comment', request.json_body['project_id'], datetime.now(), {
+    record_event(u'add_comment', request.json_body['project_id'], datetime.now(), {
         'commenter_first' : cur_user.first_name,
         'commenter_last' : cur_user.last_name,
         'comment_uri' : request.current_route_url() + '/' + str(new_comment.id),
@@ -170,7 +170,7 @@ def add_idea(request):
         raise NotFound()
         
     # Record event:
-    record_event('add_idea', request.json_body['project_id'], datetime.now(), {
+    record_event(u'add_idea', request.json_body['project_id'], datetime.now(), {
         'idea_uri' : request.current_route_url() + '/' + str(new_idea.id),
         'idea_first' : new_idea.author.first_name,
         'idea_last' : new_idea.author.last_name,

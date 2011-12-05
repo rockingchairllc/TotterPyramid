@@ -1,5 +1,5 @@
 
-from sqlalchemy import types, Text
+from sqlalchemy import types, Text, String
 from sqlalchemy.types import CHAR, VARCHAR
 from sqlalchemy.schema import Column
 
@@ -60,6 +60,81 @@ class JSONEncodedDict(types.TypeDecorator):
         if value is not None:
             value = json.loads(value)
         return value
+
+import cgi, re
+def encode_for_xml(unicode_data, encoding='ascii'):
+    """
+    Encode unicode_data for use as XML or HTML, with characters outside
+    of the encoding converted to XML numeric character references.
+    """
+    try:
+        return unicode_data.encode(encoding, 'xmlcharrefreplace')
+    except ValueError:
+        # ValueError is raised if there are unencodable chars in the
+        # data and the 'xmlcharrefreplace' error handler is not found.
+        # Pre-2.3 Python doesn't support the 'xmlcharrefreplace' error
+        # handler, so we'll emulate it.
+        return _xmlcharref_encode(unicode_data, encoding)
+
+def _xmlcharref_encode(unicode_data, encoding):
+    """Emulate Python 2.3's 'xmlcharrefreplace' encoding error handler."""
+    chars = []
+    # Step through the unicode_data string one character at a time in
+    # order to catch unencodable characters:
+    for char in unicode_data:
+        try:
+            chars.append(char.encode(encoding, 'strict'))
+        except UnicodeError:
+            chars.append('&#%i;' % ord(char))
+    return ''.join(chars)
+
+def lenient_deccharref(m):
+   return unichr(int(m.group(1)))
+   
+class HTMLUnicode(types.TypeDecorator):
+    impl=String
+    def process_bind_param(self, value, dialect):
+        # From our code to the DB
+        if isinstance(value, str):
+            raise ValueError, 'Value must be unicode!'
+        # Replaces < with &lt; > with &gt and & with &amp;
+        value = cgi.escape(value)
+        value = encode_for_xml(value, 'ascii')
+        return value
+        
  
+    def process_result_value(self, value, dialect):
+        # From the DB to our code.
+        if value:
+            value = value.decode('ascii')
+            value = re.sub('&#(\d+);', lenient_deccharref, value)
+            value = value.replace(u'&gt;', u'>')
+            value = value.replace(u'&lt;', u'<')
+            value = value.replace(u'&amp;', u'&')
+            return value
+        else:
+            return None
+        
+class HTMLUnicodeText(types.TypeDecorator):
+    impl=Text
+    def process_bind_param(self, value, dialect):
+        # From our code to the DB
+        if isinstance(value, str):
+            raise ValueError, 'Value must be unicode!'
+        # Replaces < with &lt; > with &gt and & with &amp;
+        value = cgi.encode(value)
+        value = encode_for_xml(value, 'ascii')
+        return value
+        
  
-    
+    def process_result_value(self, value, dialect):
+        if value:
+            # From the DB to our code.
+            value = value.decode('ascii')
+            value = re.sub('&#(\d+);', lenient_deccharref, value)
+            value = value.replace(u'&gt;', u'>')
+            value = value.replace(u'&lt;', u'<')
+            value = value.replace(u'&amp;', u'&')
+            return value
+        else:
+            return None
