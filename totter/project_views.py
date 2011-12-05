@@ -312,7 +312,8 @@ def display_project_people(request):
 
 @view_config(route_name='create_project', renderer='create.jinja2', permission='create')
 def create(request):
-    return {}
+    user = get_user(request)
+    return {'user' : user}
     
 def enterKey(request):
     return {}
