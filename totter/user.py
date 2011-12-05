@@ -249,6 +249,7 @@ def facebook(request):
             merge_anon_user_projects(request, user.id)
         except NoResultFound,e:
             logging.info('Creating facebook user.')
+            logging.info(profile['last_name'])
             user = User(
                 id = uuid.uuid4(),
                 email = profile['email'],
