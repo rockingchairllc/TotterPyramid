@@ -234,6 +234,7 @@ def facebook(request):
             # If we're good, fb_params should contain keys (access_token,expires)
             if 'access_token' not in fb_params:
                 raise Exception(fb_resp.content)
+            request.session['access_token'] = fb_params['access_token']
         except URLError,e:
             logging.error(repr(e))
         except Exception,e:

@@ -368,6 +368,7 @@ def invite(request):
     
     return {'user' : user, 
     'fb_app_id' : request.registry.settings['facebook.app_id'],
+    'fb_access_token' : request.session['access_token'] if 'access_token' in request.session else None
     'project_url' : request.route_url('project_entity', project_id=project_id)}
     
 def enterKey(request):
