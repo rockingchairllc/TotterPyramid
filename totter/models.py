@@ -102,7 +102,7 @@ class Project(Base):
     @property
     def __acl__(self):
         return [
-            (Allow, str(self.creator_id), 'edit'),
+            (Allow, str(self.creator_id), ['edit', 'invite']),
             (Allow, 'group:ro-'+str(self.id), 'view'),
             (Allow, 'group:rw-'+str(self.id), ['post', 'view']),
             ('Deny', 'system.Everyone', 'view'),

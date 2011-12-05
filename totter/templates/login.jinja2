@@ -35,7 +35,7 @@
             <h1 class="title">Welcome to Totter</h1>
             {% if invalid_password -%}<font color="red"> Invalid password. </font> {% endif %}
             {% if unknown_user -%}<font color="red"> Unknown email, try registering? </font> {% endif %}
-            <form id="loginForm" method='post' action="{{request.route_url('login')}}">
+            <form id="loginForm" method="post" action="{{request.route_url('login')}}">
                 <fieldset>
                     <input type="hidden" name="came_from" value="{{came_from}}"/>
                     <input type="text" class="login_field " name='login' value="{{ login if login else 'Email' }}" />

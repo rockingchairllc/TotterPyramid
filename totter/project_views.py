@@ -2,6 +2,7 @@
 #from totter.models import MyModel
 import uuid
 from pyramid.exceptions import NotFound
+from pyramid.httpexceptions import HTTPBadRequest, HTTPFound
 from pyramid.view import view_config
 from models import *
 from pyramid.i18n import TranslationStringFactory
@@ -10,6 +11,26 @@ from template import timefmt
 _ = TranslationStringFactory('totter')
 import logging
 from user import get_user
+
+notwhite = lambda value: value is not None and len(value.strip()) > 0
+notwhite.explanation = 'Value must be one or more non-whitespace characters.'
+def validate_params(request, params):
+    if instanceof(params, dict):
+        validators = params.values()
+        params = params.keys()
+    else:
+        validators = [None]*len(params)
+    
+    for i, param in enumerate(params):
+        if param not in request.params:
+            raise HTTPBadRequest(explanation='Expected parameter: ' + param)
+        if validator[i] and not validator(request.params[param]):
+            if validator[i].explanation:
+                raise HTTPBadRequest(explanation=explanation)
+            else:
+                raise HTTPBadRequest(explanation=param + ' is not valid.')
+    return True
+    
 
 def record_event(action, project_id, time, action_data):
     # TODO: Deferred processing?
@@ -313,7 +334,35 @@ def display_project_people(request):
 @view_config(route_name='create_project', renderer='create.jinja2', permission='create')
 def create(request):
     user = get_user(request)
-    return {'user' : user}
+    
+    if 'project_key' in request.params:
+        # User submitted a project.
+        # TODO: Validation.
+        new_project = Project(
+            title=request.params['project_title'],
+            key=request.params['project_key'],
+            description=request.params['project_description'],
+            url_name=request.params['project_url'],
+            creator_id=user.id)
+            
+        participation = Participation(user=user, project=new_project)
+        try: 
+            session = DBSession()
+            session.add(new_project)
+            session.add(participation)
+            session.flush()
+        except IntegrityError:
+            # url_name collision.
+            raise HTTPBadRequest(explanation="Sorry! That URL has already been taken!")
+        return HTTPFound(location=request.route_url('project_invite', project_id=new_project.id))
+    else:
+        return {'user' : user}
+
+@view_config(route_name='project_invite', renderer='invite.jinja2', permission='invite')
+def invite(request):
+    project_id = request.matchdict['project_id']
+    user = get_user(request)
+    return {'user' : user, 'project_url' : request.route_url('project_entity', project_id=project_id)}
     
 def enterKey(request):
     return {}

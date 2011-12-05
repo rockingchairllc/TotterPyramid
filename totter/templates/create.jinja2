@@ -60,24 +60,24 @@
             <div class="the_content">
                 <div class="create_totter">
                 
-                    <form id="create_project">
+                    <form id="create_project" method="post" action="{{request.current_route_url()}}">
                         <fieldset>
                             <h1 class="title">Create Project</h1>
                             <div class="field">
                             <label for="title">Title:</label>
-                            <input id="title" class="input" type="text" /><br />
+                            <input id="title" name="project_title" class="input" type="text" /><br />
                             </div>
                             <div class="field">
                             <label for="description">Description:</label><br />
-                            <textarea class="input" id="description"></textarea><br />
+                            <textarea class="input" name="project_description" id="description"></textarea><br />
                             </div>
                             <div class="field">
                             <label for="url">Project URL:</label><br />
-                            http://totter.com/<input class="input" id="url" type="text" class="create_project_url" /><br />
+                            http://totter.com/<input class="input" id="url" type="text" name="project_url" class="create_project_url" /><br />
                             </div>
                             <div class="field">
                             <label for="key">Project Key:</label>
-                            <input id="key" class="input" type="text" /><br />
+                            <input id="key" class="input" name="project_key" type="text" /><br />
                             <span>(This is a secret passcode that is used by participants to access the project.)</span>
                             </div>
                             <!-- 
