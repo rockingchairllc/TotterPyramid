@@ -7,7 +7,7 @@
 
 <ul class="user_projects">
 {% for project in projects %}
-<li><div class="project_title">{{ project.title }}</div>
+<li><div class="project_title"><a href="{{project.url}}">{{ project.title }}</a></div>
 <div class="participation_info">Posted {{ project.idea_count }} ideas and {{ project.comment_count }} comments.<div>
 </li>
 {% endfor %}

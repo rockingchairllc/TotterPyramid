@@ -28,6 +28,7 @@ def show_userpage(request):
         # How many ideas and comments other_user has posted to this project.
         data['idea_count'] = project.ideas.filter(Idea.author==other_user).count()
         data['comment_count'] = project.comments.filter(Comment.author==other_user).count()
+        data['url'] = request.route_url('project_entity', project_id=project.id)
         project_data += [data]
 
     return {
