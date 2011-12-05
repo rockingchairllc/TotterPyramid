@@ -255,7 +255,7 @@ def facebook(request):
                 first_name = profile['first_name'],
                 last_name = profile['last_name'],
                 facebook_id = profile['id'],
-                #profile_picture = profile['pic_square'],
+                profile_picture = 'http://graph.facebook.com/'+profile['id'] + '/picture',
                 salt = salt_generator(),
             )
             session.add(user)
