@@ -298,14 +298,19 @@ div.remember_me {
     margin-bottom: 30px;
 }
 
-#create_project input#url {
+#create_project .input#url {
     width: 541px;
 }
-#create_project input#title {
+
+#create_project .input#description {
+    height: 50px;
+}
+
+#create_project .input#title {
     width: 629px;
 }
 
-#create_project input#key {
+#create_project .input#key {
     width: 560px;
 }
 
