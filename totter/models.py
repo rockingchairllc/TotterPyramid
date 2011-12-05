@@ -21,7 +21,7 @@ from zope.sqlalchemy import ZopeTransactionExtension
 from sqlalchemy.schema import Column
 import uuid
 from sets import ImmutableSet
-from custom_types import UUID, JSONEncodedDict, HTMLUnicode, HTMLUnicodeText
+from custom_types import UUID, JSONEncodedDict, HTMLUnicode, HTMLUnicodeText, URL
 import string
 import random
 from datetime import datetime
