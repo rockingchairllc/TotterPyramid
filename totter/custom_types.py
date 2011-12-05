@@ -6,6 +6,7 @@ from sqlalchemy.schema import Column
 import uuid
 import string
 import json
+import logging
 
 ## UUID:
 # From http://blog.sadphaeton.com/2009/01/19/sqlalchemy-recipeuuid-column.html
@@ -62,6 +63,7 @@ class JSONEncodedDict(types.TypeDecorator):
         return value
 
 import cgi, re
+import urllib
 def encode_for_xml(unicode_data, encoding='ascii'):
     """
     Encode unicode_data for use as XML or HTML, with characters outside
@@ -96,7 +98,8 @@ class HTMLUnicode(types.TypeDecorator):
     def process_bind_param(self, value, dialect):
         # From our code to the DB
         if isinstance(value, str):
-            raise ValueError, 'Value must be unicode!'
+            logging.warn('Expected unicode value.')
+            value = value.decode('ascii')
         # Replaces < with &lt; > with &gt and & with &amp;
         value = cgi.escape(value)
         value = encode_for_xml(value, 'ascii')
@@ -120,21 +123,39 @@ class HTMLUnicodeText(types.TypeDecorator):
     def process_bind_param(self, value, dialect):
         # From our code to the DB
         if isinstance(value, str):
-            raise ValueError, 'Value must be unicode!'
+            logging.warn('Expected unicode value.')
+            value = value.decode('ascii')
         # Replaces < with &lt; > with &gt and & with &amp;
         value = cgi.encode(value)
         value = encode_for_xml(value, 'ascii')
         return value
         
- 
     def process_result_value(self, value, dialect):
+        # From the DB to our code.
         if value:
-            # From the DB to our code.
             value = value.decode('ascii')
             value = re.sub('&#(\d+);', lenient_deccharref, value)
             value = value.replace(u'&gt;', u'>')
             value = value.replace(u'&lt;', u'<')
             value = value.replace(u'&amp;', u'&')
             return value
+        else:
+            return None
+        
+class URL(types.TypeDecorator):
+    impl=String
+    def process_bind_param(self, value, dialect):
+        # From our code to the DB
+        if isinstance(value, str):
+            # Ensure the value is ascii:
+            logging.warn('Expected ascii value.')
+            return value.decode('ascii').encode('ascii')
+        # As per IRI standard, encode as utf8.
+        return urllib.quote(value.encode('utf8'))
+ 
+    def process_result_value(self, value, dialect):
+        if value:
+            # From the DB to our code.
+            return urllib.unquote(value).decode('utf8')
         else:
             return None
