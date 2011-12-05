@@ -310,9 +310,7 @@ def display_project_people(request):
         'people_count': 1,
     }
 
-def login(request):
-    return {}
-    
+@view_config(route_name='create_project', renderer='create.jinja2', permission='create')
 def create(request):
     return {}
     

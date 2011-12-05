@@ -29,11 +29,7 @@ def main(global_config, **settings):
     
     config.add_route('dashboard', '/dashboard')
 
-    config.add_route('create_project', '/project/new')
-    config.add_view('totter.project_views.create',
-                    route_name='create_project',
-                    renderer='create.jinja2',
-                    permission='edit')
+    config.add_route('create_project', '/new_project')
                                         
     config.add_route('login', '/login')
 

@@ -5,6 +5,7 @@ import logging
 class RootFactory(object):
     __name__ = None
     __acl__ = [ (Allow, Everyone, 'view'),
+                (Allow, 'group:users', 'create'),
                 (Allow, 'group:users', 'post') ]
     def __init__(self, request):
         self.request = request

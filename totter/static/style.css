@@ -173,6 +173,11 @@ body {
     position: relative;
     width: 950px;
 }
+
+.wrapper.create_totter {
+    width: 700px;
+}
+
 .header {
     border-bottom: 1px solid #2471BE;
     margin-bottom: 20px;
@@ -282,9 +287,28 @@ div.remember_me {
 .register {
     padding: 10px 0;
 }
-input.create_project_url[type="text"] {
-    width: 445px;
+
+#create_project .field {
+    margin-bottom: 29px;
 }
+#create_project .input {
+    margin: 0;
+}
+#create_project .title {
+    margin-bottom: 30px;
+}
+
+#create_project input#url {
+    width: 541px;
+}
+#create_project input#title {
+    width: 629px;
+}
+
+#create_project input#key {
+    width: 560px;
+}
+
 .idea_description {
     word-wrap: break-word;
     margin-bottom: 1em;

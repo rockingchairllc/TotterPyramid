@@ -1,9 +1,9 @@
 {% extends "base.jinja2" %}
-
+{% set custom_class = custom_class|default('') -%}
 {% block scripts %}
 {% endblock %}
 {% block body %}
-	<div class="wrapper drop-shadow curved curved-vt-2">
+	<div class="wrapper drop-shadow curved curved-vt-2 {{custom_class}}">
             {% block user_header %}
             <!-- Begin the Header -->
             <div class="header">

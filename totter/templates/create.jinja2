@@ -1,11 +1,46 @@
-{% extends "project_base.jinja2" %}
-{% block scripts %}
+{% extends "page_base.jinja2" %}
 
+{% set custom_class = 'create_totter' -%}
+{% block scripts %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
+<script type="text/javascript">
+    (function($) {
+        var $url_from_title=true;
+        
+        function random_text(element) {
+        }
+        
+        function title_text_changed(event, title_field, url_field) {
+            if ($url_from_title) {
+                var safe_url = safe_url_from_title(title_field.val());
+                url_field.val(safe_url);
+            }
+        }
+        
+        function url_text_changed(event) {
+            $url_from_title = false;
+        }
+        
+        $(document).ready(function(){
+            console.log('document.ready');
+            var $key_field = $("#key");
+            var $url_field = $("#url");
+            var $title_field = $("#title");
+            var $desc_field = $("#description");
+            
+            $desc_field.autoResize({max_width : 'original', min_height:'original', extraSpace: 10});
+			$title_field.live('keypress', function(e) {title_text_changed(e, $title_field, $url_field)});
+			$url_field.live('keypress', url_text_changed);
+		});
+		
+		function safe_url_from_title(text) {
+		    return text.replace(' ', '_');
+		}
+    })(jQuery);
+</script>
 {% endblock %}
-{% block project_header %}
-    <!-- No project header displayed in create project.         -->
-{% endblock %}
-{% block project_body %}
+{% block page_body %}
             <!-- Begin the main content. Create the Totter -->
             <div class="the_content">
                 <div class="create_totter">
@@ -13,19 +48,23 @@
                     <form id="create_project">
                         <fieldset>
                             <h1 class="title">Create Project</h1>
-                            
-                            <label>Title:</label><br />
-                            <input type="text" /><br />
-                            
-                            <label>Description:</label><br />
-                            <textarea></textarea><br />
-                            
-                            <label>Project URL:</label><br />
-                            http://totter.com/<input type="text" class="create_project_url" /><br />
-                            
-                            <label>Project Key:</label><br />
-                            <input type="text" /><br />
-                            
+                            <div class="field">
+                            <label for="title">Title:</label>
+                            <input id="title" class="input" type="text" /><br />
+                            </div>
+                            <div class="field">
+                            <label for="description">Description:</label><br />
+                            <textarea class="input" id="description"></textarea><br />
+                            </div>
+                            <div class="field">
+                            <label for="url">Project URL:</label><br />
+                            http://totter.com/<input class="input" id="url" type="text" class="create_project_url" /><br />
+                            </div>
+                            <div class="field">
+                            <label for="key">Project Key:</label>
+                            <input id="key" class="input" type="text" /><br />
+                            <span>(This is a secret passcode that is used by participants to access the project.)</span>
+                            </div>
                             <!-- 
                             Share Buttons
                             <button type="button">Share via Emai</button>
