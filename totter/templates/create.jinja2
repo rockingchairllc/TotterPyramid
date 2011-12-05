@@ -8,13 +8,26 @@
     (function($) {
         var $url_from_title=true;
         
-        function random_text(element) {
+        function random_text() {
+            // Generates a random string.
+            var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+            var string_length = 8;
+            var randomstring = '';
+            for (var i=0; i<string_length; i++) {
+                var rnum = Math.floor(Math.random() * chars.length);
+                randomstring += chars.substring(rnum,rnum+1);
+            }
+            return randomstring;
         }
         
-        function title_text_changed(event, title_field, url_field) {
+        function title_text_changed(event, $title_field, $url_field) {
             if ($url_from_title) {
-                var safe_url = safe_url_from_title(title_field.val());
-                url_field.val(safe_url);
+                setTimeout(function() {
+                    var fullValue = $title_field.val() ;
+                    var safe_url = safe_url_from_title(fullValue);
+                    $url_field.val(safe_url);
+                }, 50);
+                
             }
         }
         
@@ -29,13 +42,15 @@
             var $title_field = $("#title");
             var $desc_field = $("#description");
             
+            $key_field.val(random_text()); // Generate a random key value.
+            
             $desc_field.autoResize({max_width : 'original', min_height:'original', extraSpace: 10});
-			$title_field.live('keypress', function(e) {title_text_changed(e, $title_field, $url_field)});
+			$title_field.live('keydown', function(e) {title_text_changed(e, $title_field, $url_field)});
 			$url_field.live('keypress', url_text_changed);
 		});
 		
 		function safe_url_from_title(text) {
-		    return text.replace(' ', '_');
+		    return text.replace(/[^a-zA-Z0-9-_]/g, '_');
 		}
     })(jQuery);
 </script>
