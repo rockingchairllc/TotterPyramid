@@ -4,48 +4,5 @@
 <h1>Project created successfully!</h1>
 <a href="{{project_url}}">Go to the project!</a>
 
-    <div id="fb-root"></div>
-    <script src="http://connect.facebook.net/en_US/all.js"></script>
-    <p>
-      <input type="button"
-        onclick="sendRequestToRecipients(); return false;"
-        value="Send Request to Users Directly"
-      />
-      <input type="text" value="User ID" name="user_ids" />
-      </p>
-    <p>
-    <input type="button"
-      onclick="sendRequestViaMultiFriendSelector(); return false;"
-      value="Send Request to Many Users with MFS"
-    />
-    </p>
-    
-    <script>
-      FB.init({
-        appId  : '{{fb_app_id}}',
-        status : true,
-        cookie : true,
-        oauth: true
-      });
-
-      function sendRequestToRecipients() {
-        var user_ids = document.getElementsByName("user_ids")[0].value;
-        FB.ui({method: 'apprequests',
-          message: 'My Great Request',
-          to: user_ids, 
-          display: 'iframe'
-        }, requestCallback);
-      }
-
-      function sendRequestViaMultiFriendSelector() {
-        FB.ui({method: 'apprequests',
-          message: 'My Great Request'
-        }, requestCallback);
-      }
-      
-      function requestCallback(response) {
-        // Handle callback here
-        console.log(response);
-      }
-    </script>
+<iframe src="{{iframe_url}}" frameborder="0">
 {% endblock %}

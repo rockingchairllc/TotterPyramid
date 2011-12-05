@@ -365,9 +365,18 @@ def create(request):
 def invite(request):
     project_id = request.matchdict['project_id']
     user = get_user(request)
+    redirect_uri = request.route_url('project_entity', project_id=project_id)
     
+    iframe_url = 'https://www.facebook.com/dialog/apprequests?access_token=%(access_token)s&api_key=%(api_key)s&app_id=%(app_id)s&display=iframe&frictionless=false&locale=en_US&message=%(message)s&next=%(next)s' % {
+        'access_token' : request.session['access_token'] if 'access_token' in request.session else None,
+        'api_key' : request.registry.settings['facebook.app_id'],
+        'app_id' : request.registry.settings['facebook.app_id'],
+        'message' : "WEE ARE THE CHAMPIONS",
+        'next' : redirect_uri
+    }
     return {'user' : user, 
     'fb_app_id' : request.registry.settings['facebook.app_id'],
+    'iframe_url' : iframe_url,
     'fb_access_token' : request.session['access_token'] if 'access_token' in request.session else None,
     'project_url' : request.route_url('project_entity', project_id=project_id)}
     
