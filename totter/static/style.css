@@ -150,16 +150,28 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1d5693', end
     position: absolute;
     z-index: -2;
 }
-.curved:before {
-    border-radius: 10px 10px 10px 10px / 100px 100px 100px 100px;
-    bottom: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-    left: 0;
-    right: 50%;
-    top: 10px;
+
+.tool_tip.drop-shadow {
+	-moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+	-webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
 }
+
+/* Curved Shadows - This only does the left side */
+.curved:before {
+	top:10px;
+	bottom:10px;
+	left:0;
+	right:50%;
+	-moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+	-webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+	-moz-border-radius: 10px / 100px;
+	border-radius: 10px / 100px;
+}
+/* Vertical Curve - both right and left sides */
 .curved-vt-2:before {
-    right: 0;
+	right:0;
 }
 body {
     color: #333333;
