@@ -65,6 +65,15 @@ input[type="text"], textarea {
     font-size: 14px;
 }
 
+.dashboard_section {
+    margin: 20px;
+}
+
+.dashboard_links a {
+    display: block;
+    margin: 20px;
+}
+
 input[type="text"]:focus, textarea:focus {
 }
 

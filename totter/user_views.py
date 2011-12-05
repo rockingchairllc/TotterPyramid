@@ -75,7 +75,8 @@ def show_dashboard(request):
     
     return {
         'user' : user,
-        'learn_more_link' : request.route_url('home'),
+        'learn_more_url' : request.route_url('home'),
+        'create_url' : request.route_url('create_project'),
         'created_projects' : created_projects,
         'invited_projects' : invited_projects,
         'other_projects' : other_projects
