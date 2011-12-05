@@ -313,6 +313,8 @@ def display_project_people(request):
         
     people_bucket = {}
     
+    people_bucket[project.creator.id] = project.creator
+    
     for idea in project.ideas.all():
         people_bucket[idea.author.id] = idea.author
         for comment in idea.comments:
