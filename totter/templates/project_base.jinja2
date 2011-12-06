@@ -45,7 +45,7 @@
             <div class="project">
             <div class="title">
             <h1 id="title" class="title {%if editable %}edit{% endif %}">{{project.title}}</h1> 
-            <span class="edit_note">(click text to edit)</span>
+            {%if editable %}<span class="edit_note">(click text to edit)</span>{% endif %}
             </div>
             <h3>by <a href="#">{{project.creator.first_name}} {{project.creator.last_name}}</a></h3>
             
