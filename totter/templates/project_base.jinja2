@@ -18,7 +18,12 @@
 <script type="text/javascript">
 (function($) {
         $(document).ready(function(){
-            $('.edit').editable('{{request.model_url(context)}}');
+            $('.edit').editable('{{request.model_url(context)}}', {
+                style: 'inherit',
+                cssclass: 'inherit',
+                cancel    : 'Cancel',
+                submit    : 'OK',
+            });
             $('.edit_area').editable('{{request.model_url(context)}}', { 
                  type      : 'autoResize',
                  cancel    : 'Cancel',

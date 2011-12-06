@@ -106,6 +106,14 @@ input[type="text"]:focus, textarea:focus {
     margin-bottom: 40px;
 }
 
+.edit input {
+    font-size: 1em;
+}
+
+.title input {
+    font-weight: bold;
+}
+
 /* Button and Submit Inputs */
 button, input[type=submit] {
         color: #fff;

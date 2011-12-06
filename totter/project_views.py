@@ -159,8 +159,6 @@ def add_rating(request):
     agg_rating = session.query(AggregateRating)\
             .filter(AggregateRating.idea_id==idea_id).first() or AggregateRating(idea_id=idea_id)
     if likes or loves: # User did something worth tracking.
-        
-            
         agg_rating.liked += likes
         agg_rating.loved += loves
         agg_rating.count += likes + loves
