@@ -1,6 +1,7 @@
 #from totter.models import DBSession
 #from totter.models import MyModel
 import uuid
+import socket
 from pyramid.exceptions import NotFound
 from pyramid.security import has_permission
 from pyramid.httpexceptions import HTTPBadRequest, HTTPFound
@@ -333,27 +334,45 @@ def display_project_people(request):
     except NoResultFound:
         raise NotFound()
         
-    people_bucket = {}
     
-    people_bucket[project.creator.id] = project.creator
     
-    for idea in project.ideas.all():
-        people_bucket[idea.author.id] = idea.author
-        for comment in idea.comments:
-            people_bucket[comment.author.id] = comment.author
+    participants = session.query(Participation, User).outerjoin(User).filter(Participation.project == project).all()
+    people_data = []
+    email_data = []
+    for participant, user in participants:
+        person_data = {}
+        if user:
+            person_data['first_name'] = user.first_name
+            person_data['last_name'] = user.last_name
+            person_data['profile_url'] = request.route_url('user_entity', user_id=user.id)
+            person_data['invite_accepted'] = participant.access_time is not None
+            person_data['profile_picture'] = user.profile_picture
+            people_data += [person_data]
+        else:
+            email_data += [participant.user_email]
     
     # Sort by first last name
-    people_data = people_bucket.values()
-    people_data.sort(key=lambda user: user.first_name + ' ' + user.last_name)
+    people_data.sort(key=lambda user: user['first_name'] + u' ' + user['last_name'])
+    
     
     return {
         'people' : people_data,
+        'invited_emails' : email_data,
         'project_id' : project_id,
         'project' : project, 
         'user' : user, 
         'ideas_count': project.ideas.count(), 
-        'people_count': 1,
+        'people_count': len(active_users(project)),
     }
+
+def active_users(project):
+    people_bucket = {}
+    people_bucket[project.creator.id] = project.creator
+    for idea in project.ideas.all():
+        people_bucket[idea.author.id] = idea.author
+        for comment in idea.comments:
+            people_bucket[comment.author.id] = comment.author
+    return people_bucket.values()
 
 @view_config(route_name='create_project', renderer='create.jinja2', permission='create')
 def create(request):
@@ -413,19 +432,26 @@ def invite(request):
                 emails += [email]
             i += 1
         message = request.params['message']
-        response_params['invited'] = True
-        response_params['invitee_count'] = len(emails)
+        try: 
+            logging.info('Sending invite message for project ' + str(project.id))
+            send_email(user.email, emails, "You've been invited!", message)
+            response_params['invited'] = True
+            response_params['invitee_count'] = len(emails)
+        except socket.error:
+            pass
     else:
         if request.referrer == request.route_url('create_project'):
             response_params['created'] = True
     
     if emails:
-        logging.info('Sending invite message for project ' + str(project.id))
-        send_email(user.email, emails, "You've been invited!", message)
-        # Check if the emails are associated with any known users:
-        users = session.query(User).filter(User.email.in_(emails)).all()
-        for user in users:
-            user.projects.add(project)
+        # Add the emails to the participants list for that project.
+        existing = session.query(Participation).filter(Participation.user_email.in_(emails)).all()
+        existing = [participation.user_email for participation in existing]
+        for email in emails:
+            if email in existing:
+                continue
+            session.add(Participation(project_id=project.id, user_email=email))
+        
         
     response_params.update({'user' : user, 
     'project' : {'key':project.key,'title':project.title, 'url': request.route_url('project_entity', project_id=project.id)},
