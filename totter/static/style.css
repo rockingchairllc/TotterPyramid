@@ -77,6 +77,22 @@ input[type="text"], textarea {
 input[type="text"]:focus, textarea:focus {
 }
 
+.email_invite input[type="text"] {
+    width: 850px;
+    margin-left: 10px;
+}
+
+.email_invite textarea {
+    height: 100px;
+}
+
+.email_invite #remove_emails {
+    float: right;
+}
+.email_invite #message {
+    clear: both; 
+}
+
 /* Button and Submit Inputs */
 button, input[type=submit] {
         color: #fff;
@@ -279,6 +295,10 @@ ul.footer_links li a {
     margin: 10px;
 }
 
+.email_invite .bad {
+    color: red;
+}
+
 .forgot_password {
     font-size: 11px;
     float: right;
@@ -371,9 +391,11 @@ div.remember_me {
     width: 100%;
     z-index: 199;
 }
-.add_idea .hidden {
+
+.hidden {
     display: none;
 }
+
 .add_idea .throbber {
 }
 .add_idea .shown {
@@ -514,9 +536,7 @@ div.like_love {
     position: relative;
     text-align: right;
 }
-.like_love .hidden {
-    display: none;
-}
+
 .unlike, .unlove {
     font-style: italic;
 }

@@ -9,6 +9,7 @@ from pyramid.i18n import TranslationStringFactory
 from datetime import datetime, timedelta
 from template import timefmt
 from urllib import urlencode
+from mail import send_email
 _ = TranslationStringFactory('totter')
 import logging
 from user import get_user
@@ -364,6 +365,11 @@ def create(request):
 @view_config(route_name='project_invite', renderer='invite.jinja2', permission='invite')
 def invite(request):
     project_id = request.matchdict['project_id']
+    session = DBSession()
+    try:
+        project = session.query(Project).filter(Project.id==project_id).one()
+    except NoResultFound:
+        raise NotFound()
     user = get_user(request)
     redirect_uri = request.route_url('project_entity', project_id=project_id)
     
@@ -374,11 +380,24 @@ def invite(request):
         'message' : "WEE ARE THE CHAMPIONS",
         'next' : redirect_uri
     }
+    
+    if 'email_0' in request.params:
+        emails = []
+        i = 0
+        while 'email_' + str(i) in request.params:
+            emails += [request.params['email_'+str(i)]]
+            i += 1
+        
+        message = request.params['message']
+        send_email(user.email, emails, message)
+    
     return {'user' : user, 
+    'project' : {'key':project.key,'title':project.title, 'url': request.route_url('project_entity', project_id=project.id)},
+    'creator' : {'first_name' : project.creator.first_name, 'last_name' : project.creator.last_name},
     'fb_app_id' : request.registry.settings['facebook.app_id'],
     'iframe_url' : iframe_url,
     'fb_access_token' : request.session['access_token'] if 'access_token' in request.session else None,
-    'project_url' : request.route_url('project_entity', project_id=project_id)}
+    }
     
 def enterKey(request):
     return {}
