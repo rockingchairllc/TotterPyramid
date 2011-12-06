@@ -445,7 +445,7 @@ def invite(request):
     
     if emails:
         # Add the emails to the participants list for that project.
-        existing = session.query(Participation).filter(Participation.user_email.in_(emails)).all()
+        existing = session.query(Participation).filter(Participation.user_email.in_(emails)).filter(Participation.project==project).all()
         existing = [participation.user_email for participation in existing]
         for email in emails:
             if email in existing:
