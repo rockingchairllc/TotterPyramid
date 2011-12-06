@@ -322,7 +322,7 @@ def edit_project(request):
     if id == 'title':
         project.title = value
     elif id == 'description':
-        project.description = description
+        project.description = value
     return value
     
 @view_config(route_name='project_people', renderer='project_people.jinja2', permission='view')
