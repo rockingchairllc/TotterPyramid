@@ -87,19 +87,27 @@
     {% if created %}<h1>Project created successfully!</h1>{% endif %}
     {% if invited %}<h1>Successfully sent {{invitee_count}} invites.</h1>{% endif %}
     <h2><a href="{{project.url}}">Go to the project now!</a></h2>
-    <h3>Invite collaborators to this project:</h3>
-    <form method="post" action="{{request.current_route_url()}}">
-        <div id="invalid_msg" class="hidden bad">These emails don't look valid. Please check them again.</div>
-        <div>
-        <fieldset>
-            <div id="email"><label>Email address:</label><input name="email_0" type="text"/></div>
-            <div id="email"><label>Email address:</label><input name="email_1" type="text"/></div>
-            <div id="email"><label>Email address:</label><input name="email_2" type="text"/></div>
-            <div id="email"><label>Email address:</label><input name="email_3" type="text"/></div>
-        </fieldset>
-        <button id="remove_emails" class="hidden">Remove</button>
-        </div>
-        <div id="subject"><label>Subject:</label><input name="subject" type="text" value="I've invited you to a totter project!"/></div>
+    
+    <div class="invite_method">
+    <h3>Share this information to invite people:</h3>
+    Project URL: {{project.url}} <br/>
+    Project Access Key: {{project.key}}
+    </div> <!-- .invite_method -->
+    
+    <div class="invite_method">
+        <h3>Invite via email:</h3>
+        <form method="post" action="{{request.current_route_url()}}">
+            <div id="invalid_msg" class="hidden bad">These emails don't look valid. Please check them again.</div>
+            <div>
+            <fieldset>
+                <div id="email"><label>Email address:</label><input name="email_0" type="text"/></div>
+                <div id="email"><label>Email address:</label><input name="email_1" type="text"/></div>
+                <div id="email"><label>Email address:</label><input name="email_2" type="text"/></div>
+                <div id="email"><label>Email address:</label><input name="email_3" type="text"/></div>
+            </fieldset>
+            <button id="remove_emails" class="hidden">Remove</button>
+            </div>
+            <div id="subject"><label>Subject:</label><input name="subject" type="text" value="I've invited you to a totter project!"/></div>
 <!-- textarea, why do you care about spaces? -->
 <textarea name="message">
 Hi, {{creator.first_name}} has invited you to participate in a totter project entitled "{{project.title}}"!
@@ -109,12 +117,11 @@ Please use the secret project key: {{project.key}}.
 
 What is a totter project? It's a fun and easy way to share ideas with people on just about anything!
 </textarea>
-        </div>
-        <button id="invite">Invite</button>
-    </form>
+            <button id="invite">Invite</button>
+        </form>
+    </div> <!-- .invite_method -->
     
-    
-    </div>
+    </div> <!-- .email_invite -->
     
     <!--
     <div id="fb-root"></div>

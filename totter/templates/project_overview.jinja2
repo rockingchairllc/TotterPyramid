@@ -58,9 +58,12 @@ function addUpdate_to_project() {
             
 
 <div class="project_description">
+    <div>
     <h2>Description</h2>
-    
+    <span class="edit_note">(click text to edit)</span>
+    </div>
     <p id="description" class="{%if editable %}edit_area{% endif %}">{{project.description}}</p>
+    
 </div><!-- .project_description -->
 
 <ul class="project_updates">

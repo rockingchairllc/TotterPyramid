@@ -85,6 +85,10 @@ input[type="text"]:focus, textarea:focus {
     width: 840px;
 }
 
+.invite_method {
+    margin-bottom: 1em;
+}
+
 
 .email_invite textarea {
     height: 150px;
@@ -109,6 +113,16 @@ input[type="text"]:focus, textarea:focus {
 .edit input {
     font-size: 1em;
 }
+.project h1 {
+    display: inline;
+}
+
+.edit_note {
+    font-size: 10px;
+    vertical-align: middle;
+    position: relative;
+    top: -.5em;
+}
 
 .title input {
     font-weight: bold;
@@ -118,7 +132,8 @@ input[type="text"]:focus, textarea:focus {
 button, input[type=submit] {
         color: #fff;
         font-weight: bold;
-        margin: 10px 10px 10px 0;
+        /*margin: 10px 10px 10px 0;*/
+        margin: 5px;
         padding: 8px;
         border: none;
         -webkit-border-radius: 5px;
@@ -232,7 +247,7 @@ body {
     margin-bottom: 20px;
     padding: 10px 0;
 }
-h1.title {
+div.title {
     padding-bottom: 10px;
 }
 .logo {
@@ -473,6 +488,10 @@ div.project_description, ul.project_updates {
     margin-top: 10px;
     padding: 5px;
 }
+.project_description h2 {
+    display: inline;
+}
+
 ul.project_updates {
     background: none repeat scroll 0 0 #EFEFEF;
 }

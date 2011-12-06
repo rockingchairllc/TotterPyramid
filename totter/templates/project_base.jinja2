@@ -108,7 +108,11 @@
             <!-- END Add Idea and Modal Overlay -->
             
             <!-- Begin the main content. -->
+            <div class="project">
+            <div class="title">
             <h1 id="title" class="title {%if editable %}edit{% endif %}">{{project.title}}</h1> 
+            <span class="edit_note">(click text to edit)</span>
+            </div>
             <h3>by <a href="#">{{project.creator.first_name}} {{project.creator.last_name}}</a></h3>
             
             <div class="the_content">
@@ -141,4 +145,10 @@
             {% block project_body %}
             {% endblock %}
             </div><!-- .the_content -->
+{% endblock %}
+{% block page_footer %}
+{% block project_footer %}
+
+{% endblock %}
+{{ super() }}
 {% endblock %}
