@@ -290,7 +290,7 @@ def project(request):
     
     # Update user access time:
     if user:
-        session.merge(Participation(user_id=user.id, project_id=project.id, access_time=datetime.now()))
+        session.merge(Participation(user_email=user.email, project_id=project.id, access_time=datetime.now()))
     
     return {
         'editable' : has_permission('edit', request.context, request),

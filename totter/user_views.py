@@ -48,7 +48,7 @@ def show_dashboard(request):
     
     # Get the projects the user participates in, and data about that participation.
     session = DBSession()
-    participations = session.query(Participation).filter(Participation.user_id==user.id)
+    participations = session.query(Participation).filter(Participation.user==user)
     
     invited_projects = []
     other_projects = []

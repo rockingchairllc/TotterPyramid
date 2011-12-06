@@ -121,7 +121,7 @@ class HTMLUnicode(types.TypeDecorator):
 class HTMLUnicodeText(HTMLUnicode):
     impl=Text
         
-class URL(types.TypeDecorator):
+class URLEncodedUnicode(types.TypeDecorator):
     impl=String
     def process_bind_param(self, value, dialect):
         # From our code to the DB

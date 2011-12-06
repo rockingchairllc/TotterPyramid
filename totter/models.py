@@ -21,7 +21,7 @@ from zope.sqlalchemy import ZopeTransactionExtension
 from sqlalchemy.schema import Column
 import uuid
 from sets import ImmutableSet
-from custom_types import UUID, JSONEncodedDict, HTMLUnicode, HTMLUnicodeText, URL
+from custom_types import UUID, JSONEncodedDict, HTMLUnicode, HTMLUnicodeText, URLEncodedUnicode
 import string
 import random
 from datetime import datetime
@@ -35,10 +35,10 @@ salt_generator = lambda : ''.join(random.choice([chr(x) for x in range(0x20,0x7F
 class User(Base):
     __tablename__ = 'Users'
     id = Column('UserUUID',UUID(),primary_key=True,default=uuid.uuid4)
-    email = Column('Email', HTMLUnicode(256), unique=True, nullable=False)
+    email = Column('Email', URLEncodedUnicode(256), unique=True, nullable=False)
     first_name = Column('FirstName', HTMLUnicode(128))
     last_name = Column('LastName', HTMLUnicode(128))
-    profile_picture = Column('ProfilePicture', URL(512), nullable=True)
+    profile_picture = Column('ProfilePicture', URLEncodedUnicode(512), nullable=True)
     facebook_id = Column('FacebookID', Integer, nullable=True)
     registration_date = Column('RegistrationDate', DateTime, default=datetime.now)
     last_login = Column('LastLogin', DateTime, nullable=True) 
@@ -68,7 +68,7 @@ class User(Base):
 class Participation(Base):
     __tablename__ = 'Participants'
     project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), primary_key=True)
-    user_id = Column('UserUUID', UUID(), ForeignKey('Users.UserUUID'), primary_key=True)
+    user_email = Column('UserEmail', URLEncodedUnicode(256), ForeignKey('Users.Email'), primary_key=True)
     access_time = Column('AccessTime', DateTime, nullable=True)
     
     user = relationship(User, uselist=False)
@@ -86,9 +86,9 @@ class Project(Base):
     __tablename__ = 'Projects'
     id = Column('ProjectUUID', UUID(),primary_key=True,default=uuid.uuid4)
     description = Column('ProjectDescription', Text)
-    url_name = Column('URLName', HTMLUnicode(128), unique=True)
+    url_name = Column('URLName', URLEncodedUnicode(128), unique=True)
     title = Column('ProjectTitle', HTMLUnicode(128))
-    key = Column('ProjectKey', URL(128))
+    key = Column('ProjectKey', URLEncodedUnicode(128))
     creator_id = Column('CreatorUUID',UUID(), ForeignKey('Users.UserUUID'))
     creation_time = Column('CreationTime', DateTime, default=datetime.now)
     deadline = Column('Deadline', DateTime, nullable=True)
@@ -102,7 +102,7 @@ class Project(Base):
     @property
     def __acl__(self):
         return [
-            (Allow, str(self.creator_id), ['edit', 'invite']),
+            (Allow, str(self.creator_id), ['edit', 'invite', 'view']),
             (Allow, 'group:ro-'+str(self.id), 'view'),
             (Allow, 'group:rw-'+str(self.id), ['post', 'view']),
             ('Deny', 'system.Everyone', 'view'),
@@ -201,7 +201,6 @@ def populate():
     test_project = Project(description=u"This is the project description.", title=u"This is the project title",
         key=u"test_key_1234")
     test_project.creator = test_user
-    #test_project.participants.append(test_user)
     session.add(Participation(user=test_user, project=test_project, access_time=datetime.now()))
     session.add(test_project)
     
