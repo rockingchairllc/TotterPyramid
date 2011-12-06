@@ -89,6 +89,10 @@ input[type="text"]:focus, textarea:focus {
     margin-bottom: 1em;
 }
 
+form.button_wrapper {
+    display: inline;
+}
+
 
 .email_invite textarea {
     height: 150px;

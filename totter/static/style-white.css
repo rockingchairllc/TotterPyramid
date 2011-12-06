@@ -564,6 +564,11 @@ div.rating_system {
     font-size: 0.9em;
     font-weight: normal;
 }
+form.button_wrapper {
+    display: inline;
+}
+
+
 div.like_love {
     clear: both;
     float: right;

@@ -16,7 +16,7 @@
 <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
 <script src="{{request.static_url('totter:static/js/jquery.jeditable.autoresize.js')}}"></script>
 <script type="text/javascript">
-(function($) {
+
         $(document).ready(function(){
             $('.edit').editable('{{request.model_url(context)}}', {
                 style: 'inherit',
@@ -55,7 +55,7 @@
 			function onSuccess_addIdea(data){
 			    // Successfully added our idea to the serverside.
 			    var new_id = data.idea_id;
-				$('.project_ideas').load(location.href + " .project_ideas>*", function() {
+				$('.project').load(location.href + " .project>*", function() {
 				    addIdea();
 				    $('html,body').animate({scrollTop: $("#idea_"+new_id).offset().top},'fast');
 				    $(".add_idea .throbber").addClass('hidden');
@@ -80,33 +80,11 @@
 			}
 			
 		}
-})(jQuery);
+
 </script>
 {% endblock %}
 {% block page_body %}
             {% block project_header %}
-            <!-- Add Idea and Modal Overlay -->
-            <div class="add_idea">
-                <div class="add_idea_overlay" onClick="addIdea()"></div>
-                <div class="add_idea_modal drop-shadow">
-                    <h1>Add Idea</h1>
-                    <textarea>Start typing your idea...</textarea>
-                    <a href="javascript:void(0)" onClick="addIdea()">Cancel</a>
-                    <div class="throbber hidden">
-                        <span>Posting...</span>
-                        <img src="{{request.static_url('totter:static/images/throbber.gif')}}"/>
-                    </div>
-                    <button type="button" onClick="addIdea_to_project()">Add Idea</button>
-                </div><!-- idea_idea_modal -->
-            </div><!-- .add_idea -->
-            
-            <script>
-			function addIdea() {
-				$('.add_idea').toggle();
-			}
-			</script>
-            <!-- END Add Idea and Modal Overlay -->
-            
             <!-- Begin the main content. -->
             <div class="project">
             <div class="title">
@@ -139,7 +117,11 @@
                         Deadline<br />
                         <span class="project_stat">{{project.deadline}}</span>
                     </li>
-                    <button type="button" onClick="addIdea()" class="add_idea_button">Add Idea</button>
+                    {% block add_idea_btn %}
+                    <form class="button_wrapper" method="LINK" action="{{request.model_url(context)}}/ideas#ideapopup">
+                        <input type="submit" class="add_idea_button" value="Add Idea"></input>
+                    </form>
+                    {% endblock %}
                 </ul><!-- .project_stats -->
             {% endblock %}
             {% block project_body %}
