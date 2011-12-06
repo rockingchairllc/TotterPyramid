@@ -4,7 +4,7 @@
 {% block scripts %}
 {{ super() }}
 <script src="{{request.static_url('totter:static/js/jquery.tmpl.js')}}"></script>
-
+<script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
 <script type="text/javascript">
 function addUpdate() {
     $('.add_update').toggle();

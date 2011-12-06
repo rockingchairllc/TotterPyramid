@@ -13,17 +13,21 @@
 {% block scripts %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script src="{{request.static_url('totter:static/js/jquery.jeditable.js')}}" type="text/javascript" charset="utf-8"></script>
+<script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
+<script src="{{request.static_url('totter:static/js/jquery.jeditable.autoresize.js')}}"></script>
 <script type="text/javascript">
 (function($) {
         $(document).ready(function(){
             $('.edit').editable('{{request.model_url(context)}}');
             $('.edit_area').editable('{{request.model_url(context)}}', { 
-                 type      : 'textarea',
+                 type      : 'autoResize',
                  cancel    : 'Cancel',
                  submit    : 'OK',
                  indicator : '<img src="{{request.static_url('totter:static/images/indicator.gif')}}">',
-                 tooltip   : 'Click to edit...'
+                 tooltip   : 'Click to edit...',
+                 autoResize: {}
              });
+             
         });
                     
         function addIdea() {
