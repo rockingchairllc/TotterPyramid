@@ -43,6 +43,19 @@
 				});
             }
 		}
+		
+		function SortBy(sort_type){
+			if (sort_type == 1) { //sort by date
+				//alert("{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="date"');
+				window.location = "{{request.current_route_url()}}?" + 'sort=date';
+			}
+			else if (sort_type == 2) { //sort by Rating
+				window.location = "{{request.current_route_url()}}?" + 'sort=rating';
+			}
+			else if (sort_type == 3) { //sort by User
+				window.location = "{{request.current_route_url()}}?" + 'sort=user';
+			}
+		} 
 		$(document).ready(function(){
 		    console.log('document.ready');
 			$('.comment_input').live('keypress', submitkey_binding);
@@ -55,8 +68,10 @@
 			    addIdea();
 			}
 		});
-		
-		
+	</script>
+	
+	<!-- Ratings -->
+	<script type="text/javascript">
 		function setLiked(context, liked) {
 		    if (liked) {
                 context.find(".like").addClass('hidden');
@@ -115,23 +130,11 @@
 				}
 			});
 		}
-		
-		function SortBy(sort_type){
-			if (sort_type == 1) { //sort by date
-				//alert("{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="date"');
-				window.location = "{{request.current_route_url()}}?" + 'sort=date';
-			}
-			else if (sort_type == 2) { //sort by Rating
-				window.location = "{{request.current_route_url()}}?" + 'sort=rating';
-			}
-			else if (sort_type == 3) { //sort by User
-				window.location = "{{request.current_route_url()}}?" + 'sort=user';
-			}
-		} 
 	</script>
+	
+	<!-- Add Idea -->
 	<script type="text/javascript">
-	/** Add Idea Stuff **/
-	function addIdea() {
+	    function addIdea() {
 			$('.add_idea').toggle();
 		}
 	    function addIdea_to_project() {
@@ -151,6 +154,7 @@
 			function onSuccess_addIdea(data){
 			    // Successfully added our idea to the serverside.
 			    var new_id = data.idea_id;
+			    // Do a partial page refresh to reload the idea list:
 				$('.project').load(location.href + " .project>*", function() {
 				    addIdea();
 				    $('html,body').animate({scrollTop: $("#idea_"+new_id).offset().top},'fast');
