@@ -118,29 +118,8 @@ class HTMLUnicode(types.TypeDecorator):
         else:
             return None
         
-class HTMLUnicodeText(types.TypeDecorator):
+class HTMLUnicodeText(HTMLUnicode):
     impl=Text
-    def process_bind_param(self, value, dialect):
-        # From our code to the DB
-        if isinstance(value, str):
-            logging.warn('Expected unicode value.')
-            value = value.decode('ascii')
-        # Replaces < with &lt; > with &gt and & with &amp;
-        value = cgi.encode(value)
-        value = encode_for_xml(value, 'ascii')
-        return value
-        
-    def process_result_value(self, value, dialect):
-        # From the DB to our code.
-        if value:
-            value = value.decode('ascii')
-            value = re.sub('&#(\d+);', lenient_deccharref, value)
-            value = value.replace(u'&gt;', u'>')
-            value = value.replace(u'&lt;', u'<')
-            value = value.replace(u'&amp;', u'&')
-            return value
-        else:
-            return None
         
 class URL(types.TypeDecorator):
     impl=String
