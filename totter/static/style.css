@@ -78,19 +78,32 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .email_invite input[type="text"] {
-    width: 770px;
+    width: 650px;
     margin-left: 10px;
 }
+.email_invite #subject input[type="text"] {
+    width: 840px;
+}
+
 
 .email_invite textarea {
-    height: 100px;
+    height: 150px;
 }
 
 .email_invite #remove_emails {
-    float: right;
 }
-.email_invite #message {
-    clear: both; 
+.email_invite #subject {
+    clear: both;
+
+}
+.email_invite fieldset {
+    display: inline;
+}
+.email_invite h1 {
+    margin-bottom: 40px;
+}
+.email_invite h2 {
+    margin-bottom: 40px;
 }
 
 /* Button and Submit Inputs */

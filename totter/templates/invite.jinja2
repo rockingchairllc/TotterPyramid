@@ -12,7 +12,6 @@
             // Expanding fieldset
             $email_fieldset = $(".email_invite fieldset");
             $rem_emails_btn = $(".email_invite #remove_emails");
-            $rem_emails_btn.removeClass('hidden');
             i = 0; // Next free email row.
             email_row = function() {return $('<div id="email"><label>Email address:</label><input name="email_'+(i++)+'" type="text"/></div>');}
             $email_fieldset.empty();
@@ -25,6 +24,7 @@
                 $email_fieldset.append($new);
                 $last_added = $new;
                 $last_added.find('input').focus(add_row);
+                $rem_emails_btn.removeClass('hidden');
             }
             $last_added.find('input').focus(add_row);
             $rem_emails_btn.click(function(event) {
@@ -32,8 +32,12 @@
                 if (i > 1) {
                     $last_added.remove();
                     $last_added = $email_fieldset.find("div:last-child");
+                    $rem_emails_btn.removeClass('hidden');
                     --i;
                     $last_added.find('input').focus(add_row);
+                    if (i <= 1) {
+                        $rem_emails_btn.addClass('hidden');
+                    }
                 }
             });
             
@@ -79,13 +83,14 @@
 </script>
 {% endblock %}
 {% block page_body %}
+    <div class="email_invite">
     {% if created %}<h1>Project created successfully!</h1>{% endif %}
     {% if invited %}<h1>Successfully sent {{invitee_count}} invites.</h1>{% endif %}
-    <h2><a href="{{project.url}}">Go to the project!</a></h2>
-    <div class="email_invite">
+    <h2><a href="{{project.url}}">Go to the project now!</a></h2>
     <h3>Invite collaborators to this project:</h3>
     <form method="post" action="{{request.current_route_url()}}">
         <div id="invalid_msg" class="hidden bad">These emails don't look valid. Please check them again.</div>
+        <div>
         <fieldset>
             <div id="email"><label>Email address:</label><input name="email_0" type="text"/></div>
             <div id="email"><label>Email address:</label><input name="email_1" type="text"/></div>
@@ -93,12 +98,16 @@
             <div id="email"><label>Email address:</label><input name="email_3" type="text"/></div>
         </fieldset>
         <button id="remove_emails" class="hidden">Remove</button>
-        <div id="message"><label>Message:</label>
+        </div>
+        <div id="subject"><label>Subject:</label><input name="subject" type="text" value="I've invited you to a totter project!"/></div>
 <!-- textarea, why do you care about spaces? -->
 <textarea name="message">
-You've been invited to participate in {{creator.first_name}} {{creator.last_name}}'s totter project entitled "{{project.title}}"!
-You can access it at: &lt;{{project.url}}&gt;
-The secret project key is {{project.key}}.
+Hi, {{creator.first_name}} has invited you to participate in a totter project entitled "{{project.title}}"!
+
+You can access the project at: &lt;{{project.url}}&gt;.
+Please use the secret project key: {{project.key}}.
+
+What is a totter project? It's a fun and easy way to share ideas with people on just about anything!
 </textarea>
         </div>
         <button id="invite">Invite</button>
