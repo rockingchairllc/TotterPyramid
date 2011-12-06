@@ -5,13 +5,27 @@
     
     (request.model_url(context), 'overview', 'Overview'),
     (request.model_url(context, 'ideas'), 'ideas', 'Ideas'),
-    (request.model_url(context, 'people'), 'people', 'People')
+    (request.model_url(context, 'people'), 'people', 'People'),
+    (request.model_url(context, 'invite'), 'invite', 'Invite')
 ] -%}
 
 {% set active_page = active_page|default('overview') -%}
 {% block scripts %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
+<script src="{{request.static_url('totter:static/js/jquery.jeditable.js')}}" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+(function($) {
+        $(document).ready(function(){
+            $('.edit').editable('{{request.model_url(context)}}');
+            $('.edit_area').editable('{{request.model_url(context)}}', { 
+                 type      : 'textarea',
+                 cancel    : 'Cancel',
+                 submit    : 'OK',
+                 indicator : '<img src="img/indicator.gif">',
+                 tooltip   : 'Click to edit...'
+             });
+        });
+                    
         function addIdea() {
 			$('.add_idea').toggle();
 		}
@@ -57,6 +71,7 @@
 			}
 			
 		}
+})(jQuery);
 </script>
 {% endblock %}
 {% block page_body %}
@@ -84,7 +99,7 @@
             <!-- END Add Idea and Modal Overlay -->
             
             <!-- Begin the main content. -->
-            <h1 class="title">{{project.title}}</h1>
+            <h1 id="title" class="title {%if editable %}edit{% endif %}">{{project.title}}</h1> 
             <h3>by <a href="#">{{project.creator.first_name}} {{project.creator.last_name}}</a></h3>
             
             <div class="the_content">

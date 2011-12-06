@@ -2,6 +2,7 @@
 #from totter.models import MyModel
 import uuid
 from pyramid.exceptions import NotFound
+from pyramid.security import has_permission
 from pyramid.httpexceptions import HTTPBadRequest, HTTPFound
 from pyramid.view import view_config
 from models import *
@@ -274,7 +275,7 @@ def ideas(request):
     
 
 
-@view_config(route_name='project_entity', renderer='project_overview.jinja2', permission='view')
+@view_config(route_name='project_entity', renderer='project_overview.jinja2', permission='view', request_method='GET')
 def project(request):
     user = get_user(request)
     project_id = uuid.UUID(hex=request.matchdict['project_id'])
@@ -294,6 +295,7 @@ def project(request):
         session.merge(Participation(user_id=user.id, project_id=project.id, access_time=datetime.now()))
     
     return {
+        'editable' : has_permission('edit', request.context, request),
         'project_id' : project_id,
         'project' : project, 
         'updates' : updates,
@@ -302,6 +304,26 @@ def project(request):
         'ideas_count': project.ideas.count(), 
         'people_count': 1
     }
+@view_config(route_name='project_entity', renderer='string', permission='view', request_method='POST')
+def edit_project(request):
+    project_id = request.matchdict['project_id']
+    session = DBSession()
+    try:
+        project = session.query(Project).filter(Project.id==project_id).one()
+    except NoResultFound:
+        raise NotFound()
+        
+    logging.info('edit_project'  + str(request.params))
+    # jquery.jeditable.js passes us two parameters. 
+    # id: id of the element edited
+    # value: new value the user typed in
+    id = request.params['id']
+    value = request.params['value']
+    if id == 'title':
+        project.title = value
+    elif id == 'description':
+        project.description = description
+    return value
     
 @view_config(route_name='project_people', renderer='project_people.jinja2', permission='view')
 def display_project_people(request):
