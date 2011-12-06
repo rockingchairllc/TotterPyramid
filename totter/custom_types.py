@@ -98,7 +98,7 @@ class HTMLUnicode(types.TypeDecorator):
     def process_bind_param(self, value, dialect):
         # From our code to the DB
         if isinstance(value, str):
-            logging.warn('Expected unicode value.')
+            logging.warn('Expected unicode value, assuming ascii')
             value = value.decode('ascii')
         # Replaces < with &lt; > with &gt and & with &amp;
         value = cgi.escape(value)
@@ -127,8 +127,8 @@ class URLEncodedUnicode(types.TypeDecorator):
         # From our code to the DB
         if isinstance(value, str):
             # Ensure the value is ascii:
-            logging.warn('Expected ascii value.')
-            return value.decode('ascii').encode('ascii')
+            logging.warn('Expected unicode value, assuming ascii')
+            value = value.decode('ascii')
         # As per IRI standard, encode as utf8.
         return urllib.quote(value.encode('utf8'))
  
