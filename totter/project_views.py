@@ -401,26 +401,32 @@ def invite(request):
         'next' : redirect_uri
     }
     
+    # Parse the request params:
+    emails = []
+    message = None
     response_params = {}
     if 'email_0' in request.params:
-        emails = []
         i = 0
         while 'email_' + str(i) in request.params:
             email = request.params['email_'+str(i)]
             if email:
                 emails += [email]
             i += 1
-        if emails:
-            logging.info('Sending invite message for project ' + str(project.id))
-            message = request.params['message']
-            send_email(user.email, emails, "You've been invited!", message)
-            response_params['invited'] = True
-            response_params['invitee_count'] = len(emails)
+        message = request.params['message']
+        response_params['invited'] = True
+        response_params['invitee_count'] = len(emails)
     else:
         if request.referrer == request.route_url('create_project'):
             response_params['created'] = True
-        
     
+    if emails:
+        logging.info('Sending invite message for project ' + str(project.id))
+        send_email(user.email, emails, "You've been invited!", message)
+        # Check if the emails are associated with any known users:
+        users = session.query(User).filter(User.email.in_(emails)).all()
+        for user in users:
+            user.projects.add(project)
+        
     response_params.update({'user' : user, 
     'project' : {'key':project.key,'title':project.title, 'url': request.route_url('project_entity', project_id=project.id)},
     'creator' : {'first_name' : project.creator.first_name, 'last_name' : project.creator.last_name},
