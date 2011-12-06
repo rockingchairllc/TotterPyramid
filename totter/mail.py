@@ -10,4 +10,4 @@ def send_invite_email(from_name, to_emails, message):
     msg['To'] = ','.join(to_emails)
     
     s = smtplib.SMTP('localhost')
-    s.sendmail(from_name, to_emails, msg.as_string
+    s.sendmail(from_name, to_emails, msg.as_string)
