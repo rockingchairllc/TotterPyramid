@@ -78,7 +78,7 @@ input[type="text"]:focus, textarea:focus {
 }
 
 .email_invite input[type="text"] {
-    width: 850px;
+    width: 770px;
     margin-left: 10px;
 }
 

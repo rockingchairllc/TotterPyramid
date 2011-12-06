@@ -381,23 +381,34 @@ def invite(request):
         'next' : redirect_uri
     }
     
+    response_params = {}
     if 'email_0' in request.params:
         emails = []
         i = 0
         while 'email_' + str(i) in request.params:
-            emails += [request.params['email_'+str(i)]]
+            email = request.params['email_'+str(i)]
+            if email:
+                emails += [email]
             i += 1
+        if emails:
+            logging.info('Sending invite message for project ' + str(project.id))
+            message = request.params['message']
+            send_email(user.email, emails, "You've been invited!", message)
+            response_params['invited'] = True
+            response_params['invitee_count'] = len(emails)
+    else:
+        if request.referrer == request.route_url('create_project'):
+            response_params['created'] = True
         
-        message = request.params['message']
-        send_email(user.email, emails, message)
     
-    return {'user' : user, 
+    response_params.update({'user' : user, 
     'project' : {'key':project.key,'title':project.title, 'url': request.route_url('project_entity', project_id=project.id)},
     'creator' : {'first_name' : project.creator.first_name, 'last_name' : project.creator.last_name},
     'fb_app_id' : request.registry.settings['facebook.app_id'],
     'iframe_url' : iframe_url,
     'fb_access_token' : request.session['access_token'] if 'access_token' in request.session else None,
-    }
+    })
+    return response_params
     
 def enterKey(request):
     return {}

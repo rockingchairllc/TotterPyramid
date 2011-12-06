@@ -14,7 +14,7 @@
             $rem_emails_btn = $(".email_invite #remove_emails");
             $rem_emails_btn.removeClass('hidden');
             i = 0; // Next free email row.
-            email_row = function() {return $('<div id="email"><label>Email:</label><input name="email_'+(i++)+'" type="text"/></div>');}
+            email_row = function() {return $('<div id="email"><label>Email address:</label><input name="email_'+(i++)+'" type="text"/></div>');}
             $email_fieldset.empty();
             $last_added = email_row();
             $email_fieldset.append($last_added);
@@ -79,18 +79,18 @@
 </script>
 {% endblock %}
 {% block page_body %}
-    <h1>Project created successfully!</h1>
+    {% if created %}<h1>Project created successfully!</h1>{% endif %}
+    {% if invited %}<h1>Successfully sent {{invitee_count}} invites.</h1>{% endif %}
     <h2><a href="{{project.url}}">Go to the project!</a></h2>
     <div class="email_invite">
     <h3>Invite collaborators to this project:</h3>
     <form method="post" action="{{request.current_route_url()}}">
         <div id="invalid_msg" class="hidden bad">These emails don't look valid. Please check them again.</div>
         <fieldset>
-            <label>Email:</label>
-            <div id="email"><input name="email_0" type="text"/></div>
-            <div id="email"><input name="email_1" type="text"/></div>
-            <div id="email"><input name="email_2" type="text"/></div>
-            <div id="email"><input name="email_3" type="text"/></div>
+            <div id="email"><label>Email address:</label><input name="email_0" type="text"/></div>
+            <div id="email"><label>Email address:</label><input name="email_1" type="text"/></div>
+            <div id="email"><label>Email address:</label><input name="email_2" type="text"/></div>
+            <div id="email"><label>Email address:</label><input name="email_3" type="text"/></div>
         </fieldset>
         <button id="remove_emails" class="hidden">Remove</button>
         <div id="message"><label>Message:</label>
@@ -101,8 +101,9 @@ You can access it at: &lt;{{project.url}}&gt;
 The secret project key is {{project.key}}.
 </textarea>
         </div>
+        <button id="invite">Invite</button>
     </form>
-    <button id="invite">Invite</button>
+    
     
     </div>
     
