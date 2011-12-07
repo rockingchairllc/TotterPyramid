@@ -2,12 +2,20 @@
 
 {# navigation_bar elements: (url, id, caption) #}
 {% set navigation_bar = [
-    
     (request.model_url(context), 'overview', 'Overview'),
     (request.model_url(context, 'ideas'), 'ideas', 'Ideas'),
     (request.model_url(context, 'people'), 'people', 'People'),
-    (request.model_url(context, 'invite'), 'invite', 'Invite')
+    (request.model_url(context, 'invite'), 'invite', 'Invite') 
 ] -%}
+
+{% if show_invite %}
+{% set navigation_bar = [
+    (request.model_url(context), 'overview', 'Overview'),
+    (request.model_url(context, 'ideas'), 'ideas', 'Ideas'),
+    (request.model_url(context, 'people'), 'people', 'People'),
+    (request.model_url(context, 'invite'), 'invite', 'Invite') 
+] -%}
+{% endif %}
 
 {% set active_page = active_page|default('overview') -%}
 {% block scripts %}
