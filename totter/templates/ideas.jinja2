@@ -5,6 +5,7 @@
     {# project_base has add_idea functions #}
     {{ super() }}
     <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
+    
 	<script type="text/javascript">
 		function showComment(idx) {
 		    $('#'+idx + '.idea').find('.project_idea_comments').show();
@@ -73,17 +74,21 @@
 			    showAddIdea();
 			}
 			
+			// Creates a toggle function between each of .toggle's children.
 			$('.toggle').each(function() {
 			    var $children = $(this).children();
 			    $children.each(function() {
-			        $(this).click(function() {
-			            $children.each(function() {
+			        $(this).click(function() { // Child X was clicked.
+			            $children.each(function() { // Show everyone.
 			                $(this).removeClass('hidden');
 			            });
-			            $(this).addClass('hidden');
+			            $(this).addClass('hidden'); // Hide X
 			        });
 			    });
 			});
+			
+			// All .remember textboxes will remember their default values.
+			$('.remember').default('bind');
 		});
 	</script>
 	
@@ -156,6 +161,7 @@
 		}
 		function hideAddIdea() {
 		    $('.add_idea').hide();
+		    $('.add_idea .remember').default();
 		}
 	    function addIdea_to_project() {
 			var prjId = "{{project.id}}";
@@ -211,7 +217,7 @@
                 <div class="add_idea_overlay" onClick="hideAddIdea()"></div>
                 <div class="add_idea_modal drop-shadow">
                     <h1>Add Idea</h1>
-                    <textarea>Start typing your idea...</textarea>
+                    <textarea class="remember">Start typing your idea...</textarea>
                     <a href="javascript:void(0)" onClick="hideAddIdea()">Cancel</a>
                     <div class="throbber hidden">
                         <span>Posting...</span>
@@ -295,7 +301,7 @@
                                 </li>
                                 <li class="new_comment first_update">
                                     <a href="#"><img src="{{user.profile_picture}}?type=square" width="32" height="32" /></a>
-                                    <textarea class="comment_text comment_input" type="text" order="{{idea_data[ideas_index].idea.id}}">Comment</textarea><br />
+                                    <textarea class="comment_text comment_input remember" type="text" order="{{idea_data[ideas_index].idea.id}}">Comment</textarea><br />
                                     <span class="enter_to_submit default">Push Enter to Submit</span>
                                     <span class="enter_to_submit throbber hidden">Posting...<img src="{{request.static_url('totter:static/images/throbber.gif')}}"/></span>
                                 </li><!-- .new_comment -->
