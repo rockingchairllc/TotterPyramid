@@ -6,6 +6,18 @@
     {{ super() }}
     <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
     <script src="{{request.static_url('totter:static/js/jquery.toggle.js')}}"></script>
+    <script src="{{request.static_url('totter:static/js/jquery.tmpl.js')}}"></script>
+    {% raw %}
+    <script id="comment_template" type="text/x-jquery-tmpl">
+    <li class="last_update">
+        <a href="#"><img src="${profile}" width="32" height="32" /></a>
+        <div class="comment_body">
+            {{if author_url}}<a href="${author_url}">{{/if}}<span class="comment_author">${author}</span>{{if author_url}}</a>{{/if}}
+            <span class="comment_text">${text}</span>
+        </div>
+    </li>
+    </script>
+    {% endraw %}
 	<script type="text/javascript">
 		function showComment(idx) {
 		    $('#'+idx + '.idea').find('.project_idea_comments').show();
@@ -23,7 +35,7 @@
                 idx = $(this).attr("order");
                 var prjId = "{{project.id}}";
                 var cmtdata = $(this).val();
-				var CommentData = JSON.stringify({'data': cmtdata, 'project_id': prjId, 'Idea_id': idx });
+				var CommentData = JSON.stringify({'data': cmtdata, 'project_id': prjId, 'Idea_id': idx, 'anonymous' : anon_state[idx] || 0 });
 				$('#comments'+idx).find('.enter_to_submit.default').addClass('hidden');
 				$('#comments'+idx).find('.enter_to_submit.throbber').removeClass('hidden');
 				$.ajax({
@@ -35,9 +47,15 @@
 					    $('#comments'+idx).find('.enter_to_submit.default').removeClass('hidden');
 				        $('#comments'+idx).find('.enter_to_submit.throbber').addClass('hidden');
 				        
-                                        
-						var m_data = '<li class="last_update"> <a href="#"> <img src="{{user.profile_picture}}" width="32" height="32" /> </a>' +
-										'<div class="comment_body"> <span class="comment_author"><a href="#">{{user.first_name}} </a></span><span class="comment_text">' + cmtdata + '</span></div></li>';
+				        if (anon_state[idx]) {
+				            tmpl_data = {'profile' : "{{request.static_url('totter:static/images/anonymous_profile.jpg')}}", 
+				                'author' : 'Anonymous', 'text' : cmtdata };
+				        } else {
+				            tmpl_data = {'profile' : "{{user.profile_picture}}", 
+				                'author' : "{{user.first_name}}", 'text' : cmtdata, 'author_url' : '#'};
+				        }
+                        
+                        var m_data = $('#comment_template').tmpl(tmpl_data);
 						sibling = $('#comments'+idx).find('.last_update');
 						
 						if (sibling.length > 0) {
@@ -206,6 +224,17 @@
 			
 		}
 	</script>
+	<script type="text/javascript">
+	    var anon_state = new Array();
+	    function anonOn(idea_id) {
+	        anon_state[idea_id] = true;
+	    }
+	    function anonOff(idea_id) {
+	        anon_state[idea_id] = false;
+	    }
+	</script>
+	
+	
 {% endblock %}
 
 {% block add_idea_btn %}
@@ -299,10 +328,18 @@
                                             <li>
                                         {% endif %}	
                                             <a href="#">
+                                                {% if comment.anonymous %}
+                                                <img src="{{request.static_url('totter:static/images/anonymous_profile.jpg')}}" width="32" height="32" />
+                                                {% else %}
                                                 <img src="{{comment.author.profile_picture}}?type=square" width="32" height="32" />
+                                                {% endif %}
                                             </a>
                                             <div class="comment_body">
+                                                {% if comment.anonymous %}
+                                                <span class="comment_author">Anonymous</span>
+                                                {% else %}
                                                 <span class="comment_author"><a href="#">{{comment.author.first_name}}</a></span>
+                                                {% endif %}
                                                 <span class="comment_text">{{comment.data}}</span>
                                             </div>
                                             </li>
@@ -310,7 +347,10 @@
                                     </ul>
                                 </li>
                                 <li class="new_comment first_update">
-                                    <a href="#"><img src="{{user.profile_picture}}?type=square" width="32" height="32" /></a>
+                                    <div class="toggle">
+                                    <img onclick="anonOn({{idea.id}})" src="{{user.profile_picture}}?type=square" width="32" height="32" />
+                                    <img onclick="anonOff({{idea.id}})" class="hidden" src="{{request.static_url('totter:static/images/anonymous_profile.jpg')}}" width="32" height="32" />
+                                    </div>
                                     <textarea class="comment_text comment_input remember" type="text" order="{{idea_data[ideas_index].idea.id}}">Comment</textarea><br />
                                     <span class="enter_to_submit default">Push Enter to Submit</span>
                                     <span class="enter_to_submit throbber hidden">Posting...<img src="{{request.static_url('totter:static/images/throbber.gif')}}"/></span>

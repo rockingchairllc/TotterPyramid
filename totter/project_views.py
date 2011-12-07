@@ -58,10 +58,11 @@ def add_comment(request):
     # 'data' : The comment text.
     session = DBSession()
     comment_text = request.json_body['data']
+    anonymous = request.json_body['anonymous']
     idea_id = request.matchdict['idea_id']
     project_id = request.matchdict['project_id']
     cur_user = get_user(request)
-    new_comment = Comment(project_id=project_id, idea_id=idea_id, data=comment_text)
+    new_comment = Comment(project_id=project_id, idea_id=idea_id, data=comment_text, anonymous=anonymous)
     new_comment.author = cur_user
     session.add(new_comment)
     session.flush()
