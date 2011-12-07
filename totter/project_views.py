@@ -228,7 +228,8 @@ def ideas(request):
     
     sort = request.params.get('sort')
     if sort == 'user':
-        idea_data = idea_data.order_by(User.first_name)
+        # Use Python to sort, so we sort Anonymous posts properly.
+        pass
     elif sort == 'rating':
         # Use Python to sort it. 
         pass
@@ -263,6 +264,8 @@ def ideas(request):
     if sort == 'rating':
         # Descending (highest rating first)
         idea_data.sort(key=lambda el:el['total_rating'], reverse=True)
+    elif sort == 'user':
+        idea_data.sort(key=lambda el:el['idea'].author.first_name + ' ' + el['idea'].author.last_name if not el['idea'].anonymous else 'Anonymous')
     
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return template_permissions(request, {

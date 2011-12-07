@@ -13,7 +13,7 @@
                     });
                 });
             } else if (method == 'unbind') {
-                $.unbind('.toggle');
+                $('*').unbind('.toggle');
             }
         });
     };

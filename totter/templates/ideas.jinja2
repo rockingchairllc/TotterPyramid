@@ -7,6 +7,50 @@
     <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
     <script src="{{request.static_url('totter:static/js/jquery.toggle.js')}}"></script>
     <script src="{{request.static_url('totter:static/js/jquery.tmpl.js')}}"></script>
+    <!-- General -->
+    <script type="text/javascript">
+    function bindAll() {
+        $('.comment_input').live('keypress', submitkey_binding);
+        
+        $('.comment_input').autoResize({max_width : 100, min_height:'original', extraSpace: 10});
+        
+        // If our URL has #ideapopup on the end, open the add idea popup.
+        anchor = self.document.location.hash;
+        if (anchor == '#ideapopup') {
+            showAddIdea();
+        }
+        
+        // Creates a toggle function between each of .toggle's children.
+        $('.toggle').toggle('bind');
+        
+        // All .remember textboxes will remember their default values.
+        $('.remember').default('bind');
+        
+        // Have the sort links do a partial refresh instead of a full refresh.
+        $sort_links = $('.sort_by a').each(function() {
+            var url = $(this).attr('href');
+            $(this).click(function(e) {
+                console.log("Performing partial refresh: " + url);
+                e.preventDefault();
+                unbindAll();
+                $('.project_ideas').load(url + " .project_ideas>*", function() {
+                    console.log("Completed partial refresh.");
+                    bindAll();
+                });
+            });
+        });
+    }
+    function unbindAll() {
+        $('.toggle').toggle('unbind');
+        $('.remember').default('unbind');
+        $('.sort_by a').unbind('click');
+    }
+    $(document).ready(function(){
+        console.log('document.ready');
+        bindAll();
+    });
+    </script>
+    <!-- Commentary -->
     {% raw %}
     <script id="comment_template" type="text/x-jquery-tmpl">
     <li class="last_update">
@@ -19,6 +63,14 @@
     </script>
     {% endraw %}
 	<script type="text/javascript">
+	    var anon_state = new Array();
+	    function anonOn(idea_id) {
+	        anon_state[idea_id] = true;
+	    }
+	    function anonOff(idea_id) {
+	        anon_state[idea_id] = false;
+	    }
+	    
 		function showComment(idx) {
 		    $('#'+idx + '.idea').find('.project_idea_comments').show();
 		}
@@ -67,24 +119,7 @@
 				});
             }
 		}
-		$(document).ready(function(){
-		    console.log('document.ready');
-			$('.comment_input').live('keypress', submitkey_binding);
-			
-			$('.comment_input').autoResize({max_width : 100, min_height:'original', extraSpace: 10});
-			
-			// If our URL has #ideapopup on the end, open the add idea popup.
-			anchor = self.document.location.hash;
-			if (anchor == '#ideapopup') {
-			    showAddIdea();
-			}
-			
-			// Creates a toggle function between each of .toggle's children.
-			$('.toggle').toggle('bind');
-			
-			// All .remember textboxes will remember their default values.
-			$('.remember').default('bind');
-		});
+		
 	</script>
 	
 	<!-- Ratings -->
@@ -172,11 +207,8 @@
 			
 			$(".add_idea .throbber").removeClass('hidden');
 			$(".add_idea button").addClass('hidden');
-			// Creates a toggle function between each of .toggle's children.
-            $('.toggle').toggle('unbind');
-            
-            // All .remember textboxes will remember their default values.
-            $('.remember').default('unbind');
+			
+			unbindAll();
 			
 			function onSuccess_addIdea(data){
 			    // Successfully added our idea to the serverside.
@@ -188,11 +220,7 @@
 				    $(".add_idea .throbber").addClass('hidden');
 			        $(".add_idea button").removeClass('hidden');
 			        
-			        // Creates a toggle function between each of .toggle's children.
-                    $('.toggle').toggle('bind');
-                    
-                    // All .remember textboxes will remember their default values.
-                    $('.remember').default('bind');
+			        bindAll();
 			        
 				});
 				
@@ -211,17 +239,6 @@
 			
 		}
 	</script>
-	<script type="text/javascript">
-	    var anon_state = new Array();
-	    function anonOn(idea_id) {
-	        anon_state[idea_id] = true;
-	    }
-	    function anonOff(idea_id) {
-	        anon_state[idea_id] = false;
-	    }
-	</script>
-	
-	
 {% endblock %}
 
 {% block add_idea_btn %}

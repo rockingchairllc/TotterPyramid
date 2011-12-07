@@ -623,6 +623,7 @@ ul.star_tool_tip li a:hover {
 .comment_time, .toggle_comments {
     color: gray;
     font-size: 12px;
+    cursor: pointer;
 }
 ul.project_idea_comments .new_comment {
     background: none repeat scroll 0 0 #E8E8E8;
