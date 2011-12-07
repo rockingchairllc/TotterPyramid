@@ -4,8 +4,7 @@
 {% set navigation_bar = [
     (request.model_url(context), 'overview', 'Overview'),
     (request.model_url(context, 'ideas'), 'ideas', 'Ideas'),
-    (request.model_url(context, 'people'), 'people', 'People'),
-    (request.model_url(context, 'invite'), 'invite', 'Invite') 
+    (request.model_url(context, 'people'), 'people', 'People')
 ] -%}
 
 {% if show_invite %}
