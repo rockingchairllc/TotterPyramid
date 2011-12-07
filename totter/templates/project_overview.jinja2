@@ -6,41 +6,39 @@
 <script src="{{request.static_url('totter:static/js/jquery.tmpl.js')}}"></script>
 <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
 <script type="text/javascript">
-$(document).ready(function(){
+    $(document).ready(function(){
         $('.remember').default('bind');
     });
-function addUpdate() {
-    $('.add_update').toggle();
-    $('.add_update .remember').default();
-}
-function addUpdate_to_project() {
-    var prjId = "{{project.id}}";
-    var IdeaData = JSON.stringify({'data': $(".add_update_modal textarea").val(), 'project_id': prjId });
-    $.ajax({
-        url:"{{request.model_url(context, 'updates')}}",
-        type: "POST",
-        dataType: "json",
-        data: IdeaData,
-        success: onSuccess_addUpdate
-        
-    });
-    
-    function onSuccess_addUpdate(data){
-        var new_id = data.idea_id;
-        var when = data.when;
-        var text = data.data;
-        var update_data = {'when' : when, 'data' : text};
-        var prepare_data = $('#updateTemplate').tmpl(update_data);
-        $(".add_update_modal textarea").val("Start typing your update...")
-        var after = $('.updates_header');
-        $('.first_update').removeClass('first_update');
-        after.after(prepare_data);
+    function addUpdate() {
+        $('.add_update').toggle();
         $('.add_update .remember').default();
     }
-    addUpdate();
-    
-    
-}
+    function addUpdate_to_project() {
+        var prjId = "{{project.id}}";
+        var IdeaData = JSON.stringify({'data': $(".add_update_modal textarea").val(), 'project_id': prjId });
+        $.ajax({
+            url:"{{request.model_url(context, 'updates')}}",
+            type: "POST",
+            dataType: "json",
+            data: IdeaData,
+            success: onSuccess_addUpdate
+            
+        });
+        
+        function onSuccess_addUpdate(data){
+            var new_id = data.idea_id;
+            var when = data.when;
+            var text = data.data;
+            var update_data = {'when' : when, 'data' : text};
+            var prepare_data = $('#updateTemplate').tmpl(update_data);
+            $(".add_update_modal textarea").val("Start typing your update...")
+            var after = $('.updates_header');
+            $('.first_update').removeClass('first_update');
+            after.after(prepare_data);
+            $('.add_update .remember').default();
+        }
+        addUpdate();
+    }
 </script>
 {# Turn Jinja2 off, this is jquery.tmpl's territory. #}
 {% raw %}
