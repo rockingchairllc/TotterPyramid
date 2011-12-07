@@ -67,19 +67,6 @@
 				});
             }
 		}
-		
-		function SortBy(sort_type){
-			if (sort_type == 1) { //sort by date
-				//alert("{{request.application_url}}/project/{{project.id}}/ideas?" + 'sort="date"');
-				window.location = "{{request.current_route_url()}}?" + 'sort=date';
-			}
-			else if (sort_type == 2) { //sort by Rating
-				window.location = "{{request.current_route_url()}}?" + 'sort=rating';
-			}
-			else if (sort_type == 3) { //sort by User
-				window.location = "{{request.current_route_url()}}?" + 'sort=user';
-			}
-		} 
 		$(document).ready(function(){
 		    console.log('document.ready');
 			$('.comment_input').live('keypress', submitkey_binding);
