@@ -72,7 +72,7 @@ def add_rating(request):
     
     session = DBSession()
     cur_user = get_user(request)
-    idea_id = request.matchdict['idea_id']
+    idea_id = request.context.id
     rating_data = request.json_body
     
     logging.warn('Rating received ' + str(rating_data))
