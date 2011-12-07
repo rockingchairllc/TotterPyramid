@@ -10,10 +10,6 @@
     <!-- General -->
     <script type="text/javascript">
     function bindAll() {
-        $('.comment_input').live('keypress', submitkey_binding);
-        
-        $('.comment_input').autoResize({max_width : 100, min_height:'original', extraSpace: 10});
-        
         // If our URL has #ideapopup on the end, open the add idea popup.
         anchor = self.document.location.hash;
         if (anchor == '#ideapopup') {
@@ -44,9 +40,15 @@
         $('.toggle').toggle('unbind');
         $('.remember').default('unbind');
         $('.sort_by a').unbind('click');
+        
+        
+        
+        
     }
     $(document).ready(function(){
         console.log('document.ready');
+        $('.comment_input').live('keypress', submitkey_binding);
+        $('.comment_input').autoResize({max_width : 100, min_height:'original', extraSpace: 10});
         bindAll();
     });
     </script>
@@ -220,6 +222,7 @@
 				    $(".add_idea .throbber").addClass('hidden');
 			        $(".add_idea button").removeClass('hidden');
 			        
+			        // Handled in $document.ready:
 			        bindAll();
 			        
 				});
