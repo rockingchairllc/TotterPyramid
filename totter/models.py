@@ -330,6 +330,7 @@ class UserContainer(object):
         user.__name__ = str(user.id)
         user.__parent__ = self
         session.add(user)
+        session.flush()
         return user
         
     def fakeUser(self):
@@ -365,6 +366,7 @@ class IdeaContainer(object):
         idea = Idea(*args, **kwargs)
         idea.project = self.project
         session.add(idea)
+        session.flush()
         return idea
             
 class CommentContainer(object):
@@ -392,6 +394,7 @@ class CommentContainer(object):
         comment.idea = self.idea
         comment.project = self.idea.project
         session.add(comment)
+        session.flush()
         return comment
     
     

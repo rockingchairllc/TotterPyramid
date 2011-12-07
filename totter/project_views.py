@@ -155,7 +155,6 @@ def add_idea(request):
     
     new_idea = request.context.newIdea(data=idea_text, anonymous=anonymous, author=cur_user)
     
-    
     # Record event:
     record_event(u'add_idea', request.json_body['project_id'], datetime.now(), {
         'idea_uri' : request.resource_url(new_idea),
