@@ -578,6 +578,9 @@ div.rating_system {
     font-size: 0.9em;
     font-weight: normal;
 }
+.rating_value {
+    font-weight: bold;
+}
 div.like_love {
     clear: both;
     float: right;
@@ -694,4 +697,9 @@ ul.project_idea_comments li.existing_comments {
 }
 ul.existing_comments {
     background: none repeat scroll 0 0 #E8E8E8;
+}
+
+div.toggle_comments {
+    float:right;
+    clear:both;
 }
