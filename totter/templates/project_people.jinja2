@@ -7,7 +7,7 @@
 {% for person in people %}
     <li class="person">
     <img src="{{person.profile_picture}}"></img>
-    <a href="{{person.profile_uri}}">{{person.first_name}} {{person.last_name}}</a> {%if not person.invite_accepted %}(Invited){% endif %}
+    <a href="{{person.profile_url}}">{{person.first_name}} {{person.last_name}}</a> {%if not person.invite_accepted %}(Invited){% endif %}
     </li>
 {% endfor %}
 

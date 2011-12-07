@@ -246,7 +246,6 @@
                         
                          
                         <ul class="project_idea_comments" id="comments{{idea_data[ideas_index].idea.id}}">
-                            <li class="list_title">Comments:</li>
                             <li class="existing_comments">
                                 <ul class="existing_comments">
                                 <!-- Append all new comments to the ul.project_idea_comments -->
@@ -270,7 +269,8 @@
 							    </ul>
 							</li>
 							<li class="new_comment first_update">
-                            	<textarea class="comment_text comment_input" type="text" order="{{idea_data[ideas_index].idea.id}}">Start Typing</textarea><br />
+							    <a href="#"><img src="{{user.profile_picture}}?type=square" width="32" height="32" /></a>
+                            	<textarea class="comment_text comment_input" type="text" order="{{idea_data[ideas_index].idea.id}}">Comment</textarea><br />
                                 <span class="enter_to_submit default">Push Enter to Submit</span>
                                 <span class="enter_to_submit throbber hidden">Posting...<img src="{{request.static_url('totter:static/images/throbber.gif')}}"/></span>
                             </li><!-- .new_comment -->
