@@ -5,7 +5,7 @@
     {# project_base has add_idea functions #}
     {{ super() }}
     <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
-    
+    <script src="{{request.static_url('totter:static/js/jquery.toggle.js')}}"></script>
 	<script type="text/javascript">
 		function showComment(idx) {
 		    $('#'+idx + '.idea').find('.project_idea_comments').show();
@@ -75,17 +75,7 @@
 			}
 			
 			// Creates a toggle function between each of .toggle's children.
-			$('.toggle').each(function() {
-			    var $children = $(this).children();
-			    $children.each(function() {
-			        $(this).click(function() { // Child X was clicked.
-			            $children.each(function() { // Show everyone.
-			                $(this).removeClass('hidden');
-			            });
-			            $(this).addClass('hidden'); // Hide X
-			        });
-			    });
-			});
+			$('.toggle').toggle('bind');
 			
 			// All .remember textboxes will remember their default values.
 			$('.remember').default('bind');
@@ -176,6 +166,11 @@
 			
 			$(".add_idea .throbber").removeClass('hidden');
 			$(".add_idea button").addClass('hidden');
+			// Creates a toggle function between each of .toggle's children.
+            $('.toggle').toggle('unbind');
+            
+            // All .remember textboxes will remember their default values.
+            $('.remember').default('unbind');
 			
 			function onSuccess_addIdea(data){
 			    // Successfully added our idea to the serverside.
@@ -186,6 +181,12 @@
 				    $('html,body').animate({scrollTop: $("#idea_"+new_id).offset().top},'fast');
 				    $(".add_idea .throbber").addClass('hidden');
 			        $(".add_idea button").removeClass('hidden');
+			        
+			        // Creates a toggle function between each of .toggle's children.
+                    $('.toggle').toggle('bind');
+                    
+                    // All .remember textboxes will remember their default values.
+                    $('.remember').default('bind');
 			        
 				});
 				
