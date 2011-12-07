@@ -24,6 +24,11 @@ a {
     color: #2471BE;
     text-decoration: none;
 }
+
+.notification {
+    color: #2471BE;
+}
+
 a:hover {
     text-decoration: underline;
 }
@@ -92,7 +97,6 @@ input[type="text"]:focus, textarea:focus {
 form.button_wrapper {
     display: inline;
 }
-
 
 .email_invite textarea {
     height: 150px;

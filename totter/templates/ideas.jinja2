@@ -65,7 +65,7 @@
 			// If our URL has #ideapopup on the end, open the add idea popup.
 			anchor = self.document.location.hash;
 			if (anchor == '#ideapopup') {
-			    addIdea();
+			    showAddIdea();
 			}
 		});
 	</script>
@@ -134,8 +134,11 @@
 	
 	<!-- Add Idea -->
 	<script type="text/javascript">
-	    function addIdea() {
-			$('.add_idea').toggle();
+	    function showAddIdea() {
+			$('.add_idea').show();
+		}
+		function hideAddIdea() {
+		    $('.add_idea').hide();
 		}
 	    function addIdea_to_project() {
 			var prjId = "{{project.id}}";
@@ -156,7 +159,7 @@
 			    var new_id = data.idea_id;
 			    // Do a partial page refresh to reload the idea list:
 				$('.project').load(location.href + " .project>*", function() {
-				    addIdea();
+				    hideAddIdea();
 				    $('html,body').animate({scrollTop: $("#idea_"+new_id).offset().top},'fast');
 				    $(".add_idea .throbber").addClass('hidden');
 			        $(".add_idea button").removeClass('hidden');
@@ -185,17 +188,17 @@
 
 {% block add_idea_btn %}
 <!-- Just show the overlay. -->
-<button class="add_idea_button" onclick="addIdea()">Add Idea</button>
+<button class="add_idea_button" onclick="showAddIdea()">Add Idea</button>
 {% endblock %}
 
 {% block project_body %}
             <!-- Add Idea and Modal Overlay -->
             <div class="add_idea">
-                <div class="add_idea_overlay" onClick="addIdea()"></div>
+                <div class="add_idea_overlay" onClick="hideAddIdea()"></div>
                 <div class="add_idea_modal drop-shadow">
                     <h1>Add Idea</h1>
                     <textarea>Start typing your idea...</textarea>
-                    <a href="javascript:void(0)" onClick="addIdea()">Cancel</a>
+                    <a href="javascript:void(0)" onClick="hideAddIdea()">Cancel</a>
                     <div class="throbber hidden">
                         <span>Posting...</span>
                         <img src="{{request.static_url('totter:static/images/throbber.gif')}}"/>
@@ -204,11 +207,6 @@
                 </div><!-- idea_idea_modal -->
             </div><!-- .add_idea -->
             
-            <script>
-			function addIdea() {
-				$('.add_idea').toggle();
-			}
-			</script>
             <!-- END Add Idea and Modal Overlay -->
             
             <div class="sort_by">
