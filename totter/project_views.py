@@ -263,17 +263,22 @@ def ideas(request):
         idea_data.sort(key=lambda el:el['total_rating'], reverse=True)
     
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
-    return {
+    return template_permissions(request, {
         'project' : project, 
         'project_id' : project_id,
         'idea_data': idea_data, 
         'user' : user, 
         'ideas_count': len(idea_data), 
         'people_count': 1
-    }
+    })
     
-
-
+def template_permissions(request, template_params):
+    template_params.update({
+        'editable' : has_permission('edit', request.context, request),
+        'show_invite' : has_permission('invite', request.context, request),
+    })
+    return template_params
+    
 @view_config(route_name='project_entity', renderer='project_overview.jinja2', permission='view', request_method='GET')
 def project(request):
     user = get_user(request)
@@ -293,8 +298,7 @@ def project(request):
     if user:
         session.merge(Participation(user_email=user.email, project_id=project.id, access_time=datetime.now()))
     
-    return {
-        'editable' : has_permission('edit', request.context, request),
+    return template_permissions(request, {
         'project_id' : project_id,
         'project' : project, 
         'updates' : updates,
@@ -302,7 +306,7 @@ def project(request):
         'user' : user, 
         'ideas_count': project.ideas.count(), 
         'people_count': 1
-    }
+    })
 @view_config(route_name='project_entity', renderer='string', permission='view', request_method='POST')
 def edit_project(request):
     project_id = request.matchdict['project_id']
@@ -355,7 +359,7 @@ def display_project_people(request):
     people_data.sort(key=lambda user: user['first_name'] + u' ' + user['last_name'])
     
     
-    return {
+    return template_permissions(request, {
         'people' : people_data,
         'invited_emails' : email_data,
         'project_id' : project_id,
@@ -363,7 +367,7 @@ def display_project_people(request):
         'user' : user, 
         'ideas_count': project.ideas.count(), 
         'people_count': len(active_users(project)),
-    }
+    })
 
 def active_users(project):
     people_bucket = {}
@@ -460,7 +464,7 @@ def invite(request):
     'iframe_url' : iframe_url,
     'fb_access_token' : request.session['access_token'] if 'access_token' in request.session else None,
     })
-    return response_params
+    return template_permissions(request, response_params)
     
 def enterKey(request):
     return {}
