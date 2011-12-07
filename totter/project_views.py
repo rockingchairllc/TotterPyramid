@@ -163,7 +163,7 @@ def add_idea(request):
         'idea_last' : new_idea.author.last_name,
         })
         
-    return {'idea_id' : new_idea.id, 'ideas_count' : project.ideas.count()}
+    return {'idea_id' : new_idea.id, 'ideas_count' : request.context.project.ideas.count()}
 
 @view_config(context='totter.models.Project', name='ideas', renderer='ideas.jinja2', permission='view')
 def ideas(request):
