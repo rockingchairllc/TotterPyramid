@@ -526,7 +526,7 @@ ul.project_ideas {
 ul.project_ideas li {
     border-bottom: 1px solid #CCCCCC;
     border-top: 1px solid #EFEFEF;
-    padding: 15px 0;
+    padding: 10px 0;
     position: relative;
 }
 ul.project_ideas li.first_update {
@@ -551,7 +551,6 @@ ul.project_ideas li.last_update {
     font-weight: bold;
 }
 .idea_meta {
-    padding-bottom: 3px;
 }
 
 .total_rating {
