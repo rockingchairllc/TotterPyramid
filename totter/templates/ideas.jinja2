@@ -239,35 +239,42 @@
             
             <ul class="project_ideas">
             {% for ideas_index in range(ideas_count) %}
-                {% set idea_id = idea_data[ideas_index].idea.id %}
+                {% set idea = idea_data[ideas_index].idea %}
+                {% set liked = idea_data[ideas_index].user_rating.liked %}
+                {% set loved = idea_data[ideas_index].user_rating.loved %}
+                {% set comments = idea.comments %}
             	<li>
-            	    <div id="{{idea_id}}" class="idea">
+            	    <div id="{{idea.id}}" class="idea">
                         <a name="idea_{{idea_data[ideas_index].idea.id}}" id="idea_{{idea_data[ideas_index].idea.id}}"></a>
                         <div class="idea_author">
                             <a href="#">
+                                {% if idea.anonymous %}
+                                <img src="{{request.static_url('totter:static/images/anonymous_profile.jpg')}}" />
+                                {% else %}
                                 <img src="{{idea_data[ideas_index].idea.author.profile_picture}}?type=square" />
+                                {% endif %}
                             </a>
                         </div><!-- .idea_author -->
                         <div class="idea_body">
                             <div class="idea_meta">
-                            {% set liked = idea_data[ideas_index].user_rating.liked %}
-                            {% set loved = idea_data[ideas_index].user_rating.loved %}
-                            {% set comments = idea_data[ideas_index].idea.comments %}
-                            {% set idea = idea_data[ideas_index].idea %}
+                            {% if idea.anonymous %}
+                            <div class="username">Anonymous</div>
+                            {% else %}
                             <div class="username"><a href="#">{{idea_data[ideas_index].idea.author.first_name}}</a></div>
+                            {% endif %}
                             <div class="rating_system">
-                                <span class="total_rating" id="total_rating_{{idea_id}}" >Total Rating: <span class="rating_value">{{idea_data[ideas_index].total_rating}}</span></span>
-                                <div class="like_love" id="like_love_{{idea_id}}">
-                                    <a class="like {% if liked %}hidden{% endif %}" onClick="like('#like_love_{{idea_id}}', {{idea_id}})">Like It (+1)</a>
-                                    <a class="unlike {% if not liked %}hidden{% endif %}"onClick="unlike('#like_love_{{idea_id}}', {{idea_id}})">Unlike It</a>
+                                <span class="total_rating" id="total_rating_{{idea.id}}" >Total Rating: <span class="rating_value">{{idea_data[ideas_index].total_rating}}</span></span>
+                                <div class="like_love" id="like_love_{{idea.id}}">
+                                    <a class="like {% if liked %}hidden{% endif %}" onClick="like('#like_love_{{idea.id}}', {{idea.id}})">Like It (+1)</a>
+                                    <a class="unlike {% if not liked %}hidden{% endif %}"onClick="unlike('#like_love_{{idea.id}}', {{idea.id}})">Unlike It</a>
                                     &bull;
-                                    <a class="love {% if loved %}hidden{% endif %}" onClick="love('#like_love_{{idea_id}}', {{idea_id}})">Love It (+2)</a>
-                                    <a class="unlove {% if not loved %}hidden{% endif %}" onClick="unlove('#like_love_{{idea_id}}', {{idea_id}})">Unlove It</a>
+                                    <a class="love {% if loved %}hidden{% endif %}" onClick="love('#like_love_{{idea.id}}', {{idea.id}})">Love It (+2)</a>
+                                    <a class="unlove {% if not loved %}hidden{% endif %}" onClick="unlove('#like_love_{{idea.id}}', {{idea.id}})">Unlove It</a>
                                 </div><!-- like_love -->
                             </div>
                             <div class="toggle toggle_comments">
-                                <a class="hidden" onclick="showComment({{idea_id}})">show {{comments|length}} comments</a>
-                                <a class=""       onclick="hideComment({{idea_id}})">hide comments</a>
+                                <a class="hidden" onclick="showComment({{idea.id}})">show {{comments|length}} comments</a>
+                                <a class=""       onclick="hideComment({{idea.id}})">hide comments</a>
                             </div><!-- .toggle_comments -->
                             <div class="comment_time">
                                 {{idea_data[ideas_index].idea.creation_time | timefmt}}
