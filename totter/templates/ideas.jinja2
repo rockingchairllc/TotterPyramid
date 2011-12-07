@@ -224,10 +224,10 @@
             <!-- END Add Idea and Modal Overlay -->
             
             <div class="sort_by">
-                Sort by:<br />
-                <button type="button" onClick="SortBy(1)">Date</button>
-                <button type="button" onClick="SortBy(2)">Rating</button>
-                <button type="button" onClick="SortBy(3)">User</button>
+                Sort by:
+                <a href="{{request.current_route_url()}}?sort=date">Date</a> |
+                <a href="{{request.current_route_url()}}?sort=date">Rating</a> |
+                <a href="{{request.current_route_url()}}?sort=date">User</a>
             </div><!-- .sort_by -->
             
             <ul class="project_ideas">
