@@ -356,7 +356,7 @@ def create(request):
 
 @view_config(context='totter.models.Project', name='invite', renderer='invite.jinja2', permission='invite')
 def invite(request):
-    project = request.context.id
+    project = request.context
     session = DBSession()
     user = get_user(request)
     redirect_uri = request.resource_url(project)
