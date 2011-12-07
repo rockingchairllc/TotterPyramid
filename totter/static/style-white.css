@@ -694,3 +694,19 @@ div.rating_system, div.toggle_comments {
     position: relative;
     top: -1.2em;
 }
+
+.notification {
+    color: #2471BE;
+    font-weight: bold;
+}
+
+.user_projects .project_title {
+    margin-left: 4em;
+}
+.user_projects .participation_info {
+    margin-left: 8em;
+}
+
+.access_info {
+    font-weight: bold;
+}
