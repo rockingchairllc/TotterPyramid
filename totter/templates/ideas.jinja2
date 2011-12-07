@@ -155,7 +155,8 @@
 		}
 	    function addIdea_to_project() {
 			var prjId = "{{project.id}}";
-			var IdeaData = JSON.stringify({'data': $(".add_idea_modal textarea").val(), 'project_id': prjId });
+			var anonymous = $(".add_idea_modal #anonymous").is(':checked');
+			var IdeaData = JSON.stringify({'data': $(".add_idea_modal textarea").val(), 'project_id': prjId, 'anonymous' : anonymous});
 			$.ajax({
 				url:"{{request.application_url}}/project/{{project.id}}/idea",
 				type: "POST",
@@ -218,6 +219,7 @@
                 <div class="add_idea_overlay" onClick="hideAddIdea()"></div>
                 <div class="add_idea_modal drop-shadow">
                     <h1>Add Idea</h1>
+                    <div class="anonymous"><label for="anonymous">Anonymous:</label><input type="checkbox" id="anonymous"/></div>
                     <textarea class="remember">Start typing your idea...</textarea>
                     <a href="javascript:void(0)" onClick="hideAddIdea()">Cancel</a>
                     <div class="throbber hidden">

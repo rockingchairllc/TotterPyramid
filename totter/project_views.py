@@ -180,9 +180,10 @@ def add_idea(request):
     # 'data' : The idea text
     session = DBSession()
     idea_text = request.json_body['data']
+    anonymous = request.json_body['anonymous']
     project_id = uuid.UUID(hex=request.matchdict['project_id'])
     cur_user = get_user(request)
-    new_idea = Idea(project_id=project_id, data=idea_text)
+    new_idea = Idea(project_id=project_id, data=idea_text, anonymous=anonymous)
     new_idea.author = cur_user
     session.add(new_idea)
     session.flush()
