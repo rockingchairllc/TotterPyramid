@@ -389,7 +389,7 @@ def invite(request):
         except socket.error:
             pass
     else:
-        if request.referrer == request.route_url('create_project'):
+        if request.referrer == request.resource_url(project, 'new'):
             response_params['created'] = True
     
     if emails:
