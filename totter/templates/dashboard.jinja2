@@ -2,7 +2,7 @@
 {% block page_body %}
 <h1>Welcome to Totter {{ user.first_name }}!</h1>
 <div class="dashboard_section">
-    {% if invited_projects %}<h3>You've been invited to a Totter project!</h3>{% endif %}
+    {% if invited_projects %}<h3 class="notification">You've been invited to a Totter project!</h3>{% endif %}
     <ul class="project_list invited_projects">
     {% for project in invited_projects %}
         <li>
