@@ -32,11 +32,12 @@ def add_comment(request):
     comment_text = request.json_body['data']
     anonymous = request.json_body['anonymous']
     cur_user = get_user(request)
+    session = DBSession()
     
     new_comment = request.context.newComment(data=comment_text, anonymous=anonymous, author=cur_user)
     
     # Record event:
-    idea_author = session.query(Idea).filter(Idea.id==idea_id).one().author
+    idea_author = session.query(Idea).filter(Idea.id==request.context.idea.id).one().author
     record_event(u'add_comment', request.json_body['project_id'], datetime.now(), {
         'commenter_first' : cur_user.first_name,
         'commenter_last' : cur_user.last_name,

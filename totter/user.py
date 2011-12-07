@@ -112,9 +112,9 @@ def merge_anon_user_projects(request, user_id):
     user = session.query(User).filter(User.id==user_id).one()
     projects = request.session.get('project_id', [])
     for project in projects:
-        if project not in user.projects:
+        if project not in user.projects: # FIXME: Always runs.
             try: 
-                session.merge(Participation(project_id=project.id, user_email=user.email, access_time=datetime.now()))
+                session.merge(Participation(project_id=project, user_email=user.email, access_time=datetime.now()))
             except IntegrityError:
                 continue
 
