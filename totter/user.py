@@ -18,12 +18,7 @@ pp = pprint.PrettyPrinter(indent=4)
 def get_user(request, allow_anon=False):
     user_id = authenticated_userid(request)
     if user_id == 'PROJECT':
-        if allow_anon:
-            # Return 'fake' anonymous user.
-            return request.root.users.fakeUser()
-            return 
-        else:
-            return None
+        return None
     else:
         try:
             return request.root.users.fromID(user_id)
@@ -61,6 +56,7 @@ def groupfinder(userid, request):
 
 @view_config(context=Forbidden)
 def forbidden_handler(request):
+    request.session['authdenied_referrer'] = request.referrer
     if isinstance(request.context, Project):
         # User tried to access a project.
         return HTTPFound(location=request.route_url('access_project', project_id=request.context.id))
@@ -75,9 +71,10 @@ def project_access(request):
         project_key = request.params.get('project_key')
         logging.info('Attempting to authenticate user for project ' + project_id)
         session = DBSession()
+        
         try: 
-            project = session.query(Project).filter(Project.id==project_id).one()
-        except NoResultFound,e:
+            project = request.root.projects[project_id]
+        except KeyError,e:
             return {'not_found' : True, 'project_id' : project_id}
         
         if project.key != project_key:
@@ -131,10 +128,6 @@ def landing(request):
 @view_config(route_name='login', renderer="login.jinja2")
 def login(request):
     login_url = request.route_url('login', request)
-    referrer = request.url
-    if referrer == login_url:
-        referrer = '/' # never use the login form itself as came_from
-    came_from = request.params.get('came_from', referrer)
     message = ''
     login = ''
     password = ''
@@ -150,7 +143,7 @@ def login(request):
                 user.last_login = datetime.now()
                 session.flush()
                 merge_anon_user_projects(request, user.id)
-                return HTTPFound(location = came_from, headers = headers)
+                return redirect_to_referrer(request, headers)
             else:
                 message = 'invalid_password'
         except NoResultFound:
@@ -158,7 +151,6 @@ def login(request):
     
     fail_result = dict(
         facebook_app_id = request.registry.settings['facebook.app_id'],
-        came_from = came_from,
         login = login,
         password = password,
         user = authenticated_userid(request),
@@ -177,10 +169,7 @@ def logout(request):
 def register(request):
     login_url = request.route_url('login')
     register_url = request.route_url('register')
-    referrer = request.url
-    if referrer == login_url or referrer == register_url:
-        referrer = '/'
-    came_from = request.params.get('came_from', referrer)
+    
     message = login = password = firstname = lastname = ''
     if 'form.submitted' in request.params:
         login = request.params['login']
@@ -205,7 +194,7 @@ def register(request):
         else:
             merge_anon_user_projects(request, user.id)
             headers = remember(request, str(user.id))
-            return HTTPFound(location = came_from, headers = headers)            
+            return redirect_to_referrer(request, headers)
 
     return dict(
         message = message,
@@ -213,7 +202,6 @@ def register(request):
         firstname = firstname,
         lastname = lastname,
         password = password,
-        came_from = came_from,
         user = authenticated_userid(request),
         )
         
@@ -270,12 +258,7 @@ def facebook(request):
             merge_anon_user_projects(request, user.id)
         login = user.email
         headers = remember(request, str(user.id))
-        url = request.referer if request.referer else request.application_url
-        if url == request.route_url('login'):
-            url = '/'
-        logging.info('request.referrer' + str(request.referer))
-        logging.info('request.application_url: ' + str(request.application_url))
-        return HTTPFound(location = url, headers = headers) 
+        return redirect_to_referrer(request, headers)
     elif 'error' in request.params:
         # The user denied our request to use their fb creds.
         logging.info('Facebook credential access denied by user.')
@@ -295,4 +278,13 @@ def facebook(request):
             
         ])
         return HTTPFound(location = fb_url+"?"+params)
-
+        
+def redirect_to_referrer(request, headers=None):
+    url = request.referer if request.referer else request.application_url
+    if request.session.get('authdenied_referrer'):
+        url = request.session['authdenied_referrer']
+        request.session['authdenied_referrer'] = None
+    elif url == request.route_url('login') or url == request.route_url('logout'):
+        # User 
+        url = '/'
+    return HTTPFound(location = url, headers=headers)
