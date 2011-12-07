@@ -27,6 +27,7 @@ a {
 
 .notification {
     color: #2471BE;
+    font-weight: bold;
 }
 
 a:hover {
