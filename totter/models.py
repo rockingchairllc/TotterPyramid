@@ -52,10 +52,10 @@ class User(Base):
 
     def default_profile_url(self, request):
         return request.static_url('totter:static/images/default_profile.jpg')
-        
-    @property
-    def __name__(self):
-        return str(self.id)
+    
+    # These should be set by totter.routes.UserContainer
+    __name__ = None
+    __parent__ = None
         
     @property
     def __acl__(self):
@@ -96,9 +96,10 @@ class Project(Base):
     
     creator = relationship(User, backref=backref('created_projects'))
     
-    @property
-    def __name__(self):
-        return str(self.id)
+    # These should be set by totter.routes.ProjectContainer
+    __name__ = None
+    __parent__ = None
+    
     @property
     def __acl__(self):
         return [
@@ -107,7 +108,12 @@ class Project(Base):
             (Allow, 'group:rw-'+str(self.id), ['post', 'view']),
             ('Deny', 'system.Everyone', 'view'),
         ]
-
+    
+    def __getitem__(self, key):
+        if key != 'idea':
+            raise KeyError # Perform view lookup.
+        return IdeaContainer(self, 'idea')
+            
 class ProjectUpdate(Base):
     __tablename__ = 'ProjectUpdates'
     id = Column('UpdateID', Integer, primary_key=True, nullable=False, autoincrement=True)
@@ -139,7 +145,19 @@ class Idea(Base):
     author = relationship(User, backref=backref('ideas', lazy='dynamic'))
     project = relationship(Project, backref=backref('ideas', lazy='dynamic'))
     
-
+    # These should be set by totter.routes.IdeaContainer
+    @property
+    def __name__(self):
+        return self.id
+        
+    @property
+    def __parent__(self):
+        return self.project['idea']
+    
+    def __getitem__(self, key):
+        if key != 'comment':
+            raise KeyError # Perform view lookup.
+        return CommentContainer(self, 'comment')
 
 class Comment(Base):
     __tablename__ = 'Comments'
@@ -155,6 +173,15 @@ class Comment(Base):
     author = relationship(User, backref=backref('comments'))
     idea = relationship(Idea, backref=backref('comments'))
     project = relationship(Project, backref=backref('comments', lazy='dynamic'))
+    
+    # These should be set by totter.routes.CommentContainer
+    @property
+    def __name__(self):
+        return self.id
+        
+    @property
+    def __parent__(self):
+        return self.idea['comment']
                 
 class UserRating(Base):
     __tablename__ = 'UserRatings'
@@ -187,6 +214,189 @@ class AggregateRating(Base):
         self.loved = 0
         self.stars = 0
         self.count = 0
+    
+#### Containers ####
+from pyramid.security import ALL_PERMISSIONS, Allow, Everyone
+import logging
+from zope.interface import implements, Interface
+# FIXME: ProjectLongname and ProjectShortname both derive from ProjectContainer
+# For pyramid views to be able to specify "either" as their context by just specifying
+# ProjectContainer, the subclasses need to be wired up to the zope.interface 
+# stuff. I wonder if ABCMeta is supported as an alternative...
+
+class RootFactory(dict):
+    __name__ = None
+    __acl__ = [ (Allow, Everyone, 'view'),
+                (Allow, 'group:users', 'create'),
+                (Allow, 'group:users', 'post') ]
+    def __init__(self, request):
+        self.request = request
+        self.projects = self['project'] = ProjectLongname(self, 'project')
+        self['p'] = ProjectShortname(self, 'p')
+        self.users = self['user'] =  UserContainer(self, 'user')
+        
+        
+class ProjectContainer():
+    __acl__ = [
+        (Allow, 'group:users', 'create'),
+        (Allow, 'group:admin', ALL_PERMISSIONS),
+    ]
+    def __init__(self, parent, name):
+        self.__parent__ = parent
+        self.__name__ = name
+        
+    def name_from_project(self, project):
+        raise NotImplementedError
+        
+    def __getitem__(self, key):
+        # Get Project from database
+        session = DBSession()
+        try: 
+            logging.info('ProjectContainer key: ' + str(key))
+            logging.info('ProjectContainer key type: ' + str(type(key)))
+            project = session.query(Project)\
+                .filter((Project.id==key)).one()
+            name = self.name_from_project(project)
+            project.__parent__ = self
+            project.__name__ = name
+            return project
+        except NoResultFound:
+            logging.info('ProjectContainer KeyError: ' + str(key))
+            raise KeyError
+        except MultipleResultsFound:
+            # This is actually a problem with our database.
+            logging.error('Multiple project mappings for identifier:' + key)
+            raise KeyError
+        except StatementError:
+            raise KeyError
+            
+    def newProject(self, *args, **kwargs):
+        session = DBSession()
+        project = Project(*args, **kwargs)
+        session.add(project)
+        session.flush()
+        project.__name__ = self.name_from_project(project)
+        project.__parent__ = self
+        return project
+        
+    def fromID(self, id):
+        session = DBSession()
+        project = session.query(Project).filter(Project.id==id).one()
+        project.__name__ = self.name_from_project(project)
+        project.__parent__ = self
+        return project
+        
+class ProjectShortname(ProjectContainer):
+    def name_from_project(self, project):
+        return project.url_name
+        
+class ProjectLongname(ProjectContainer):
+    def name_from_project(self, project):
+        return project.id
+        
+class UserContainer(object):
+    __acl__ = [
+        (Allow, 'group:admin', ALL_PERMISSIONS),
+    ]
+    def __init__(self, parent, name):
+        self.__parent__ = parent
+        self.__name__ = name
+    
+    def __getitem__(self, key):
+        # Get User from database
+        session = DBSession()
+        try: 
+            logging.info('User key: ' + str(key))
+            logging.info('User key type: ' + str(type(key)))
+            user = session.query(User)\
+                .filter(User.id==key).one()
+            user.__parent__ = self
+            user.__name__ = str(user.id)
+            logging.info('User model found!')
+            return user
+        except NoResultFound:
+            logging.info('User model not found.')
+            raise KeyError
+        except MultipleResultsFound:
+            # This is actually a problem with our database.
+            logging.error('Multiple user mappings for identifier:' + key)
+            raise KeyError
+        except StatementError:
+            raise KeyError
+            
+    def newUser(self, *args, **kwargs):
+        session = DBSession()
+        user = User(*args, **kwargs)
+        user.__name__ = str(user.id)
+        user.__parent__ = self
+        session.add(user)
+        return user
+        
+    def fakeUser(self):
+        session = DBSession()
+        return session.query(User).filter(User.email=='test@rockingchairllc.com').one()
+        
+    def fromID(self, id):
+        session = DBSession()
+        return session.query(User).filter(User.id==id).one()
+
+class IdeaContainer(object):
+    def __init__(self, parent, name):
+        self.__parent__ = parent
+        self.__name__ = name
+        assert isinstance(parent, Project)
+        self.project = parent
+        
+    def __getitem__(self, key):
+        # Get Idea from database
+        session = DBSession()
+        try: 
+            idea = session.query(Idea)\
+                .filter(Project.id==self.project.id)\
+                .filter(Idea.id==key).one()
+                
+            idea.__parent__ = self
+            idea.__name__ = str(idea.id)
+            return idea
+        except NoResultFound:
+            logging.info('Idea model not found:' + key)
+            raise KeyError
+            
+    def newIdea(self, *args, **kwargs):
+        session = DBSession()
+        idea = Idea(*args, **kwargs)
+        idea.project = self.project
+        session.add(idea)
+        return idea
+            
+class CommentContainer(object):
+    def __init__(self, parent, name):
+        self.__parent__ = parent
+        self.__name__ = name
+        assert isinstance(parent, Idea)
+        self.idea = parent
+        
+    def __getitem__(self, key):
+        # Get Comment from database
+        session = DBSession()
+        try: 
+            comment = session.query(Comment)\
+                .filter(Idea.id==self.idea.id)\
+                .filter(Comment.id==key).one()
+            comment.__parent__ = self
+            comment.__name__ = str(comment.id)
+            return comment
+        except NoResultFound:
+            logging.info('Idea model not found:' + key)
+            raise KeyError
+            
+    def newComment(self, *args, **kwargs):
+        session = DBSession()
+        comment = Comment(*args, **kwargs)
+        comment.idea = self.idea
+        comment.project = self.idea.project
+        session.add(comment)
+        return comment
     
     
 def populate():

@@ -5,15 +5,11 @@ from user import get_user
 import logging
 from pyramid.httpexceptions import HTTPFound
 
-@view_config(route_name='user_entity', renderer="other_user.jinja2", permission='friends') 
+@view_config(context='totter.models.User', name='', renderer="other_user.jinja2", permission='friends') 
 def show_userpage(request):
-    user_id = request.matchdict['user_id']
     session = DBSession()
-    try:
-        other_user = session.query(User).filter(User.id==user_id).one()
-    except NoResultFound:
-        logging.warning("User view model not found!")
-        raise NotFound()
+    
+    other_user = request.context
         
     current_user = get_user(request)
     shared_projects = []
@@ -28,7 +24,7 @@ def show_userpage(request):
         # How many ideas and comments other_user has posted to this project.
         data['idea_count'] = project.ideas.filter(Idea.author==other_user).count()
         data['comment_count'] = project.comments.filter(Comment.author==other_user).count()
-        data['url'] = request.route_url('project_entity', project_id=project.id)
+        data['url'] = request.resource_url(request.root.projects[project.id])
         project_data += [data]
 
     return {
@@ -56,7 +52,7 @@ def show_dashboard(request):
         project = participation.project
         project_data = {
             'title' : project.title, 
-            'url' : request.route_url('project_entity', project_id=project.id)
+            'url' : request.resource_url(request.root.projects[project.id])
         }
         if project.creator_id == user.id: # We add these to created_projects below.
             continue
@@ -68,7 +64,7 @@ def show_dashboard(request):
     # Get information about projects user has created.
     created_projects = session.query(Project).filter(Project.creator_id==user.id)
     created_projects = [
-        {'title' : project.title, 'url' : request.route_url('project_entity', project_id=project.id)}
+        {'title' : project.title, 'url' : request.resource_url(request.root.projects[project.id])}
         for project in created_projects
     ]
     
@@ -77,7 +73,7 @@ def show_dashboard(request):
     return {
         'user' : user,
         'learn_more_url' : request.route_url('home'),
-        'create_url' : request.route_url('create_project'),
+        'create_url' : request.resource_url(request.root.projects, 'new'),
         'created_projects' : created_projects,
         'invited_projects' : invited_projects,
         'other_projects' : other_projects

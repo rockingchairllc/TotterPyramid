@@ -16,25 +16,6 @@ _ = TranslationStringFactory('totter')
 import logging
 from user import get_user
 
-notwhite = lambda value: value is not None and len(value.strip()) > 0
-notwhite.explanation = 'Value must be one or more non-whitespace characters.'
-def validate_params(request, params):
-    if instanceof(params, dict):
-        validators = params.values()
-        params = params.keys()
-    else:
-        validators = [None]*len(params)
-    
-    for i, param in enumerate(params):
-        if param not in request.params:
-            raise HTTPBadRequest(explanation='Expected parameter: ' + param)
-        if validator[i] and not validator(request.params[param]):
-            if validator[i].explanation:
-                raise HTTPBadRequest(explanation=explanation)
-            else:
-                raise HTTPBadRequest(explanation=param + ' is not valid.')
-    return True
-    
 
 def record_event(action, project_id, time, action_data):
     # TODO: Deferred processing?
@@ -42,48 +23,35 @@ def record_event(action, project_id, time, action_data):
     session = DBSession()
     new_event = ProjectEvent(project_id=project_id, type=action, when=time, data=action_data)
     session.add(new_event)
-    
-@view_config(route_name='event_collection', request_method='GET', renderer='json')
-def get_event_list(request):
-    # Grabs the list of events for a particular project.
-    project_id = request.matchdict['project_id']
-    # Last ID received by client, client can call again to get new events:
-    last_id = request.params.get('last_received_id')
-    
-    return {}
 
-@view_config(route_name='comment_collection', request_method='POST', renderer='json', xhr=True, permission='post')
+
+@view_config(context='totter.models.CommentContainer', name='', request_method='POST', renderer='json', xhr=True, permission='post')
 def add_comment(request):
     # Add comment request body is JSON-encoded with parameters:
     # 'data' : The comment text.
-    session = DBSession()
     comment_text = request.json_body['data']
     anonymous = request.json_body['anonymous']
-    idea_id = request.matchdict['idea_id']
-    project_id = request.matchdict['project_id']
     cur_user = get_user(request)
-    new_comment = Comment(project_id=project_id, idea_id=idea_id, data=comment_text, anonymous=anonymous)
-    new_comment.author = cur_user
-    session.add(new_comment)
-    session.flush()
+    
+    new_comment = request.context.newComment(data=comment_text, anonymous=anonymous, author=cur_user)
     
     # Record event:
     idea_author = session.query(Idea).filter(Idea.id==idea_id).one().author
     record_event(u'add_comment', request.json_body['project_id'], datetime.now(), {
         'commenter_first' : cur_user.first_name,
         'commenter_last' : cur_user.last_name,
-        'comment_uri' : request.current_route_url() + '/' + str(new_comment.id),
+        'comment_uri' : request.resource_url(new_comment),
         'idea_first' : idea_author.first_name,
         'idea_last' : idea_author.last_name,
         })
     return {'comment_id' : new_comment.id}
     
-@view_config(route_name='project_update', request_method='POST', renderer='json', xhr=True, permission='edit')
+@view_config(context='totter.models.Project', name='updates', request_method='POST', renderer='json', xhr=True, permission='edit')
 def add_update(request):
     # Add comment request body is JSON-encoded with parameters:
     # 'data' : The comment text.
     session = DBSession()
-    project_id = request.matchdict['project_id']
+    project_id = request.context.id
     update_text = request.json_body['data']
     cur_user = get_user(request)
     new_update = ProjectUpdate(project_id=project_id, data=update_text)
@@ -94,8 +62,8 @@ def add_update(request):
     return {'id' : new_update.id, 'when' : timefmt(new_update.when), 'data' : new_update.data}
     
     
-    
-@view_config(route_name='rating_collection', request_method='POST', renderer='json', xhr=True, permission='post')
+
+@view_config(context='totter.models.Idea', name='rating', request_method='POST', renderer='json', xhr=True, permission='post')
 def add_rating(request):
     # Add rating request body is JSON-encoded with parameters:
     # 'like' : Boolean, True if user Liked a post, False if he unliked it.
@@ -174,46 +142,34 @@ def add_rating(request):
         'total_rating' : agg_rating.liked + agg_rating.loved * 2, 
         'rating' : {'loved' : new_rating.loved or 0, 'liked' : new_rating.liked or 0}
     }
-    
-@view_config(route_name='idea_collection', request_method='POST', renderer='json', xhr=True, permission='post')
+
+@view_config(context='totter.models.IdeaContainer', name='', request_method='POST', renderer='json', xhr=True, permission='post')
 def add_idea(request):
     # Idea request body is JSON encoded with parameters:
     # 'data' : The idea text
     session = DBSession()
     idea_text = request.json_body['data']
     anonymous = request.json_body['anonymous']
-    project_id = uuid.UUID(hex=request.matchdict['project_id'])
     cur_user = get_user(request)
-    new_idea = Idea(project_id=project_id, data=idea_text, anonymous=anonymous)
-    new_idea.author = cur_user
-    session.add(new_idea)
-    session.flush()
     
-    try:
-        project = session.query(Project).filter(Project.id==project_id).one()
-    except NoResultFound:
-        raise NotFound()
-        
+    new_idea = request.context.newIdea(data=idea_text, anonymous=anonymous, author=cur_user)
+    
+    
     # Record event:
     record_event(u'add_idea', request.json_body['project_id'], datetime.now(), {
-        'idea_uri' : request.current_route_url() + '/' + str(new_idea.id),
+        'idea_uri' : request.resource_url(new_idea),
         'idea_first' : new_idea.author.first_name,
         'idea_last' : new_idea.author.last_name,
         })
         
     return {'idea_id' : new_idea.id, 'ideas_count' : project.ideas.count()}
 
-@view_config(route_name='project_ideas', renderer='ideas.jinja2', permission='view')
+@view_config(context='totter.models.Project', name='ideas', renderer='ideas.jinja2', permission='view')
 def ideas(request):
     # Optional parameters: sort="user" | "rating" | "date"
     user = get_user(request)
-    project_id = uuid.UUID(hex=request.matchdict['project_id'])
     session = DBSession()
-    try:
-        project = session.query(Project).filter(Project.id==project_id).one()
-    except NoResultFound:
-        raise NotFound()
-        
+    project = request.context
     # Create list of ideas with User's rating added:
     if user:
         idea_data = session.query(Idea, UserRating)\
@@ -270,7 +226,7 @@ def ideas(request):
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return template_permissions(request, {
         'project' : project, 
-        'project_id' : project_id,
+        'project_id' : project.id,
         'idea_data': idea_data, 
         'user' : user, 
         'ideas_count': len(idea_data), 
@@ -283,19 +239,15 @@ def template_permissions(request, template_params):
         'show_invite' : has_permission('invite', request.context, request),
     })
     return template_params
-    
-@view_config(route_name='project_entity', renderer='project_overview.jinja2', permission='view', request_method='GET')
+
+@view_config(context='totter.models.Project', name='', renderer='project_overview.jinja2', permission='view', request_method='GET')
 def project(request):
     user = get_user(request)
-    project_id = uuid.UUID(hex=request.matchdict['project_id'])
     session = DBSession()
-    try:
-        project = session.query(Project).filter(Project.id==project_id).one()
-    except NoResultFound:
-        raise NotFound()
+    project = request.context
         
     updates = session.query(ProjectUpdate)\
-        .filter(ProjectUpdate.project_id==project_id)\
+        .filter(ProjectUpdate.project_id==project.id)\
         .filter(ProjectUpdate.when >= datetime.today() - timedelta(days=10))\
         .order_by(ProjectUpdate.when.desc()).limit(10).all()
     
@@ -304,7 +256,7 @@ def project(request):
         session.merge(Participation(user_email=user.email, project_id=project.id, access_time=datetime.now()))
     
     return template_permissions(request, {
-        'project_id' : project_id,
+        'project_id' : project.id,
         'project' : project, 
         'updates' : updates,
         'ideas': project.ideas.all(), 
@@ -312,14 +264,11 @@ def project(request):
         'ideas_count': project.ideas.count(), 
         'people_count': 1
     })
-@view_config(route_name='project_entity', renderer='string', permission='view', request_method='POST')
+    
+@view_config(context='totter.models.Project', name='', renderer='string', permission='edit', request_method='POST')
 def edit_project(request):
-    project_id = request.matchdict['project_id']
     session = DBSession()
-    try:
-        project = session.query(Project).filter(Project.id==project_id).one()
-    except NoResultFound:
-        raise NotFound()
+    project = request.context
         
     logging.info('edit_project'  + str(request.params))
     # jquery.jeditable.js passes us two parameters. 
@@ -333,17 +282,12 @@ def edit_project(request):
         project.description = value
     return value
     
-@view_config(route_name='project_people', renderer='project_people.jinja2', permission='view')
+@view_config(context='totter.models.Project', name='people', renderer='project_people.jinja2', permission='view')
 def display_project_people(request):
     user = get_user(request)
-    project_id = uuid.UUID(hex=request.matchdict['project_id'])
     session = DBSession()
-    try:
-        project = session.query(Project).filter(Project.id==project_id).one()
-    except NoResultFound:
-        raise NotFound()
         
-    
+    project = request.context
     
     participants = session.query(Participation, User).outerjoin(User).filter(Participation.project == project).all()
     people_data = []
@@ -353,7 +297,7 @@ def display_project_people(request):
         if user:
             person_data['first_name'] = user.first_name
             person_data['last_name'] = user.last_name
-            person_data['profile_url'] = request.route_url('user_entity', user_id=user.id)
+            person_data['profile_url'] = request.resource_url(request.root.users[user.id])
             person_data['invite_accepted'] = participant.access_time is not None
             person_data['profile_picture'] = user.profile_picture
             people_data += [person_data]
@@ -367,13 +311,14 @@ def display_project_people(request):
     return template_permissions(request, {
         'people' : people_data,
         'invited_emails' : email_data,
-        'project_id' : project_id,
+        'project_id' : project.id,
         'project' : project, 
         'user' : user, 
         'ideas_count': project.ideas.count(), 
         'people_count': len(active_users(project)),
     })
 
+# Returns a list of users that have commented or posted an idea on the project.
 def active_users(project):
     people_bucket = {}
     people_bucket[project.creator.id] = project.creator
@@ -383,43 +328,38 @@ def active_users(project):
             people_bucket[comment.author.id] = comment.author
     return people_bucket.values()
 
-@view_config(route_name='create_project', renderer='create.jinja2', permission='create')
+@view_config(context='totter.models.ProjectLongname',  name='new', renderer='create.jinja2', permission='create')
 def create(request):
     user = get_user(request)
     
     if 'project_key' in request.params:
         # User submitted a project.
         # TODO: Validation.
-        new_project = Project(
-            title=request.params['project_title'],
-            key=request.params['project_key'],
-            description=request.params['project_description'],
-            url_name=request.params['project_url'],
-            creator_id=user.id)
-            
-        participation = Participation(user=user, project=new_project)
         try: 
+            new_project = request.context.newProject(
+                title=request.params['project_title'],
+                key=request.params['project_key'],
+                description=request.params['project_description'],
+                url_name=request.params['project_url'],
+                creator_id=user.id)
+                
+            participation = Participation(user=user, project=new_project)
             session = DBSession()
-            session.add(new_project)
             session.add(participation)
             session.flush()
         except IntegrityError:
             # url_name collision.
             raise HTTPBadRequest(explanation="Sorry! That URL has already been taken!")
-        return HTTPFound(location=request.route_url('project_invite', project_id=new_project.id))
+        return HTTPFound(location=request.resource_url(new_project, 'invite'))
     else:
         return {'user' : user}
 
-@view_config(route_name='project_invite', renderer='invite.jinja2', permission='invite')
+@view_config(context='totter.models.Project', name='invite', renderer='invite.jinja2', permission='invite')
 def invite(request):
-    project_id = request.matchdict['project_id']
+    project = request.context.id
     session = DBSession()
-    try:
-        project = session.query(Project).filter(Project.id==project_id).one()
-    except NoResultFound:
-        raise NotFound()
     user = get_user(request)
-    redirect_uri = request.route_url('project_entity', project_id=project_id)
+    redirect_uri = request.resource_url(project)
     
     iframe_url = 'https://www.facebook.com/dialog/apprequests?access_token=%(access_token)s&api_key=%(api_key)s&app_id=%(app_id)s&display=iframe&frictionless=false&locale=en_US&message=%(message)s&next=%(next)s' % {
         'access_token' : request.session['access_token'] if 'access_token' in request.session else None,
@@ -463,7 +403,7 @@ def invite(request):
         
         
     response_params.update({'user' : user, 
-    'project' : {'key':project.key,'title':project.title, 'url': request.route_url('project_entity', project_id=project.id)},
+    'project' : {'key':project.key,'title':project.title, 'url': request.resource_url(project)},
     'creator' : {'first_name' : project.creator.first_name, 'last_name' : project.creator.last_name},
     'fb_app_id' : request.registry.settings['facebook.app_id'],
     'iframe_url' : iframe_url,

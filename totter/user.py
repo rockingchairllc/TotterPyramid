@@ -16,17 +16,17 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
 def get_user(request, allow_anon=False):
-    session = DBSession()
     user_id = authenticated_userid(request)
     if user_id == 'PROJECT':
         if allow_anon:
             # Return 'fake' anonymous user.
-            return session.query(User).filter(User.email=='test@rockingchairllc.com').one()
+            return request.root.users.fakeUser()
+            return 
         else:
             return None
     else:
         try:
-            return session.query(User).filter(User.id==user_id).one()
+            return request.root.users.fromID(user_id)
         except NoResultFound:
             logging.warn('Invalid user received: ' + str(user_id))
             return None
@@ -59,7 +59,15 @@ def groupfinder(userid, request):
     except NoResultFound,e:
         return None
 
-@view_config(context=Forbidden, route_name="project_entity", renderer="enter_key.jinja2")
+@view_config(context=Forbidden)
+def forbidden_handler(request):
+    if isinstance(request.context, Project):
+        # User tried to access a project.
+        return HTTPFound(location=request.route_url('access_project', project_id=request.context.id))
+    else:
+        return HTTPFound(location=request.route_url('login'))
+
+@view_config(route_name="access_project", renderer="enter_key.jinja2")
 def project_access(request):
     if 'project_id' in request.params:
         # Attempt login.
@@ -97,8 +105,7 @@ def project_access(request):
             
             
         # Redirect to project page:
-        return HTTPFound(location=request.route_url('project_entity', project_id=str(project.id)), 
-            headers=headers)
+        return HTTPFound(location=request.resource_url(project), headers=headers)
     else:
         # Just render the form.
         return {'project_id' : request.matchdict.get('project_id')}
@@ -121,7 +128,6 @@ def landing(request):
     else:
         return HTTPFound(location=request.route_url('login'))
     
-@view_config(context=Forbidden, renderer="login.jinja2")
 @view_config(route_name='login', renderer="login.jinja2")
 def login(request):
     login_url = request.route_url('login', request)

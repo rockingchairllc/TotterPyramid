@@ -4,7 +4,7 @@
             <h1>Welcome to Totter</h1>
             {% if access_denied -%}<font color="red"> Invalid Project Key. </font> {% endif %}
             {% if not_found -%}<font color="red"> Unknown project. Is Project ID correct? </font> {% endif %}
-            <form id="loginForm" method="post" action="{{request.current_route_url()}}">
+            <form id="loginForm" method="post" action="{{request.path_url}}">
                 <fieldset>
                     {% if project_id %}
                     <input type="text" id="user_name" name="project_id" value="{{project_id}}" /><br />
