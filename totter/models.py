@@ -355,8 +355,6 @@ class IdeaContainer(object):
                 .filter(Project.id==self.project.id)\
                 .filter(Idea.id==key).one()
                 
-            idea.__parent__ = self
-            idea.__name__ = str(idea.id)
             return idea
         except NoResultFound:
             logging.info('Idea model not found:' + key)
@@ -383,8 +381,6 @@ class CommentContainer(object):
             comment = session.query(Comment)\
                 .filter(Idea.id==self.idea.id)\
                 .filter(Comment.id==key).one()
-            comment.__parent__ = self
-            comment.__name__ = str(comment.id)
             return comment
         except NoResultFound:
             logging.info('Idea model not found:' + key)
