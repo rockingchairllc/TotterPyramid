@@ -52,6 +52,7 @@
 
 {% endblock %}
 {% block project_body %}
+{% if user %}
 <div class="add_idea add_update">
     <div class="add_idea_overlay add_update_overlay" onClick="addUpdate()"></div>
     <div class="add_idea_modal add_update_modal drop-shadow">
@@ -61,7 +62,7 @@
         <button type="button" onClick="addUpdate_to_project()">Add Update</button>
     </div><!-- idea_idea_modal -->
 </div><!-- .add_idea -->
-            
+{% endif %}
 
 <div class="project_description">
     <div>
@@ -75,7 +76,11 @@
 <ul class="project_updates">
     <div class="updates_header">
         <h2>Updates</h2>
+        {% if user %}
         <button type="button" onClick="addUpdate()" class="add_update_button">Add Update</button>
+        {% else %}
+        {{fakebutton('Add Update', 'add_update_button')}}
+        {% endif %}
     </div> <!-- .updates_header -->
     {% for update in updates %}
     <li {% if loop.first %}class="first_update"{% endif %}{% if loop.last %}class="last_update"{% endif %}>

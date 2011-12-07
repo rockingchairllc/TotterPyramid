@@ -512,7 +512,7 @@ div.updates_header h2 {
     position: relative;
     top: 0.4em;
 }
-div.updates_header button {
+div.updates_header .add_update_button {
     float: right;
 }
 #new_project_idea input[type="submit"] {

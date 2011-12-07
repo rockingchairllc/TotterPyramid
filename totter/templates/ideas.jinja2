@@ -242,8 +242,13 @@
 {% endblock %}
 
 {% block add_idea_btn %}
+{% if user %}
 <!-- Just show the overlay. -->
 <button class="add_idea_button" onclick="showAddIdea()">Add Idea</button>
+{% else %}
+{{fakebutton('Add Idea', 'add_idea_button')}}
+{% endif %}
+
 {% endblock %}
 
 {% block project_body %}
@@ -350,6 +355,7 @@
                                     {% endfor %}
                                     </ul>
                                 </li>
+                                {% if user %}
                                 <li class="new_comment first_update">
                                     <div class="toggle">
                                     <img onclick="anonOn({{idea.id}})" src="{{user.profile_picture}}?type=square" width="32" height="32" />
@@ -359,6 +365,7 @@
                                     <span class="enter_to_submit default">Push Enter to Submit</span>
                                     <span class="enter_to_submit throbber hidden">Posting...<img src="{{request.static_url('totter:static/images/throbber.gif')}}"/></span>
                                 </li><!-- .new_comment -->
+                                {% endif %}
                             </ul><!-- .project_idea_comments -->
                         </div><!-- idea_body -->
                     </div> <!-- .idea -->

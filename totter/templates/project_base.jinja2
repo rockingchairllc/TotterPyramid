@@ -17,6 +17,13 @@
 {% endif %}
 
 {% set active_page = active_page|default('overview') -%}
+{% macro fakebutton(label, class='') -%}
+    {# Redirects user to login screen.  #}
+    <form class="button_wrapper" method="LINK" action="{{request.route_url('login')}}">
+        <input type="submit" class="{{class}}" value="{{label}}"></input>
+    </form>
+{%- endmacro %}
+
 {% block scripts %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
 <script src="{{request.static_url('totter:static/js/jquery.jeditable.js')}}" type="text/javascript" charset="utf-8"></script>
@@ -83,9 +90,13 @@
                         <span class="project_stat">{{project.deadline}}</span>
                     </li>
                     {% block add_idea_btn %}
+                    {% if user %}
                     <form class="button_wrapper" method="LINK" action="{{request.model_url(context)}}/ideas#ideapopup">
                         <input type="submit" class="add_idea_button" value="Add Idea"></input>
                     </form>
+                    {% else %}
+                    {{fakebutton('Add Idea', 'add_idea_button')}}
+                    {% endif %}
                     {% endblock %}
                 </ul><!-- .project_stats -->
             {% endblock %}
