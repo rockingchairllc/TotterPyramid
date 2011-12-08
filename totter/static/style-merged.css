@@ -23,6 +23,8 @@ a {text-decoration: none; color: 	#2471BE;}
 a:hover {text-decoration: underline;}
 .clearfloat {clear:both;}
 .hidden { display:none; }
+.first { border-top: none; }
+.last { border-bottom: none; }
 
 /*******************************************************************************************************************************
  Form Elements 
@@ -47,9 +49,6 @@ input[type=text], textarea {
 
 input[type=text]:focus,
 textarea:focus {
-	-webkit-box-shadow: inset 0px 1px 1px 1px rgba(0, 0, 0, .3);
-	-moz-box-shadow: inset 0px 1px 1px 1px rgba(0, 0, 0, .3);
-	box-shadow: inset 0px 1px 1px 1px rgba(0, 0, 0, .3);
 }
 
 /* Button and Submit Inputs */
