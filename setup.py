@@ -19,7 +19,6 @@ requires = [
     'MySQL-python',
     'requests',
     'email',
-    'decorator'
     ]
 
 if sys.version_info[:3] < (2,5,0):
