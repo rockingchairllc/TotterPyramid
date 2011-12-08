@@ -102,7 +102,7 @@ def project_access(request):
             
             
         # Redirect to project page:
-        return HTTPFound(location=request.resource_url(project), headers=headers)
+        return HTTPFound(location=request.root.project_url(project), headers=headers)
     else:
         # Just render the form.
         return {'project_id' : request.matchdict.get('project_id')}
