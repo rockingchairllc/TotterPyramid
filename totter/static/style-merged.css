@@ -43,7 +43,6 @@ input[type=text], textarea {
 	-moz-box-shadow: inset 0px 0px 1px 1px rgba(0, 0, 0, .3);
 	box-shadow: inset 0px 0px 1px 1px rgba(0, 0, 0, .3);
 }
-input[type=text] {height: 30px;}
 
 input[type=text]:focus,
 textarea:focus {
