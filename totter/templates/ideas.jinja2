@@ -260,6 +260,12 @@
             stars.each(function() {
                 var myIndex = index;
                 index += 1;
+                $(this).mouseover(function() {
+                    stars.each(function() { $(this).removeClass('star_active'); });
+                    for (var i = 0;  i <= myIndex; ++i) {
+                        $(stars[i]).addClass('star_active');
+                    }
+                });
                 $(this).click(function() {
                     console.log('Sending ajax rating.');
                     $.ajax({
