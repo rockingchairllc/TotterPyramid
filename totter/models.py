@@ -234,7 +234,7 @@ class RootFactory(dict):
         self['project'] = ProjectLongname(self, 'project')
         self['p'] = ProjectShortname(self, 'p')
         self['user'] =  UserContainer(self, 'user')
-        self.projects = self['p']
+        self.projects = self['project']
         
         self.users = self['user']
         

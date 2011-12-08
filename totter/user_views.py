@@ -52,7 +52,7 @@ def show_dashboard(request):
         project = participation.project
         project_data = {
             'title' : project.title, 
-            'url' : request.resource_url(request.root.projects[project.id])
+            'url' : request.resource_url(request.root['p'][project.url_name])
         }
         if project.creator_id == user.id: # We add these to created_projects below.
             continue
@@ -64,7 +64,7 @@ def show_dashboard(request):
     # Get information about projects user has created.
     created_projects = session.query(Project).filter(Project.creator_id==user.id)
     created_projects = [
-        {'title' : project.title, 'url' : request.resource_url(request.root.projects[project.id])}
+        {'title' : project.title, 'url' : request.resource_url(request.root['p'][project.url_name])}
         for project in created_projects
     ]
     
