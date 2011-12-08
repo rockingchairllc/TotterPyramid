@@ -325,7 +325,7 @@
                             <div class="username"><a href="{{idea.author.profile_url}}">{{idea.author.first_name}}</a></div>
                             {% endif %}
                             <div class="rating_system">
-                                {% if project.rating_type == 'like_love' %}
+                                {% if project.rating_type == 'like/love' %}
                                 <span class="total_rating" id="total_rating_{{idea.id}}" >Total Rating: <span class="rating_value">{{idea_data[ideas_index].total_rating}}</span></span>
                                 <div class="like_love" id="like_love_{{idea.id}}">
                                     <a class="like {% if liked %}hidden{% endif %}" onClick="like('#like_love_{{idea.id}}', {{idea.id}})">Like It (+1)</a>
