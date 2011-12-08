@@ -15,7 +15,7 @@
                             <textarea></textarea><br />
                             
                             <label>Project URL:</label><br />
-                            http://totter.com/<input type="text" class="create_project_url" /><br />
+                            http://totter.com/p/<input type="text" class="create_project_url" /><br />
                             
                             <label>Project Key:</label><br />
                             <input type="text" /><br />
