@@ -350,7 +350,7 @@ def create(request):
         except IntegrityError:
             # url_name collision.
             raise HTTPBadRequest(explanation="Sorry! That URL has already been taken!")
-        return HTTPFound(location=request.resource_url(new_project, 'invite'))
+        return HTTPFound(location=request.resource_url(request.root['p'][new_project.url_name], 'invite'))
     else:
         return {'user' : user}
 
