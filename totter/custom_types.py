@@ -117,14 +117,17 @@ def lenient_deccharref(m):
 class HTMLUnicode(types.TypeDecorator):
     impl=String
     def process_bind_param(self, value, dialect):
-        # From our code to the DB
-        if isinstance(value, str):
-            logging.warn('Expected unicode value, assuming ascii')
-            value = value.decode('ascii')
-        # Replaces < with &lt; > with &gt and & with &amp;
-        value = cgi.escape(value)
-        value = encode_for_xml(value, 'ascii')
-        return value
+        if value:
+            # From our code to the DB
+            if isinstance(value, str):
+                logging.warn('Expected unicode value, assuming ascii')
+                value = value.decode('ascii')
+            # Replaces < with &lt; > with &gt and & with &amp;
+            value = cgi.escape(value)
+            value = encode_for_xml(value, 'ascii')
+            return value
+        else:
+            return None
         
  
     def process_result_value(self, value, dialect):
@@ -145,13 +148,16 @@ class HTMLUnicodeText(HTMLUnicode):
 class URLEncodedUnicode(types.TypeDecorator):
     impl=String
     def process_bind_param(self, value, dialect):
-        # From our code to the DB
-        if isinstance(value, str):
-            # Ensure the value is ascii:
-            logging.warn('Expected unicode value, assuming ascii')
-            value = value.decode('ascii')
-        # As per IRI standard, encode as utf8.
-        return urllib.quote(value.encode('utf8'))
+        if value:
+            # From our code to the DB
+            if isinstance(value, str):
+                # Ensure the value is ascii:
+                logging.warn('Expected unicode value, assuming ascii')
+                value = value.decode('ascii')
+            # As per IRI standard, encode as utf8.
+            return urllib.quote(value.encode('utf8'))
+        else:
+            return None
  
     def process_result_value(self, value, dialect):
         if value:

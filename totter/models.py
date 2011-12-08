@@ -90,12 +90,13 @@ class Project(Base):
     id = Column('ProjectUUID', UUID(),primary_key=True,default=uuid.uuid4)
     description = Column('ProjectDescription', Text)
     url_name = Column('URLName', URLEncodedUnicode(128), unique=True)
-    title = Column('ProjectTitle', HTMLUnicode(128))
+    title = Column('ProjectTitle', HTMLUnicode(128), nullable=False)
     key = Column('ProjectKey', URLEncodedUnicode(128))
-    creator_id = Column('CreatorUUID',UUID(), ForeignKey('Users.UserUUID'))
-    creation_time = Column('CreationTime', UTCDateTime, default=utcnow)
+    creator_id = Column('CreatorUUID',UUID(), ForeignKey('Users.UserUUID'), nullable=False)
+    creation_time = Column('CreationTime', UTCDateTime, default=utcnow, nullable=False)
     deadline = Column('Deadline', UTCDateTime, nullable=True)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
+    rating_type = Column('RatingType', Enum('like/love', 'star'), default='like/love', nullable=False)
     
     creator = relationship(User, backref=backref('created_projects'))
     

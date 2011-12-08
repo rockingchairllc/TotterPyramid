@@ -594,8 +594,8 @@ ul.idea_meta li {display: inline-block; border: none; padding-bottom: 0px; margi
 ul.star_tool_tip {
 	display: none;
 	position: absolute;
-	top: 20px;
-	left: 60px;
+	top: -20px;
+	left: -68px;
 	padding: 10px 20px 0 20px;
 	background-color:#fff;
 	-webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;

@@ -5,7 +5,7 @@
     {# project_base has add_idea functions #}
     {{ super() }}
     <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
-    <script src="{{request.static_url('totter:static/js/jquery.toggle.js')}}"></script>
+    <script src="{{request.static_url('totter:static/js/jquery.toggler.js')}}"></script>
     <script src="{{request.static_url('totter:static/js/jquery.tmpl.js')}}"></script>
     <!-- General -->
     <script type="text/javascript">
@@ -17,7 +17,7 @@
         }
         
         // Creates a toggle function between each of .toggle's children.
-        $('.toggle').toggle('bind');
+        $('.toggle').toggler('bind');
         
         // All .remember textboxes will remember their default values.
         $('.remember').default('bind');
@@ -37,13 +37,9 @@
         });
     }
     function unbindAll() {
-        $('.toggle').toggle('unbind');
+        $('.toggle').toggler('unbind');
         $('.remember').default('unbind');
         $('.sort_by a').unbind('click');
-        
-        
-        
-        
     }
     $(document).ready(function(){
         console.log('document.ready');
@@ -125,6 +121,7 @@
 	</script>
 	
 	<!-- Ratings -->
+	<!--  Like Love --!>
 	<script type="text/javascript">
 		function setLiked(context, liked) {
 		    if (liked) {
@@ -242,6 +239,18 @@
 			
 		}
 	</script>
+	<!--  Star -->
+	<script type="text/javascript">
+    function rateIt() {
+        console.log(this);
+        $('.star_tool_tip').toggle();
+    }
+    $(function(){
+        $('.star_tool_tip').click(function(){
+            $('.star_tool_tip').toggle();
+        });
+    });
+    </script>
 {% endblock %}
 
 {% block add_idea_btn %}
@@ -316,6 +325,7 @@
                             <div class="username"><a href="{{idea.author.profile_url}}">{{idea.author.first_name}}</a></div>
                             {% endif %}
                             <div class="rating_system">
+                                {% if project.rating_type == 'like_love' %}
                                 <span class="total_rating" id="total_rating_{{idea.id}}" >Total Rating: <span class="rating_value">{{idea_data[ideas_index].total_rating}}</span></span>
                                 <div class="like_love" id="like_love_{{idea.id}}">
                                     <a class="like {% if liked %}hidden{% endif %}" onClick="like('#like_love_{{idea.id}}', {{idea.id}})">Like It (+1)</a>
@@ -324,6 +334,23 @@
                                     <a class="love {% if loved %}hidden{% endif %}" onClick="love('#like_love_{{idea.id}}', {{idea.id}})">Love It (+2)</a>
                                     <a class="unlove {% if not loved %}hidden{% endif %}" onClick="unlove('#like_love_{{idea.id}}', {{idea.id}})">Unlove It</a>
                                 </div><!-- like_love -->
+                                {% else %}
+                                <ul class="idea_meta">
+                                    <li class="star_active"></li>
+                                    <li class="star_active"></li>
+                                    <li class="star_active"></li>
+                                </ul><!-- .idea_meta -->
+                                 <strong> (758 Ratings)</strong> &bull; 
+                                 <a href="javascript:void(0)" class="rate_it" onClick="rateIt()">
+                                    Rate It
+                                    <ul class="star_tool_tip">
+                                        <li>Your Rating: </li>
+                                        <li><a href="javascript:void(0)" class="star"></a></li>
+                                        <li><a href="javascript:void(0)" class="star"></a></li>
+                                        <li><a href="javascript:void(0)" class="star"></a></li>
+                                    </ul><!-- .star_tool_tip -->
+                                 </a>
+                                 {% endif %}
                             </div>
                             <div class="toggle toggle_comments">
                                 <a class="hidden" onclick="showComment({{idea.id}})">show {{comments|length}} comments</a>
