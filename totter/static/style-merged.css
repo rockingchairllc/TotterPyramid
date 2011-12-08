@@ -415,6 +415,8 @@ Project Page
 .add_idea .shown {
     display: block;
 }
+form.button_wrapper { display: inline; }
+
 ul.tabs {
 	padding-bottom: 4px;
 	border-bottom: 1px solid #2471BE;
