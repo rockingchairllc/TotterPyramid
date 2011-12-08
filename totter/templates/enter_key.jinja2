@@ -10,13 +10,13 @@
 {% endblock %}
 {% block body %}
 	<div class="login_register_wrap drop-shadow curved curved-vt-2">
-            <h1>Welcome to Totter</h1>
+            <h1>Enter key to access this private project</h1>
             {% if access_denied -%}<font color="red"> Invalid Project Key. </font> {% endif %}
             {% if not_found -%}<font color="red"> Unknown project. Is Project ID correct? </font> {% endif %}
-            <form id="loginForm" method="post" action="{{request.path_url}}">
+            <form id="projectAccessForm" method="post" action="{{request.path_url}}">
                 <fieldset>
                     {% if project_id %}
-                    <input type="text" id="user_name" name="project_id" value="{{project_id}}" /><br />
+                    <input type="hidden" id="user_name" name="project_id" value="{{project_id}}" /><br />
                     {% else %}
                     <input type="text" class="remember" id="user_name" name="project_id" value="Project ID" /><br />
                     {% endif %}
@@ -24,6 +24,10 @@
 					<input type="submit" id="loginSubmit" value="View Project" /><br />
                 </fieldset>
             </form>
+            
+            <br/>
+            <span>or if you have an account,</span>
+            <a href="{{request.route_url('login')}}">Login</a>
             
 	</div><!-- .login_register_wrap -->
 	<div class="footer wrapper">
