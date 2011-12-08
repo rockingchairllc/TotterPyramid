@@ -15,6 +15,7 @@ from mail import send_email
 _ = TranslationStringFactory('totter')
 import logging
 from user import get_user
+from template import user_dict, idea_dict, comment_dict
 
 
 def record_event(action, project_id, time, action_data):
@@ -140,7 +141,7 @@ def add_rating(request):
     
     session.flush()
     return {
-        'total_rating' : agg_rating.liked + agg_rating.loved * 2, 
+        'total_rating' : agg_rating.total_rating, 
         'rating' : {'loved' : new_rating.loved or 0, 'liked' : new_rating.liked or 0}
     }
 
@@ -172,12 +173,16 @@ def ideas(request):
     project = request.context
     # Create list of ideas with User's rating added:
     if user:
-        idea_data = session.query(Idea, UserRating)\
+        idea_query = session.query(Idea, AggregateRating, UserRating)\
+            .outerjoin(AggregateRating, (AggregateRating.idea_id==Idea.id))\
             .outerjoin(UserRating, (Idea.id==UserRating.idea_id) & (UserRating.user_id==user.id))\
             .join(User, (Idea.author_id==User.id))\
             .filter(Idea.project_id == project.id)
     else:
-        idea_data = session.query(Idea)\
+         # Just fill third column with Nones.
+        idea_query = session.query(Idea, AggregateRating, UserRating)\
+            .outerjoin(AggregateRating, (AggregateRating.idea_id==Idea.id))\
+            .outerjoin(UserRating, (UserRating.idea_id==0))\
             .join(User, (Idea.author_id==User.id))\
             .filter(Idea.project_id == project.id)
             
@@ -187,48 +192,37 @@ def ideas(request):
         # Use Python to sort, so we sort Anonymous posts properly.
         pass
     elif sort == 'rating':
-        # Use Python to sort it. 
-        pass
+        idea_query = idea_data.order_by(Idea.total_rating.desc()) # Highest rated first.
     elif sort == 'date':
-        idea_data = idea_data.order_by(Idea.creation_time.desc()) # Most recent first
+        idea_query = idea_data.order_by(Idea.creation_time.desc()) # Most recent first
     else:
         logging.warn('Unrecognized sort: ' + str(sort))
     
-    idea_data = idea_data.all()
-    
-    if user is None:
-        # Create the 2-tuple that we'd get with a normal user:
-        idea_data = zip(idea_data, [None]*len(idea_data))
+    idea_data = []
     
     # Create a new field Idea.user_rating, that stores the IdeaRating for
     # the current user. We're taking advantage of SQLAlchemy's one-instance
     # per session feature, so that all project.idea entries have a user_rating field.
-    for i in range(len(idea_data)):
-        idea, rating = idea_data[i]
-        
+    for i, query_result in enumerate(idea_query.all()):
+        idea, aggregate_rating, rating = query_result
         # Compute total numeric rating:
         total_rating = 0
         if idea.aggregate_rating is not None:
-            total_rating = idea.aggregate_rating.liked + idea.aggregate_rating.loved * 2
+            total_rating = idea.total_rating
         
-        idea_data[i] = {}
-        idea_data[i]['idea'] = idea
-        idea_data[i]['user_rating'] = rating or UserRating()
-        idea_data[i]['total_rating'] = total_rating
+        idea_data += [idea_dict(request, idea, rating, total_rating, include_comments=True)]
         
-    # Handle sort by rating:
-    if sort == 'rating':
-        # Descending (highest rating first)
-        idea_data.sort(key=lambda el:el['total_rating'], reverse=True)
-    elif sort == 'user':
+    # Handle sort by user:
+    if sort == 'user':
         idea_data.sort(key=lambda el:el['idea'].author.first_name + ' ' + el['idea'].author.last_name if not el['idea'].anonymous else 'Anonymous')
     
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return template_permissions(request, {
         'project' : project, 
+        'creator' : user_dict(request, project.creator),
         'project_id' : project.id,
         'idea_data': idea_data, 
-        'user' : user, 
+        'user' : user_dict(request, user), 
         'ideas_count': len(idea_data), 
         'people_count': 1
     })
@@ -260,7 +254,7 @@ def project(request):
         'project' : project, 
         'updates' : updates,
         'ideas': project.ideas.all(), 
-        'user' : user, 
+        'user' : user_dict(request, user), 
         'ideas_count': project.ideas.count(), 
         'people_count': 1
     })
@@ -313,7 +307,7 @@ def display_project_people(request):
         'invited_emails' : email_data,
         'project_id' : project.id,
         'project' : project, 
-        'user' : cur_user, 
+        'user' : user_dict(request, cur_user), 
         'ideas_count': project.ideas.count(), 
         'people_count': len(active_users(project)),
     })
@@ -352,7 +346,7 @@ def create(request):
             raise HTTPBadRequest(explanation="Sorry! That URL has already been taken!")
         return HTTPFound(location=request.root.project_url(new_project)+'/invite')
     else:
-        return {'user' : user}
+        return {'user' : user_dict(request, user)}
 
 @view_config(context='totter.models.Project', name='invite', renderer='invite.jinja2', permission='invite')
 def invite(request):
@@ -402,7 +396,7 @@ def invite(request):
             session.add(Participation(project_id=project.id, user_email=email))
         
         
-    response_params.update({'user' : user, 
+    response_params.update({'user' : user_dict(request, user), 
     'project' : {'key':project.key,'title':project.title, 'url': request.resource_url(project)},
     'creator' : {'first_name' : project.creator.first_name, 'last_name' : project.creator.last_name},
     'fb_app_id' : request.registry.settings['facebook.app_id'],

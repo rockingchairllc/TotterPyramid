@@ -11,7 +11,7 @@
                 <div class="user_info">
                     <h4 class="username_first_name">{{user.first_name}}</h4>
                     <ul class="tool_tip drop-shadow">
-                        <li><a href="{{request.resource_url(user)}}">View Profile</a></li>
+                        <li><a href="{{user.profile_url}}">View Profile</a></li>
                         <li><a href="{{request.route_url('logout')}}">Logout</a></li>
                     </ul>
                     <img src="{{user.profile_picture}}" class="user_photo" />

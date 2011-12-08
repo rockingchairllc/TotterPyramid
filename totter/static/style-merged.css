@@ -23,8 +23,6 @@ a {text-decoration: none; color: 	#2471BE;}
 a:hover {text-decoration: underline;}
 .clearfloat {clear:both;}
 .hidden { display:none; }
-.first { border-top: none; }
-.last { border-bottom: none; }
 
 /*******************************************************************************************************************************
  Form Elements 
@@ -522,6 +520,7 @@ ul.project_ideas li {
 	border-top: 1px solid #efefef;
 	border-bottom: 1px solid #ccc;
 }
+
 ul.project_ideas li.first_update {border-top: none;}
 ul.project_ideas li.last_update {border-bottom: none;}
 .idea_author {

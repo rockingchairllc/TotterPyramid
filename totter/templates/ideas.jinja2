@@ -282,19 +282,25 @@
             
             <ul class="project_ideas">
             {% for ideas_index in range(ideas_count) %}
-                {% set idea = idea_data[ideas_index].idea %}
+                {% set idea = idea_data[ideas_index] %}
                 {% set liked = idea_data[ideas_index].user_rating.liked %}
                 {% set loved = idea_data[ideas_index].user_rating.loved %}
                 {% set comments = idea.comments %}
-            	<li>
+            	{% if loop.first %} 
+                <li class="first_idea">
+                {% elif loop.last %}
+                <li class="last_idea">
+                {% else %}
+                <li>
+                {% endif %}
             	    <div id="{{idea.id}}" class="idea">
-                        <a name="idea_{{idea_data[ideas_index].idea.id}}" id="idea_{{idea_data[ideas_index].idea.id}}"></a>
+                        <a name="idea_{{idea.id}}" id="idea_{{idea.id}}"></a>
                         <div class="idea_author">
                             <a href="#">
                                 {% if idea.anonymous %}
                                 <img src="{{request.static_url('totter:static/images/anonymous_profile.jpg')}}" />
                                 {% else %}
-                                <img src="{{idea_data[ideas_index].idea.author.profile_picture}}?type=square" />
+                                <img src="{{idea.author.profile_picture}}?type=square" />
                                 {% endif %}
                             </a>
                         </div><!-- .idea_author -->
@@ -303,7 +309,7 @@
                             {% if idea.anonymous %}
                             <div class="username">Anonymous</div>
                             {% else %}
-                            <div class="username"><a href="#">{{idea_data[ideas_index].idea.author.first_name}}</a></div>
+                            <div class="username"><a href="{{idea.author.profile_url}}">{{idea.author.first_name}}</a></div>
                             {% endif %}
                             <div class="rating_system">
                                 <span class="total_rating" id="total_rating_{{idea.id}}" >Total Rating: <span class="rating_value">{{idea_data[ideas_index].total_rating}}</span></span>
@@ -320,18 +326,18 @@
                                 <a class=""       onclick="hideComment({{idea.id}})">hide comments</a>
                             </div><!-- .toggle_comments -->
                             <div class="comment_time">
-                                {{idea_data[ideas_index].idea.creation_time | timefmt}}
+                                {{idea.creation_time}}
                             </div><!-- .comment_time -->
                             
                             </div><!-- .idea_meta -->
-                            <div class="idea_description">{{idea_data[ideas_index].idea.data}}</div>
+                            <div class="idea_description">{{idea.data}}</div>
                             
                              
-                            <ul class="project_idea_comments" id="comments{{idea_data[ideas_index].idea.id}}">
+                            <ul class="project_idea_comments" id="comments{{idea.id}}">
                                 <li class="existing_comments">
                                     <ul class="existing_comments">
                                     <!-- Append all new comments to the ul.project_idea_comments -->
-                                    {% for comment in idea_data[ideas_index].idea.comments %}
+                                    {% for comment in comments %}
                                         {% if loop.first %} 
                                             <li class="first_update">
                                         {% elif loop.last %}
@@ -350,7 +356,7 @@
                                                 {% if comment.anonymous %}
                                                 <span class="comment_author">Anonymous</span>
                                                 {% else %}
-                                                <span class="comment_author"><a href="#">{{comment.author.first_name}}</a></span>
+                                                <span class="comment_author"><a href="{{comment.author.profile_url}}">{{comment.author.first_name}}</a></span>
                                                 {% endif %}
                                                 <span class="comment_text">{{comment.data}}</span>
                                             </div>
@@ -364,7 +370,7 @@
                                     <img onclick="anonOn({{idea.id}})" src="{{user.profile_picture}}?type=square" width="32" height="32" />
                                     <img onclick="anonOff({{idea.id}})" class="hidden" src="{{request.static_url('totter:static/images/anonymous_profile.jpg')}}" width="32" height="32" />
                                     </div>
-                                    <textarea class="comment_text comment_input remember" type="text" order="{{idea_data[ideas_index].idea.id}}">Comment</textarea><br />
+                                    <textarea class="comment_text comment_input remember" type="text" order="{{idea.id}}">Comment</textarea><br />
                                     <span class="enter_to_submit default">Push Enter to Submit</span>
                                     <span class="enter_to_submit throbber hidden">Posting...<img src="{{request.static_url('totter:static/images/throbber.gif')}}"/></span>
                                 </li><!-- .new_comment -->

@@ -12,6 +12,8 @@ from pyramid.security import ALL_PERMISSIONS, Allow, Everyone
 from sqlalchemy.exc import IntegrityError, StatementError
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.hybrid import hybrid_property, hybrid_method
+
 
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
@@ -158,7 +160,15 @@ class Idea(Base):
         if key != 'comment':
             raise KeyError # Perform view lookup.
         return CommentContainer(self, 'comment')
-
+        
+    @hybrid_property
+    def total_rating(self):
+        return self.aggregate_rating.total_rating
+    
+    @hybrid_property
+    def stars(self):
+        return self.aggregate_rating.stars / self.aggregate_rating.count
+    
 class Comment(Base):
     __tablename__ = 'Comments'
     id = Column('CommentID', Integer, 
@@ -215,6 +225,10 @@ class AggregateRating(Base):
         self.stars = 0
         self.count = 0
     
+    @hybrid_property
+    def total_rating(self):
+        return self.liked + self.loved * 2
+        
 #### Containers ####
 from pyramid.security import ALL_PERMISSIONS, Allow, Everyone
 import logging
@@ -240,6 +254,7 @@ class RootFactory(dict):
         
     def project_url(self, project):
         return self.request.resource_url(self['p'][project.url_name])
+        
     def user_url(self, user):
         return self.request.resource_url(self['user'][user.id])
         
