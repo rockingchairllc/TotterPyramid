@@ -18,7 +18,8 @@ requires = [
     'Flup',
     'MySQL-python',
     'requests',
-    'email'
+    'email',
+    'decorator'
     ]
 
 if sys.version_info[:3] < (2,5,0):
