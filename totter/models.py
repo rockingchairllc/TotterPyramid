@@ -437,23 +437,6 @@ def populate():
     test_user = User(first_name=u'Tester', last_name=u'McTesterton', salted_password_hash=password_data, salt=salt, email=u'test@rockingchairllc.com', 
     profile_picture=u'http://linux-engineer.net/blog/public/test.jpg')
     session.add(test_user)
-    
-    test_project = Project(description=u"This is the project description.", title=u"This is the project title",
-        key=u"test_key_1234")
-    test_project.creator = test_user
-    session.add(Participation(user=test_user, project=test_project, access_time=utcnow()))
-    session.add(test_project)
-    
-    test_idea = Idea(data=u"This is a test idea")
-    test_idea.author = test_user
-    test_idea.project = test_project
-    session.add(test_idea)
-    
-    test_comment = Comment(data=u"This is a test comment.")
-    test_comment.author = test_user
-    test_comment.idea = test_idea
-    test_comment.project = test_project
-    session.add(test_comment)
     session.flush()
     transaction.commit()
 
