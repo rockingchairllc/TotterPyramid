@@ -93,6 +93,7 @@ def project_access(request):
                 headers = remember(request, 'PROJECT')
             else:
                 logging.info('Authorization approved, adding project to participants.')
+                request.session['project_id'] = request.session.get('project_id',[]) + [str(project.id)]
                 merge_anon_user_projects(request, user_id)
         else:
             logging.info('Authorization approved, setting access cookie.')
