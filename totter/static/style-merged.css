@@ -538,7 +538,7 @@ ul.project_ideas li.last_update {border-bottom: none;}
 	margin-left: 60px; 
 }
 .username {font-weight: bold;}
-.idea_meta {padding-bottom: 3px;}
+.idea_meta {}
 
 
 div.rating_system,div.toggle_comments {
@@ -644,7 +644,7 @@ ul.project_idea_comments li {
 ul.project_idea_comments li img {float: left; position: relative; top: -6px; margin-left: 2.5px;}
 .comment_body {margin-left: 40px;}
 .comment_text {font-size: 12px; word-wrap:break-word;}
-.comment_input { height: 15px; position: relative; width 770px; left: 14px; margin: 0; top: -5px;}
+.comment_input { height: 15px; position: relative; width: 770px; left: 14px; margin: 0; top: -5px;}
 
 .comment_author {font-size: 12px; font-weight: bold;}
 ul.project_idea_comments li.existing_comments {
