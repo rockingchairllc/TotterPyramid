@@ -595,6 +595,7 @@ ul.idea_meta li {display: inline-block; border: none; padding-bottom: 0px; margi
 	width: 30px;
 	display: block;
 }
+
 .star {	background: url(images/star-grey.png) center bottom no-repeat;}
 .star_active {background: url(images/star.png) center bottom no-repeat;}
 ul.star_tool_tip {
@@ -616,7 +617,7 @@ ul.star_tool_tip {
 	z-index:-2;
 }
 ul.star_tool_tip li {display: inline-block; border: none; color: #333; line-height: 30px; vertical-align: middle; font-weight: bold;}
-ul.star_tool_tip li a:hover {text-decoration: none;}
+ul.star_tool_tip li a:hover {text-decoration: none; background: url(images/star.png) center bottom no-repeat;}
 
 /* END Stars */
 
