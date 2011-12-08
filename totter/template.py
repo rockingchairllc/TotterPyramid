@@ -50,8 +50,10 @@ def timefmt(*args, **kwargs):
     return args[0].strftime('%B %d at %I:%M %p')
 
 ### Model to dict helpers ###
-@memoize_on(size=100, argf=lambda req,usr: usr.id)
+@memoize_on(size=100, argf=lambda req,usr: usr.id if usr else None)
 def user_dict(request, user):
+    if not user:
+        return None
     return  {
         'id' : str(user.id),
         'first_name' : user.first_name, 
