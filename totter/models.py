@@ -231,9 +231,12 @@ class RootFactory(dict):
                 (Allow, 'group:users', 'post') ]
     def __init__(self, request):
         self.request = request
-        self.projects = self['project'] = ProjectLongname(self, 'project')
+        self['project'] = ProjectLongname(self, 'project')
         self['p'] = ProjectShortname(self, 'p')
-        self.users = self['user'] =  UserContainer(self, 'user')
+        self['user'] =  UserContainer(self, 'user')
+        self.projects = self['p']
+        
+        self.users = self['user']
         
         
 class ProjectContainer():
@@ -247,6 +250,8 @@ class ProjectContainer():
         
     def name_from_project(self, project):
         raise NotImplementedError
+    def lookup_field(self):
+        raise NotImplementedError
         
     def __getitem__(self, key):
         # Get Project from database
@@ -255,7 +260,7 @@ class ProjectContainer():
             logging.info('ProjectContainer key: ' + str(key))
             logging.info('ProjectContainer key type: ' + str(type(key)))
             project = session.query(Project)\
-                .filter((Project.id==key)).one()
+                .filter((self.lookup_field()==key)).one()
             name = self.name_from_project(project)
             project.__parent__ = self
             project.__name__ = name
@@ -289,10 +294,14 @@ class ProjectContainer():
 class ProjectShortname(ProjectContainer):
     def name_from_project(self, project):
         return project.url_name
+    def lookup_field(self):
+        return Project.url_name
         
 class ProjectLongname(ProjectContainer):
     def name_from_project(self, project):
         return project.id
+    def lookup_field(self):
+        return Project.id
         
 class UserContainer(object):
     __acl__ = [
