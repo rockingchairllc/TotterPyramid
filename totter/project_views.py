@@ -242,7 +242,7 @@ def project(request):
         
     updates = session.query(ProjectUpdate)\
         .filter(ProjectUpdate.project_id==project.id)\
-        .filter(ProjectUpdate.when >= datetime.today() - timedelta(days=10))\
+        .filter(ProjectUpdate.when >= utcnow() - timedelta(days=10))\
         .order_by(ProjectUpdate.when.desc()).limit(10).all()
     
     # Update user access time:
