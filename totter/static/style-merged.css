@@ -538,6 +538,16 @@ ul.project_ideas li.last_update {border-bottom: none;}
 .username {font-weight: bold;}
 .idea_meta {}
 
+.ideas_empty_prompt {
+    position: relative;
+    margin: 0 auto;
+    background: grey;
+    text-align: center;
+    width: 500px;
+    padding: 50px;
+    background-color: #EFEFEF;
+}
+
 
 div.rating_system,div.toggle_comments {
     float:right;
