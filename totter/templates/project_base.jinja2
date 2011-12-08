@@ -91,7 +91,7 @@
                     </li>
                     {% block add_idea_btn %}
                     {% if user %}
-                    <form class="button_wrapper" method="LINK" action="{{request.model_url(context)}}/ideas#ideapopup">
+                    <form class="button_wrapper" method="LINK" action="{{request.resource_url(context)}}ideas#ideapopup">
                         <input type="submit" class="add_idea_button" value="Add Idea"></input>
                     </form>
                     {% else %}
