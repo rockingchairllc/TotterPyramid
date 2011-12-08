@@ -279,7 +279,11 @@
                 <a href="{{request.path_url}}?sort=rating">Rating</a> |
                 <a href="{{request.path_url}}?sort=user">User</a>
             </div><!-- .sort_by -->
-            
+            {% if not ideas_count %}
+            <div class="empty_prompt">
+            No ideas yet! <a onclick="showAddIdea()">Add a first idea.</a>
+            </div>
+            {% endif %}
             <ul class="project_ideas">
             {% for ideas_index in range(ideas_count) %}
                 {% set idea = idea_data[ideas_index] %}
@@ -326,7 +330,7 @@
                                 <a class=""       onclick="hideComment({{idea.id}})">hide comments</a>
                             </div><!-- .toggle_comments -->
                             <div class="comment_time">
-                                {{idea.creation_time}}
+                                {{idea.created}}
                             </div><!-- .comment_time -->
                             
                             </div><!-- .idea_meta -->

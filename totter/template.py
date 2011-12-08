@@ -69,7 +69,7 @@ def idea_dict(request, idea, user_rating, total_rating, include_comments=False):
         'anonymous' : idea.anonymous,
         'user_rating' : rating_data,
         'total_rating' : total_rating,
-        'created' : idea.creation_time.isoformat()
+        'created' : idea.creation_time.strftime('%B %d at %I:%M %p')
     }
     if include_comments:
         idea_data['comments'] = [comment_dict(request, comment) for comment in idea.comments]
@@ -79,7 +79,7 @@ def comment_dict(request, comment):
     return {
         'id' : str(comment.id),
         'author': user_dict(request, comment.author) if not comment.anonymous else None,
-        'created' : comment.creation_time.isoformat(),
+        'created' : comment.creation_time.strftime('%B %d at %I:%M %p'),
         'anonymous' : comment.anonymous,
         'data' : comment.data
     }

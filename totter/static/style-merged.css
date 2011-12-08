@@ -452,7 +452,7 @@ ul.project_stats li {
 span.project_stat {font-size: 1.3em;}
 .add_idea_button {width: 125px; font-size: 1.1em; float: right;}
 
-.sort_by {margin-bottom: -15px;}
+.sort_by {}
 .sort_by button {width: 75px; font-size: 16px;}
 
 /* Inline editing */
@@ -513,7 +513,7 @@ Project Idea Page
 	width: 100px; 
 	margin: -5px 2px 0 0;
 }
-ul.project_ideas {margin-top: 20px;}
+ul.project_ideas {margin-top: 5px;}
 ul.project_ideas li {
 	position: relative; 
 	padding: 10px 0;
