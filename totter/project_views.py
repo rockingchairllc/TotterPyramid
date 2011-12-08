@@ -252,6 +252,7 @@ def project(request):
     return template_permissions(request, {
         'project_id' : project.id,
         'project' : project, 
+        'creator' : user_dict(request, project.creator),
         'updates' : updates,
         'ideas': project.ideas.all(), 
         'user' : user_dict(request, user), 
@@ -307,6 +308,7 @@ def display_project_people(request):
         'invited_emails' : email_data,
         'project_id' : project.id,
         'project' : project, 
+        'creator' : user_dict(request, project.creator),
         'user' : user_dict(request, cur_user), 
         'ideas_count': project.ideas.count(), 
         'people_count': len(active_users(project)),
@@ -398,7 +400,7 @@ def invite(request):
         
     response_params.update({'user' : user_dict(request, user), 
     'project' : {'key':project.key,'title':project.title, 'url': request.resource_url(project)},
-    'creator' : {'first_name' : project.creator.first_name, 'last_name' : project.creator.last_name},
+    'creator' : user_dict(request, project.creator),
     'fb_app_id' : request.registry.settings['facebook.app_id'],
     'iframe_url' : iframe_url,
     'fb_access_token' : request.session['access_token'] if 'access_token' in request.session else None,
