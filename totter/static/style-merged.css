@@ -227,11 +227,11 @@ margin:20px;
 /**************************************************
 User Page
 **************************************************/
-div.user_projects div.project_title {
+.user_projects div.project_title {
 margin-left:4em;
 }
 
-div.user_projects div.participation_info {
+.user_projects div.participation_info {
 margin-left:8em;
 }
 
