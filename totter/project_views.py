@@ -39,7 +39,7 @@ def add_comment(request):
     
     # Record event:
     idea_author = session.query(Idea).filter(Idea.id==request.context.idea.id).one().author
-    record_event(u'add_comment', request.json_body['project_id'], datetime.now(), {
+    record_event(u'add_comment', request.json_body['project_id'], utcnow(), {
         'commenter_first' : cur_user.first_name,
         'commenter_last' : cur_user.last_name,
         'comment_uri' : request.resource_url(new_comment),
@@ -157,7 +157,7 @@ def add_idea(request):
     new_idea = request.context.newIdea(data=idea_text, anonymous=anonymous, author=cur_user)
     
     # Record event:
-    record_event(u'add_idea', request.json_body['project_id'], datetime.now(), {
+    record_event(u'add_idea', request.json_body['project_id'], utcnow(), {
         'idea_uri' : request.resource_url(new_idea),
         'idea_first' : new_idea.author.first_name,
         'idea_last' : new_idea.author.last_name,
@@ -247,7 +247,7 @@ def project(request):
     
     # Update user access time:
     if user:
-        session.merge(Participation(user_email=user.email, project_id=project.id, access_time=datetime.now()))
+        session.merge(Participation(user_email=user.email, project_id=project.id, access_time=utcnow()))
     
     return template_permissions(request, {
         'project_id' : project.id,

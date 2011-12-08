@@ -23,15 +23,16 @@ from zope.sqlalchemy import ZopeTransactionExtension
 from sqlalchemy.schema import Column
 import uuid
 from sets import ImmutableSet
-from custom_types import UUID, JSONEncodedDict, HTMLUnicode, HTMLUnicodeText, URLEncodedUnicode
+from custom_types import UUID, JSONEncodedDict, HTMLUnicode, HTMLUnicodeText, URLEncodedUnicode, UTCDateTime
 import string
 import random
 from datetime import datetime
 import hashlib
-
+import pytz
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 Base = declarative_base()
 
+utcnow = lambda : pytz.utc.localize(datetime.utcnow())
 salt_generator = lambda : ''.join(random.choice([chr(x) for x in range(0x20,0x7F)]) for x in range(16))
 
 class User(Base):
@@ -42,8 +43,8 @@ class User(Base):
     last_name = Column('LastName', HTMLUnicode(128))
     profile_picture = Column('ProfilePicture', URLEncodedUnicode(512), nullable=True)
     facebook_id = Column('FacebookID', Integer, nullable=True)
-    registration_date = Column('RegistrationDate', DateTime, default=datetime.now)
-    last_login = Column('LastLogin', DateTime, nullable=True) 
+    registration_date = Column('RegistrationDate', UTCDateTime, default=utcnow)
+    last_login = Column('LastLogin', UTCDateTime, nullable=True) 
     salted_password_hash = Column('SaltedPasswordHash', CHAR(32)) # MD5(Salt+MD5(Password), nullable=False)
     salt = Column('Salt', CHAR(16), default=salt_generator, nullable=False)
 
@@ -71,7 +72,7 @@ class Participation(Base):
     __tablename__ = 'Participants'
     project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), primary_key=True)
     user_email = Column('UserEmail', URLEncodedUnicode(256), ForeignKey('Users.Email'), primary_key=True)
-    access_time = Column('AccessTime', DateTime, nullable=True)
+    access_time = Column('AccessTime', UTCDateTime, nullable=True)
     
     user = relationship(User, uselist=False)
     project = relationship('Project', uselist=False)
@@ -92,8 +93,8 @@ class Project(Base):
     title = Column('ProjectTitle', HTMLUnicode(128))
     key = Column('ProjectKey', URLEncodedUnicode(128))
     creator_id = Column('CreatorUUID',UUID(), ForeignKey('Users.UserUUID'))
-    creation_time = Column('CreationTime', DateTime, default=datetime.now)
-    deadline = Column('Deadline', DateTime, nullable=True)
+    creation_time = Column('CreationTime', UTCDateTime, default=utcnow)
+    deadline = Column('Deadline', UTCDateTime, nullable=True)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     
     creator = relationship(User, backref=backref('created_projects'))
@@ -120,7 +121,7 @@ class ProjectUpdate(Base):
     __tablename__ = 'ProjectUpdates'
     id = Column('UpdateID', Integer, primary_key=True, nullable=False, autoincrement=True)
     project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), nullable=False, index=True)
-    when = Column('When', DateTime, default=datetime.now, nullable=False, index=True)
+    when = Column('When', UTCDateTime, default=utcnow, nullable=False, index=True)
     data = Column('Data', JSONEncodedDict)
     project = relationship(Project, backref=backref('updates', lazy='dynamic'))
         
@@ -128,7 +129,7 @@ class ProjectEvent(Base):
     __tablename__ = 'ProjectEvents'
     id = Column('EventID', Integer, primary_key=True, nullable=False, autoincrement=True)
     project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'), nullable=False, index=True)
-    when = Column('When', DateTime, default=datetime.now, nullable=False, index=True)
+    when = Column('When', UTCDateTime, default=utcnow, nullable=False, index=True)
     type = Column('EventType', HTMLUnicode(32), nullable=False)
     data = Column('Data', JSONEncodedDict)
     
@@ -140,7 +141,7 @@ class Idea(Base):
         primary_key=True, nullable=False, autoincrement = True)
     project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'))
     author_id = Column('AuthorUUID', UUID(), ForeignKey('Users.UserUUID'))
-    creation_time = Column('CreationTime', DateTime, default=datetime.now)
+    creation_time = Column('CreationTime', UTCDateTime, default=utcnow)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     data = Column('IdeaData', HTMLUnicodeText)
     
@@ -176,7 +177,7 @@ class Comment(Base):
     idea_id = Column('IdeaID', Integer, ForeignKey('Ideas.IdeaID'))
     project_id = Column('ProjectUUID', UUID(), ForeignKey('Projects.ProjectUUID'))
     author_id = Column('AuthorUUID', UUID(), ForeignKey('Users.UserUUID'))
-    creation_time = Column('CreationTime', DateTime, default=datetime.now)
+    creation_time = Column('CreationTime', UTCDateTime, default=utcnow)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
     data = Column('CommentData', HTMLUnicodeText)
     
@@ -201,8 +202,8 @@ class UserRating(Base):
     liked = Column('Liked', Boolean, nullable=False, default='0')
     loved = Column('Loved', Boolean, nullable=False, default='0')
     stars = Column('Stars', Integer, nullable=False, default='0')
-    modified = Column('LastModified', DateTime, default=datetime.now)
-    creation_time = Column('CreationTime', DateTime, default=datetime.now)
+    modified = Column('LastModified', UTCDateTime, default=utcnow)
+    creation_time = Column('CreationTime', UTCDateTime, default=utcnow)
     
     idea = relationship(Idea, backref=backref('user_ratings', lazy='dynamic'))
     rater = relationship(User, backref=backref('ratings'))
@@ -439,7 +440,7 @@ def populate():
     test_project = Project(description=u"This is the project description.", title=u"This is the project title",
         key=u"test_key_1234")
     test_project.creator = test_user
-    session.add(Participation(user=test_user, project=test_project, access_time=datetime.now()))
+    session.add(Participation(user=test_user, project=test_project, access_time=utcnow()))
     session.add(test_project)
     
     test_idea = Idea(data=u"This is a test idea")

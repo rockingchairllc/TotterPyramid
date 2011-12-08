@@ -115,7 +115,7 @@ def merge_anon_user_projects(request, user_id):
     for project in projects:
         if project not in user.projects: # FIXME: Always runs.
             try: 
-                session.merge(Participation(project_id=project, user_email=user.email, access_time=datetime.now()))
+                session.merge(Participation(project_id=project, user_email=user.email, access_time=utcnow()))
             except IntegrityError:
                 continue
 
@@ -141,7 +141,7 @@ def login(request):
             user = session.query(User).filter(User.email==login).one()
             if user.password_hash(password) == user.salted_password_hash:
                 headers = remember(request, str(user.id))
-                user.last_login = datetime.now()
+                user.last_login = utcnow()
                 session.flush()
                 merge_anon_user_projects(request, user.id)
                 return redirect_to_referrer(request, headers)

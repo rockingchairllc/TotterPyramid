@@ -1,5 +1,5 @@
 
-from sqlalchemy import types, Text, String
+from sqlalchemy import types, Text, String, DateTime
 from sqlalchemy.types import CHAR, VARCHAR
 from sqlalchemy.schema import Column
 
@@ -7,7 +7,7 @@ import uuid
 import string
 import json
 import logging
-
+import pytz
 ## UUID:
 # From http://blog.sadphaeton.com/2009/01/19/sqlalchemy-recipeuuid-column.html
 # With modification: Accept reasonable hex strings.
@@ -41,6 +41,27 @@ class UUID(types.TypeDecorator):
  
     def is_mutable(self):
         return False
+        
+class UTCDateTime(types.TypeDecorator):
+    impl = DateTime
+    def process_bind_param(self, value, dialect):
+        # From our code to the DB
+        if value:
+            if value.tzinfo is None:
+                raise ValueError,'value %s has no timezone information' % value
+            else:
+                value.astimezone(pytz.utc)
+        return value
+        
+ 
+    def process_result_value(self, value, dialect):
+        # From the DB to our code.
+        if value:
+            if value.tzinfo is None:
+                value = pytz.utc.localize(value)
+            return value
+        else:
+            return None
         
 
 # From http://www.sqlalchemy.org/docs/core/types.html#marshal-json-strings

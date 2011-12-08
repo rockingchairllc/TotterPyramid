@@ -2,6 +2,8 @@
 # Our template helpers
 from totter.cache import memoize_on
 from datetime import datetime
+from pytz import timezone
+import pytz
 
 ## Stolen from flask's jinja extensions
 # This is the function we use for the tojinja filter
@@ -57,7 +59,8 @@ def user_dict(request, user):
         'profile_picture' : user.profile_picture,
         'profile_url' : request.root.user_url(user)
     }
-    
+
+tz = timezone('US/Eastern')
 def idea_dict(request, idea, user_rating, total_rating, include_comments=False):
     rating_data = {
         'liked' : user_rating.liked if user_rating else False,
@@ -70,7 +73,7 @@ def idea_dict(request, idea, user_rating, total_rating, include_comments=False):
         'anonymous' : idea.anonymous,
         'user_rating' : rating_data,
         'total_rating' : total_rating,
-        'created' : idea.creation_time.strftime('%B %d at %I:%M %p')
+        'created' : idea.creation_time.astimezone(tz).strftime('%B %d at %I:%M %p %Z')
     }
     if include_comments:
         idea_data['comments'] = [comment_dict(request, comment) for comment in idea.comments]
@@ -80,7 +83,7 @@ def comment_dict(request, comment):
     return {
         'id' : str(comment.id),
         'author': user_dict(request, comment.author) if not comment.anonymous else None,
-        'created' : comment.creation_time.strftime('%B %d at %I:%M %p'),
+        'created' : comment.creation_time.astimezone(tz).strftime('%B %d at %I:%M %p %Z'),
         'anonymous' : comment.anonymous,
         'data' : comment.data
     }
