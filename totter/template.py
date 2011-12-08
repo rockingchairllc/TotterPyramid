@@ -63,10 +63,11 @@ def user_dict(request, user):
     }
 
 tz = timezone('US/Eastern')
-def idea_dict(request, idea, user_rating, total_rating, include_comments=False):
+def idea_dict(request, idea, user_rating, aggregate_rating, include_comments=False):
     rating_data = {
         'liked' : user_rating.liked if user_rating else False,
         'loved' : user_rating.loved if user_rating else False,
+        'stars' : user_rating.stars if user_rating else False
     }
     idea_data = {
         'id' : str(idea.id), 
@@ -74,7 +75,9 @@ def idea_dict(request, idea, user_rating, total_rating, include_comments=False):
         'author' : user_dict(request, idea.author) if not idea.anonymous else None,
         'anonymous' : idea.anonymous,
         'user_rating' : rating_data,
-        'total_rating' : total_rating,
+        'total_rating' : aggregate_rating.total_rating if aggregate_rating else 0,
+        'total_stars' : aggregate_rating.average_stars if aggregate_rating and aggregate_rating.count else 0,
+        'rating_count' : aggregate_rating.count if aggregate_rating else 0,
         'created' : idea.creation_time.astimezone(tz).strftime('%B %d at %I:%M %p %Z')
     }
     if include_comments:

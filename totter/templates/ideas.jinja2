@@ -246,8 +246,51 @@
         $('.star_tool_tip').toggle();
     }
     $(function(){
-        $('.star_tool_tip').click(function(){
-            $('.star_tool_tip').toggle();
+        $('.star_tool_tip').each(function(){
+            //$('.star_tool_tip').toggle();
+            var $idea = $($(this).closest('.idea'));
+            var idea_id = $idea.attr('id');
+            console.log("Closest idea ID: " + idea_id);
+            var rating_count = $idea.find('.rating_count');
+            var total_stars = $idea.find('.idea_meta li.star');
+            var stars = $(this).find('.star');
+            console.log("Found total_stars " + total_stars.length);
+            console.log("Found stars " + stars.length);
+            var index = 0;
+            stars.each(function() {
+                var myIndex = index;
+                index += 1;
+                $(this).click(function() {
+                    console.log('Sending ajax rating.');
+                    $.ajax({
+                        url:"{{request.application_url}}/project/{{project.id}}/idea/"+idea_id+"/rating",
+                        type: "POST",
+                        dataType: "json",
+                        data: JSON.stringify({'stars' : myIndex + 1}),
+                        success: function(data) {
+                            console.log("ajax success:" + data);
+                            var usr_stars = data.rating['stars'];
+                            // Set all stars to inactive.
+                            stars.each(function() { $(this).removeClass('star_active'); });
+                            // Set all stars 0..usr_stars to active.
+                            for (var i = 0;  i < usr_stars; ++i) {
+                                $(stars[i]).addClass('star_active');
+                            }
+                            
+                            var tot_stars = data['total_stars'];
+                            total_stars.each(function() { $(this).removeClass('star_active'); });
+                            // Set all stars 0..total_stars to active.
+                            for (var i = 0;  i < tot_stars; ++i) {
+                                $(total_stars[i]).addClass('star_active');
+                            }
+                            
+                            $(rating_count).text(data['rating_count']);
+                            
+                            rateIt();
+                        }
+                    });
+                });
+            });
         });
     });
     </script>
@@ -335,21 +378,30 @@
                                     <a class="unlove {% if not loved %}hidden{% endif %}" onClick="unlove('#like_love_{{idea.id}}', {{idea.id}})">Unlove It</a>
                                 </div><!-- like_love -->
                                 {% else %}
+                                
                                 <ul class="idea_meta">
-                                    <li class="star_active"></li>
-                                    <li class="star_active"></li>
-                                    <li class="star_active"></li>
+                                    {% for star in range(3) %}
+                                    {% if star < idea.total_stars %}
+                                    <li class="star star_active"></li>
+                                    {% else %}
+                                    <li class="star"></li>
+                                    {% endif %}
+                                    {% endfor %}
                                 </ul><!-- .idea_meta -->
-                                 <strong> (758 Ratings)</strong> &bull; 
-                                 <a href="javascript:void(0)" class="rate_it" onClick="rateIt()">
+                                <strong> (<span class="rating_count">{{idea.rating_count}}</span> Ratings)</strong> &bull; 
+                                <a href="javascript:void(0)" class="rate_it" onClick="rateIt()">
                                     Rate It
-                                    <ul class="star_tool_tip">
-                                        <li>Your Rating: </li>
-                                        <li><a href="javascript:void(0)" class="star"></a></li>
-                                        <li><a href="javascript:void(0)" class="star"></a></li>
-                                        <li><a href="javascript:void(0)" class="star"></a></li>
-                                    </ul><!-- .star_tool_tip -->
-                                 </a>
+                                </a>
+                                <ul class="star_tool_tip">
+                                    <li>Your Rating: </li>
+                                    {% for star in range(3) %}
+                                    {% if star < idea.user_rating.stars %}
+                                    <li><a href="javascript:void(0)" class="star star_active"></a></li>
+                                    {% else %}
+                                    <li><a href="javascript:void(0)" class="star"></a></li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul><!-- .star_tool_tip -->
                                  {% endif %}
                             </div>
                             <div class="toggle toggle_comments">

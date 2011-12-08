@@ -71,13 +71,51 @@ def add_rating(request):
     # 'like' : Boolean, True if user Liked a post, False if he unliked it.
     # 'love' : Boolean, True if user loved a post, False is she unloved it.
     
-    session = DBSession()
+    
     cur_user = get_user(request)
     idea_id = request.context.id
     rating_data = request.json_body
     
+    if not ('like' in rating_data or 'love' in rating_data or 'stars' in rating_data):
+        raise HTTPBadRequest
+    
     logging.warn('Rating received ' + str(rating_data))
     
+    if 'stars' in rating_data:
+        return star_rating(idea_id, cur_user, rating_data)
+    else:
+        return like_love_rating(idea_id, cur_user, rating_data)
+        
+def star_rating(idea_id, cur_user, rating_data):
+    session = DBSession()
+    stars = rating_data['stars']
+    old_rating = session.query(UserRating)\
+        .filter(UserRating.rater==cur_user)\
+        .filter(UserRating.idea_id==idea_id).first()
+        
+    new_rating = UserRating(user_id=cur_user.id, idea_id=idea_id, stars=stars)
+    
+    # Compute change in aggregate
+    star_delta = stars
+    if old_rating:
+        star_delta = stars - (old_rating.stars if old_rating.stars else 0)
+    
+    # Stars is simpler then like_love. If the user has starred something
+    # He can never unstar it.
+    agg_rating = session.query(AggregateRating)\
+            .filter(AggregateRating.idea_id==idea_id).first() or AggregateRating(idea_id=idea_id)
+    if not old_rating:
+        agg_rating.count += 1
+    agg_rating.stars += star_delta
+    
+    session.merge(agg_rating)
+    session.merge(new_rating)
+    session.flush()
+    
+    return {'rating' : {'stars' : new_rating.stars}, 'total_stars' : agg_rating.average_stars, 'rating_count' : agg_rating.count}
+    
+def like_love_rating(idea_id, cur_user, rating_data):
+    session = DBSession()
     # Get the old rating, or make a new one if user never rated this post:
     old_rating = session.query(UserRating)\
         .filter(UserRating.rater==cur_user)\
@@ -205,12 +243,8 @@ def ideas(request):
     # per session feature, so that all project.idea entries have a user_rating field.
     for i, query_result in enumerate(idea_query.all()):
         idea, aggregate_rating, rating = query_result
-        # Compute total numeric rating:
-        total_rating = 0
-        if idea.aggregate_rating is not None:
-            total_rating = idea.total_rating
         
-        idea_data += [idea_dict(request, idea, rating, total_rating, include_comments=True)]
+        idea_data += [idea_dict(request, idea, rating, aggregate_rating, include_comments=True)]
         
     # Handle sort by user:
     if sort == 'user':

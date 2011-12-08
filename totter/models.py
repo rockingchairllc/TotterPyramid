@@ -231,6 +231,11 @@ class AggregateRating(Base):
     def total_rating(self):
         return self.liked + self.loved * 2
         
+    @hybrid_property
+    def average_stars(self):
+        # Every user can give at most 3 stars.
+        return self.stars / (self.count)
+        
 #### Containers ####
 from pyramid.security import ALL_PERMISSIONS, Allow, Everyone
 import logging
