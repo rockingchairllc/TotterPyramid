@@ -1,11 +1,11 @@
 (function( $ ){
     
-    $.fn.toggle = function( method ) {
+    $.fn.toggler = function( method ) {
         return this.each(function() {
             if (method == 'bind') {
                 var $children = $(this).children();
                 $children.each(function() {
-                    $(this).bind('click.toggle', function() { // Child X was clicked.
+                    $(this).bind('click.toggler', function() { // Child X was clicked.
                         $children.each(function() { // Show everyone.
                             $(this).removeClass('hidden');
                         });
@@ -13,7 +13,7 @@
                     });
                 });
             } else if (method == 'unbind') {
-                $('*').unbind('.toggle');
+                $('*').unbind('.toggler');
             }
         });
     };
