@@ -1,5 +1,7 @@
 # template.py 
 # Our template helpers
+from totter.cache import memoize_on
+from datetime import datetime
 
 ## Stolen from flask's jinja extensions
 # This is the function we use for the tojinja filter
@@ -38,7 +40,6 @@ else:
     _tojson_filter = json.dumps
 
 ### Date formatting ###
-from datetime import datetime
 def timefmt(*args, **kwargs):
     # Takes strftime arguments
     if not isinstance(args[0], datetime):
@@ -47,7 +48,7 @@ def timefmt(*args, **kwargs):
     return args[0].strftime('%B %d at %I:%M %p')
 
 ### Model to dict helpers ###
-    
+@memoize_on(size=100, argf=lambda req,usr: usr.id)
 def user_dict(request, user):
     return  {
         'id' : str(user.id),
