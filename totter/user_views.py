@@ -24,7 +24,7 @@ def show_userpage(request):
         # How many ideas and comments other_user has posted to this project.
         data['idea_count'] = project.ideas.filter(Idea.author==other_user).count()
         data['comment_count'] = project.comments.filter(Comment.author==other_user).count()
-        data['url'] = request.resource_url(request.root.projects[project.id])
+        data['url'] = request.root.project_url(project)
         project_data += [data]
 
     return {
@@ -52,7 +52,7 @@ def show_dashboard(request):
         project = participation.project
         project_data = {
             'title' : project.title, 
-            'url' : request.resource_url(request.root['p'][project.url_name])
+            'url' : request.root.project_url(project)
         }
         if project.creator_id == user.id: # We add these to created_projects below.
             continue
@@ -64,7 +64,7 @@ def show_dashboard(request):
     # Get information about projects user has created.
     created_projects = session.query(Project).filter(Project.creator_id==user.id)
     created_projects = [
-        {'title' : project.title, 'url' : request.resource_url(request.root['p'][project.url_name])}
+        {'title' : project.title, 'url' : request.root.project_url(project)}
         for project in created_projects
     ]
     

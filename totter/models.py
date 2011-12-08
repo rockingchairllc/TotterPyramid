@@ -238,6 +238,11 @@ class RootFactory(dict):
         
         self.users = self['user']
         
+    def project_url(self, project):
+        return self.request.resource_url(self['p'][project.url_name])
+    def user_url(self, user):
+        return self.request.resource_url(self['user'][user.id])
+        
         
 class ProjectContainer():
     __acl__ = [

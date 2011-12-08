@@ -297,7 +297,7 @@ def display_project_people(request):
         if user:
             person_data['first_name'] = user.first_name
             person_data['last_name'] = user.last_name
-            person_data['profile_url'] = request.resource_url(request.root.users[user.id])
+            person_data['profile_url'] = request.root.user_url(user)
             person_data['invite_accepted'] = participant.access_time is not None
             person_data['profile_picture'] = user.profile_picture
             people_data += [person_data]
@@ -350,7 +350,7 @@ def create(request):
         except IntegrityError:
             # url_name collision.
             raise HTTPBadRequest(explanation="Sorry! That URL has already been taken!")
-        return HTTPFound(location=request.resource_url(request.root['p'][new_project.url_name], 'invite'))
+        return HTTPFound(location=request.root.project_url(new_project)+'/invite')
     else:
         return {'user' : user}
 
