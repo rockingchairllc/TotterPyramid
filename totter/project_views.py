@@ -284,7 +284,7 @@ def edit_project(request):
     
 @view_config(context='totter.models.Project', name='people', renderer='project_people.jinja2', permission='view')
 def display_project_people(request):
-    user = get_user(request)
+    cur_user = get_user(request)
     session = DBSession()
         
     project = request.context
@@ -313,7 +313,7 @@ def display_project_people(request):
         'invited_emails' : email_data,
         'project_id' : project.id,
         'project' : project, 
-        'user' : user, 
+        'user' : cur_user, 
         'ideas_count': project.ideas.count(), 
         'people_count': len(active_users(project)),
     })
