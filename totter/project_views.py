@@ -234,25 +234,28 @@ def ideas(request):
         # Use Python to sort, so we sort Anonymous posts properly.
         pass
     elif sort == 'rating':
-        idea_query = idea_query.order_by(Idea.total_rating.desc()) # Highest rated first.
+        # Use Python to sort, so we can use our total_rating algorithm..
+        pass
     elif sort == 'date':
         idea_query = idea_query.order_by(Idea.creation_time.desc()) # Most recent first
     else:
         logging.warn('Unrecognized sort: ' + str(sort))
     
-    idea_data = []
-    
-    # Create a new field Idea.user_rating, that stores the IdeaRating for
-    # the current user. We're taking advantage of SQLAlchemy's one-instance
-    # per session feature, so that all project.idea entries have a user_rating field.
-    for i, query_result in enumerate(idea_query.all()):
-        idea, aggregate_rating, rating = query_result
-        
-        idea_data += [idea_dict(request, idea, rating, aggregate_rating, include_comments=True)]
-        
-    # Handle sort by user:
+    idea_data = idea_query.all()
+    # Do python sorting.
     if sort == 'user':
-        idea_data.sort(key=lambda el:el['idea'].author.first_name + ' ' + el['idea'].author.last_name if not el['idea'].anonymous else 'Anonymous')
+        idea_data.sort(key=lambda el:el[0].author.first_name + ' ' + el[0].author.last_name if not el[0].anonymous else 'Anonymous')
+    elif sort == 'rating':
+        if project.rating_type == 'like/love':
+            idea_data.sort(key=lambda el: el[0].aggregate_rating.total_rating if el[0].aggregate_rating else 0, reverse=True)
+        else:
+            idea_data.sort(key=lambda el: el[0].aggregate_rating.average_stars if el[0].aggregate_rating else 0, reverse=True)
+    
+    # Turn it all into dicts for our templating engine.
+    for i in range(len(idea_data)):
+        idea, aggregate_rating, rating = idea_data[i]
+        idea_data[i] = idea_dict(request, idea, rating, aggregate_rating, include_comments=True)
+        
     
     # Idea.user_rating will be used to determine the initial state of the Like/Love/Stars
     return template_permissions(request, {
