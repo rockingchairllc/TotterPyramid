@@ -372,9 +372,6 @@
 		The plugin will attach itself to file inputs
 		with the class 'multi' when the page loads
 	*/
-	$(function(){
-	 $('input[type=radio].star').rating();
-	});
 	
 	
 	

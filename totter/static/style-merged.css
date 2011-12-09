@@ -589,7 +589,7 @@ div.like_love {
 
 
 /* Stars */
-ul.star_tool_tip label { font-size: 1em; }
+ul.star_tool_tip label { font-size: 1em; float: left;}
 ul.idea_meta li {display: inline-block; border: none; padding-bottom: 0px; margin-top: -25px;}
 .star, .star_active {
 	height: 30px;

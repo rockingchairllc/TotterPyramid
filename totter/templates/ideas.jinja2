@@ -253,8 +253,9 @@
         //$('.star_tool_tip').toggle();
     }
     function star_bindings() {
+        $('input[type=radio].star').rating();
         $('.rate_it').each(function() {
-            var $idea = $($(this).closest('.idea'));
+            var $idea = $(this).closest('.idea');
             $(this).click(function() {
                 // Show the corresponding star_rating box:
                 $idea.find('.star_rating').show();
@@ -266,7 +267,7 @@
         });
         
         $('.star_tool_tip').each(function(){
-            var $idea = $($(this).closest('.idea'));
+            var $idea = $(this).closest('.idea');
             var idea_id = $idea.attr('id');
             var rating_count = $idea.find('.rating_count');
             var avg_stars = $idea.find('.idea_meta li.star');
