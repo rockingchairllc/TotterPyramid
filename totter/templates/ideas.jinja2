@@ -251,8 +251,12 @@
         $('.rate_it').each(function() {
             var $idea = $($(this).closest('.idea'));
             $(this).click(function() {
-                $idea.find('.star_tool_tip').toggle();
+                $idea.find('.star_rating').toggle();
             });
+        });
+        
+        $('.star_rating_overlay').click(function() {
+            $('.star_rating').hide();
         });
     
         $('.star_tool_tip').each(function(){
@@ -295,7 +299,7 @@
                             
                             $(rating_count).text(data['rating_count']);
                             
-                            $idea.find('.star_tool_tip').hide();
+                            $idea.find('.star_rating').hide();
                         }
                     });
                 });
@@ -402,6 +406,8 @@
                                 <a href="javascript:void(0)" class="rate_it">
                                     Rate It
                                 </a>
+                                <div class="star_rating">
+                                <div class="star_rating_overlay"></div>
                                 <ul class="star_tool_tip drop-shadow">
                                 <span>Your rating:</span>
                                 <form class="star_scale">
@@ -414,6 +420,7 @@
                                 {% endfor %}
                                 </form>
                                 </ul>
+                                </div>
                                 {% endif %}
                             </div>
                             <div class="toggle toggle_comments">
