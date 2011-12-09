@@ -407,19 +407,19 @@
                                     Rate It
                                 </a>
                                 <div class="star_rating">
-                                <div class="star_rating_overlay"></div>
-                                <ul class="star_tool_tip drop-shadow">
-                                <span>Your rating:</span>
-                                <form class="star_scale">
-                                {% for star in range(3) %}
-                                    {% if star < idea.total_stars %}
-                                    <input name="star1" type="radio" class="star" checked="checked"/>
-                                    {% else %}
-                                    <input name="star1" type="radio" class="star"/>
-                                    {% endif %}
-                                {% endfor %}
-                                </form>
-                                </ul>
+                                    <div class="star_rating_overlay"></div>
+                                    <ul class="star_tool_tip drop-shadow">
+                                        <label>Your rating:</label>
+                                        <form class="star_scale">
+                                        {% for star in range(3) %}
+                                            {% if star < idea.total_stars %}
+                                            <input name="star1" type="radio" class="star" checked="checked"/>
+                                            {% else %}
+                                            <input name="star1" type="radio" class="star"/>
+                                            {% endif %}
+                                        {% endfor %}
+                                        </form>
+                                    </ul>
                                 </div>
                                 {% endif %}
                             </div>

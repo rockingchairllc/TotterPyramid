@@ -7,7 +7,7 @@ div.rating-cancel a,div.star-rating a{display:block;width:30px;height:100%;backg
 div.star-rating-on a{background:url(star.png) no-repeat 0 0px}
 
 div.rating-cancel a {display:block;width:30px;height:100%;background-position:50% 9px;border:0}
-div.star-rating-hover a{background:url(star-selected.png) no-repeat 0 0px}
+div.star-rating-hover a{background:url(star.png) no-repeat 0 0px}
 div.rating-cancel.star-rating-hover  a{background:url(not_.png) no-repeat 50% 9px}
 /* Read Only CSS */
 div.star-rating-readonly a{cursor:default !important}
