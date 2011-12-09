@@ -234,7 +234,7 @@ class AggregateRating(Base):
     @hybrid_property
     def average_stars(self):
         # Every user can give at most 3 stars.
-        return self.stars / (self.count)
+        return self.stars / (self.count) if self.count else 0
         
 #### Containers ####
 from pyramid.security import ALL_PERMISSIONS, Allow, Everyone

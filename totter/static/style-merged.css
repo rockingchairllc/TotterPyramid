@@ -606,7 +606,8 @@ ul.idea_meta li {display: inline-block; border: none; padding-bottom: 0px; margi
 	display: block;
 	background: rgba(0,0,0,0);
 }
-
+.star_system ul.idea_meta { float: right; }
+.star_system div.rating_info { clear: both; }
 .star {	background: url(images/star-grey.png) center bottom no-repeat;}
 .star_active {background: url(images/star.png) center bottom no-repeat;}
 ul.star_tool_tip {
