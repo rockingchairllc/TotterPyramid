@@ -137,7 +137,7 @@ Drop Shadows
 }
 
 /* For User Options tool tip dropdown. */
-.tool_tip.drop-shadow {
+.tool_tip.drop-shadow, .star_tool_tip.drop-shadow {
     -moz-box-shadow:0 0 20px rgba(0, 0, 0, 0.8);
     -webkit-box-shadow:0 0 20px rgba(0, 0, 0, 0.8);
     box-shadow:0 0 20px rgba(0, 0, 0, 0.8);
@@ -599,7 +599,8 @@ ul.idea_meta li {display: inline-block; border: none; padding-bottom: 0px; margi
 .star {	background: url(images/star-grey.png) center bottom no-repeat;}
 .star_active {background: url(images/star.png) center bottom no-repeat;}
 ul.star_tool_tip {
-    width: 210px;
+    width: 220px;
+    height: 40px;
 	display: none;
 	position: absolute;
 	top: -20px;
@@ -618,7 +619,8 @@ ul.star_tool_tip {
 }
 ul.star_tool_tip li {display: inline-block; border: none; color: #333; line-height: 30px; vertical-align: middle; font-weight: bold;}
 ul.star_tool_tip li a:hover {text-decoration: none; background: url(images/star.png) center bottom no-repeat;}
-
+ul.star_tool_tip form {display: inline; float: right; }
+ul.star_tool_tip span {vertical-align: sub}
 /* END Stars */
 
 

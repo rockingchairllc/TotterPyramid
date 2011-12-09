@@ -7,6 +7,8 @@
     <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
     <script src="{{request.static_url('totter:static/js/jquery.toggler.js')}}"></script>
     <script src="{{request.static_url('totter:static/js/jquery.tmpl.js')}}"></script>
+    <script src="{{request.static_url('totter:static/star-rating/jquery.rating.js')}}"></script>
+    <link rel="stylesheet" href="{{request.static_url('totter:static/star-rating/jquery.rating.css')}}" >
     <!-- General -->
     <script type="text/javascript">
     function bindAll() {
@@ -243,9 +245,16 @@
 	<script type="text/javascript">
     function rateIt() {
         console.log(this);
-        $('.star_tool_tip').toggle();
+        //$('.star_tool_tip').toggle();
     }
     $(function(){
+        $('.rate_it').each(function() {
+            var $idea = $($(this).closest('.idea'));
+            $(this).click(function() {
+                $idea.find('.star_tool_tip').toggle();
+            });
+        });
+    
         $('.star_tool_tip').each(function(){
             //$('.star_tool_tip').toggle();
             var $idea = $($(this).closest('.idea'));
@@ -260,12 +269,6 @@
             stars.each(function() {
                 var myIndex = index;
                 index += 1;
-                $(this).mouseover(function() {
-                    stars.each(function() { $(this).removeClass('star_active'); });
-                    for (var i = 0;  i <= myIndex; ++i) {
-                        $(stars[i]).addClass('star_active');
-                    }
-                });
                 $(this).click(function() {
                     console.log('Sending ajax rating.');
                     $.ajax({
@@ -292,7 +295,7 @@
                             
                             $(rating_count).text(data['rating_count']);
                             
-                            rateIt();
+                            $idea.find('.star_tool_tip').hide();
                         }
                     });
                 });
@@ -330,7 +333,6 @@
             </div><!-- .add_idea -->
             
             <!-- END Add Idea and Modal Overlay -->
-            
             <div class="sort_by">
                 Sort by:
                 <a href="{{request.path_url}}?sort=date">Date</a> |
@@ -342,7 +344,9 @@
             No ideas yet! <a onclick="showAddIdea()">Add a first idea.</a>
             </div>
             {% endif %}
+            
             <ul class="project_ideas">
+            
             {% for ideas_index in range(ideas_count) %}
                 {% set idea = idea_data[ideas_index] %}
                 {% set liked = idea_data[ideas_index].user_rating.liked %}
@@ -395,20 +399,22 @@
                                     {% endfor %}
                                 </ul><!-- .idea_meta -->
                                 <strong> (<span class="rating_count">{{idea.rating_count}}</span> Ratings)</strong> &bull; 
-                                <a href="javascript:void(0)" class="rate_it" onClick="rateIt()">
+                                <a href="javascript:void(0)" class="rate_it">
                                     Rate It
                                 </a>
-                                <ul class="star_tool_tip">
-                                    <li>Your Rating: </li>
-                                    {% for star in range(3) %}
-                                    {% if star < idea.user_rating.stars %}
-                                    <li><a href="javascript:void(0)" class="star star_active"></a></li>
+                                <ul class="star_tool_tip drop-shadow">
+                                <span>Your rating:</span>
+                                <form class="star_scale">
+                                {% for star in range(3) %}
+                                    {% if star < idea.total_stars %}
+                                    <input name="star1" type="radio" class="star" checked="checked"/>
                                     {% else %}
-                                    <li><a href="javascript:void(0)" class="star"></a></li>
+                                    <input name="star1" type="radio" class="star"/>
                                     {% endif %}
-                                    {% endfor %}
-                                </ul><!-- .star_tool_tip -->
-                                 {% endif %}
+                                {% endfor %}
+                                </form>
+                                </ul>
+                                {% endif %}
                             </div>
                             <div class="toggle toggle_comments">
                                 <a class="hidden" onclick="showComment({{idea.id}})">show {{comments|length}} comments</a>
