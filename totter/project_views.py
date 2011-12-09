@@ -229,14 +229,14 @@ def ideas(request):
             .filter(Idea.project_id == project.id)
             
     
-    sort = request.params.get('sort')
+    sort = request.params.get('sort', 'rating') 
     if sort == 'user':
         # Use Python to sort, so we sort Anonymous posts properly.
         pass
     elif sort == 'rating':
-        idea_query = idea_data.order_by(Idea.total_rating.desc()) # Highest rated first.
+        idea_query = idea_query.order_by(Idea.total_rating.desc()) # Highest rated first.
     elif sort == 'date':
-        idea_query = idea_data.order_by(Idea.creation_time.desc()) # Most recent first
+        idea_query = idea_query.order_by(Idea.creation_time.desc()) # Most recent first
     else:
         logging.warn('Unrecognized sort: ' + str(sort))
     
