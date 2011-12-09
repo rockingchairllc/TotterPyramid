@@ -12,10 +12,16 @@
             if($(this).attr("value") == "") $(this).attr("value", searchBoxDefault);  
         });
         
+        // We can't change the type of an input textbox on the fly, 
+        // so for the password input, flip the textbox to a password box
+        // as soon as the user touches it.
         var fakePassword = $("#fakepassword");
         var realPassword = $("#realpassword");
         var passwordDefault = "Password";
         fakePassword.focus(function(){
+            fakePassword.attr('name', '_');
+            realPassword.attr('name', 'password');
+            
             fakePassword.addClass("hidden");
             realPassword.removeClass("hidden");
             realPassword.focus();
