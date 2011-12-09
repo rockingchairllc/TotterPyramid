@@ -104,8 +104,8 @@ def star_rating(idea_id, cur_user, rating_data):
     # He can never unstar it.
     agg_rating = session.query(AggregateRating)\
             .filter(AggregateRating.idea_id==idea_id).first() or AggregateRating(idea_id=idea_id)
-    if star_delta > 0: 
-        if not old_rating or not old_rating.stars:
+    if star_delta != 0: 
+        if not old_rating or not old_rating.stars and star_delta > 0:
             agg_rating.count += 1 # This user hasn't rated this project before.
         elif old_rating and old_rating.stars + star_delta == 0:
             agg_rating.count -= 1 # Don't count it toward the total.
