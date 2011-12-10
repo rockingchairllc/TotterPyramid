@@ -348,8 +348,12 @@
 {% endblock %}
 
 {% block add_idea_btn %}
+{% if user %}
 <!-- Just show the overlay. -->
 <button class="add_idea_button" onclick="showAddIdea()">Add Idea</button>
+{% else %}
+<button class="add_idea_button" onclick="showLoginPrompt()">Add Idea</button>
+{% endif %}
 {% endblock %}
 
 {% block project_body %}
