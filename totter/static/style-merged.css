@@ -49,6 +49,8 @@ input[type=text]:focus,
 textarea:focus {
 }
 
+:disabled {background-color: #F0F0F0;}
+
 /* Button and Submit Inputs */
 button, input[type=submit] {
 	color: #fff;

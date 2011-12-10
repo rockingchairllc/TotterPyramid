@@ -519,9 +519,13 @@
                                     {% else %}
                                     <img onclick="anonOn({{idea.id}})" src="{{request.static_url('totter:static/images/default_profile.jpg')}}" width="32" height="32" />
                                     {% endif %}
-                                    <textarea class="comment_text comment_input remember" type="text" order="{{idea.id}}">Comment</textarea><br />
+                                    <textarea class="comment_text comment_input remember" {%if not user%}disabled="disabled"{% endif %} type="text" order="{{idea.id}}">Comment</textarea><br />
+                                    {% if user %}
                                     <span class="enter_to_submit default">Push Enter to Submit</span>
                                     <span class="enter_to_submit throbber hidden">Posting...<img src="{{request.static_url('totter:static/images/throbber.gif')}}"/></span>
+                                    {% else %}
+                                    <span class="enter_to_submit default">Please <a href="{{request.route_url('login')}}">login</a> to enable commenting.</span>
+                                    {% endif %}
                                 </li><!-- .new_comment -->
                             </ul><!-- .project_idea_comments -->
                         </div><!-- idea_body -->
