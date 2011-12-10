@@ -30,7 +30,8 @@
             var new_id = data.idea_id;
             var when = data.when;
             var text = data.data;
-            var update_data = {'when' : when, 'data' : text};
+            var last = {% if updates|count > 0 %}false;{% else %}true;{% endif %}
+            var update_data = {'when' : when, 'data' : text, 'last' : last};
             var prepare_data = $('#updateTemplate').tmpl(update_data);
             $(".add_update_modal textarea").val("Start typing your update...")
             var after = $('.updates_header');
@@ -48,7 +49,7 @@
 {# Turn Jinja2 off, this is jquery.tmpl's territory. #}
 {% raw %}
 <script id="updateTemplate" type="text/x-jquery-tmpl">
-<li class="first_update">
+<li class="first_update {{if last}}last_update{{/if}}">
     <span class="project_update_date">${when}</span><br />
         ${data}
 </li>
@@ -84,12 +85,13 @@
         {% endif %}
     </div> <!-- .updates_header -->
     {% for update in updates %}
-    <li {% if loop.first %}class="first_update"{% endif %}{% if loop.last %}class="last_update"{% endif %}>
+    <li class="{% if loop.first %}first_update{% endif %} {% if loop.last %}last_update{% endif %}">
         <span class="project_update_date">{{update.when | timefmt}}</span><br />
             {{update.data}}
     </li>
     {% endfor %}
 </ul><!-- .project_updates -->
+<!--
 {% if not updates|length %}
 <div class="updates_empty_prompt list_empty_prompt">
 No updates in a while! 
@@ -98,4 +100,5 @@ No updates in a while!
 {% endif %}
 </div>
 {% endif %}
+-->
 {% endblock %}
