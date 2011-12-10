@@ -57,7 +57,7 @@ def groupfinder(userid, request):
 @view_config(context=Forbidden)
 def forbidden_handler(request):
     request.session['authdenied_referrer'] = request.referrer
-    logging.info('Storing forbidden referrer in cookie: ' + request.referrer)
+    logging.info('Storing forbidden referrer in cookie: ' + str(request.referrer))
     if isinstance(request.context, Project):
         # User tried to access a project.
         return HTTPFound(location=request.route_url('access_project', project_id=request.context.id))
