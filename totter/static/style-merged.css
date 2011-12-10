@@ -503,10 +503,11 @@ div.updates_header {
 }
 
 div.updates_header h2 {
-    display: inline;
+    display: block;
+    float: left;
     position: relative;
-    top: .4em;
-    left: .1em;
+    padding-top: .4em;
+    padding-left: .1em;
 }
 
 div.updates_header button {
