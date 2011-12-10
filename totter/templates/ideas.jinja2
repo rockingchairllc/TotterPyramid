@@ -27,7 +27,7 @@
                 console.log("Performing partial refresh: " + url);
                 e.preventDefault();
                 unbindAll();
-                $('.project_ideas').load(url + " .project_ideas>*", function() {
+                $('.the_content').load(url + " .the_content>*", function() {
                     console.log("Completed partial refresh.");
                     bindAll();
                 });
