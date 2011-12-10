@@ -291,5 +291,5 @@ def redirect_to_referrer(request, headers=None):
     if url == request.route_url('login') or url == request.route_url('logout') or url == request.route_url('register'):
         # User 
         url = '/'
-        logging.info('Referrer cookie is invalid.')
+        logging.info('Referrer cookie is invalid.' if 'authdenied_referrer' in request.session else 'no referrer cookie!')
     return HTTPFound(location = url, headers=headers)
