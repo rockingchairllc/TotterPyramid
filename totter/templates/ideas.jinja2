@@ -272,8 +272,12 @@
         $('.rate_it').each(function() {
             var $idea = $(this).closest('.idea');
             $(this).click(function() {
+                {% if user %}
                 // Show the corresponding star_rating box:
                 $idea.find('.star_rating').show();
+                {% else %}
+                showLoginPrompt();
+                {% endif %}
             });
         });
         
