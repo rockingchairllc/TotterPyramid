@@ -297,6 +297,7 @@ def project(request):
         'updates' : updates,
         'ideas': project.ideas.all(), 
         'user' : user_dict(request, user), 
+        'can_update' : user == project.creator,
         'ideas_count': project.ideas.count(), 
         'people_count': 1
     })

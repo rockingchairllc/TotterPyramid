@@ -484,6 +484,7 @@ Project Overview
 ******************************************************************************************************************************************************/
 div.project_description, 
 ul.project_updates {margin-top: 10px; padding: 5px;}
+div.project_description h2 { display:inline; }
 
 ul.project_updates {background: #efefef;}
 /* Same as: background:none repeat scroll 0 0 #EFEFEF; ? */
@@ -512,9 +513,11 @@ div.updates_header button {
     float: right;
 }
 
-div.project_description h2 {
-display:inline;
+div.updates_empty_prompt {
+    margin-top: 10px;
 }
+
+
 
 /******************************************************************************************************************************************************
 Project Idea Page
@@ -549,7 +552,7 @@ ul.project_ideas li.last_update {border-bottom: none;}
 .username {font-weight: bold;}
 .idea_meta {}
 
-.ideas_empty_prompt {
+.list_empty_prompt {
     position: relative;
     margin: 0 auto;
     background: grey;

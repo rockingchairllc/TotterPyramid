@@ -37,6 +37,7 @@
             $('.first_update').removeClass('first_update');
             after.after(prepare_data);
             $('.add_update .remember').default();
+            $('.updates_empty_prompt').hide();
         }
         {% else %}
         showLoginPrompt();
@@ -78,7 +79,9 @@
 <ul class="project_updates">
     <div class="updates_header">
         <h2>Updates</h2>
+        {% if can_update %}
         <button type="button" onClick="addUpdate()" class="add_update_button">Add Update</button>
+        {% endif %}
     </div> <!-- .updates_header -->
     {% for update in updates %}
     <li {% if loop.first %}class="first_update"{% endif %}{% if loop.last %}class="last_update"{% endif %}>
@@ -87,5 +90,12 @@
     </li>
     {% endfor %}
 </ul><!-- .project_updates -->
-
+{% if not updates|length %}
+<div class="updates_empty_prompt list_empty_prompt">
+No updates in a while! 
+{% if can_update %}
+<a onclick="addUpdate()">Add an update?</a>
+{% endif %}
+</div>
+{% endif %}
 {% endblock %}
