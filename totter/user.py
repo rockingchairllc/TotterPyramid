@@ -286,8 +286,8 @@ def redirect_to_referrer(request, headers=None):
     if request.session.get('authdenied_referrer'):
         url = request.session['authdenied_referrer']
         request.session['authdenied_referrer'] = None
-    logging.info('redirect_to_referrer read from cookie: ' + str(url))
-    elif url == request.route_url('login') or url == request.route_url('logout') or url == request.route_url('register'):
+        logging.info('redirect_to_referrer read from cookie: ' + str(url))
+    if url == request.route_url('login') or url == request.route_url('logout') or url == request.route_url('register'):
         # User 
         url = '/'
         logging.info('Referrer cookie is invalid.')
