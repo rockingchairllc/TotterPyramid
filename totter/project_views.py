@@ -265,7 +265,8 @@ def ideas(request):
         'idea_data': idea_data, 
         'user' : user_dict(request, user), 
         'ideas_count': len(idea_data), 
-        'people_count': 1
+        'people_count': 1,
+        'sort' : sort
     })
     
 def template_permissions(request, template_params):
