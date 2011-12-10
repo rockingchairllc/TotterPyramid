@@ -63,12 +63,24 @@
             <h3 class="register login_text">New here?  
                 <a href="{{request.route_url('register')}}" class="register_btn">Register</a></h3>
         
-            <div class="fb_login">
-                <a href="{{request.route_url('facebook')}}">
-                    <img src="{{request.application_url}}/static/images/facebook.png">
-                </a>
-            </div><!-- .fb_login -->
-            
+            <div id="fb-root"></div>
+            <script>
+            window.fbAsyncInit = function() {
+              FB.init({
+                appId      : 'YOUR_APP_ID',
+                status     : true, 
+                cookie     : true,
+                xfbml      : true
+              });
+            };
+            (function(d){
+               var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+               js = d.createElement('script'); js.id = id; js.async = true;
+               js.src = "//connect.facebook.net/en_US/all.js";
+               d.getElementsByTagName('head')[0].appendChild(js);
+             }(document));
+            </script>
+            <div class="fb-login-button">Login with Facebook</div>
 	</div><!-- .login_register_wrap -->
 {% endblock %}
 

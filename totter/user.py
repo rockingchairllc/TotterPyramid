@@ -126,6 +126,7 @@ def merge_anon_user_projects(request, user_id):
 @view_config(route_name='home', renderer="login.jinja2")
 def landing(request):
     if 'referrer' in request.session:
+        logging.info("Cleared referrer in landing page.")
         request.session['referrer'] = None
     if get_user(request):
         return HTTPFound(location=request.route_url('dashboard'))
