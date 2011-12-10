@@ -193,6 +193,7 @@ def register(request):
             session.flush()
         except IntegrityError:
             message = "Email '%s' already taken" % login
+            session.rollback()
         else:
             merge_anon_user_projects(request, user.id)
             headers = remember(request, str(user.id))
