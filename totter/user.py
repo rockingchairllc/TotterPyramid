@@ -158,10 +158,11 @@ def login(request):
             message = 'unknown_user'
     
     fail_result = dict(
-        facebook_app_id = request.registry.settings['facebook.app_id'],
+        app_id = request.registry.settings['facebook.app_id'],
         login = login,
         password = password,
         user = authenticated_userid(request),
+        
         )
     fail_result[message] = True
     return fail_result
@@ -212,6 +213,7 @@ def register(request):
         lastname = lastname,
         password = password,
         user = authenticated_userid(request),
+        app_id = request.registry.settings['facebook.app_id']
         )
         
 
