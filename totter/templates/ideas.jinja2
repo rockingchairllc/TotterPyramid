@@ -512,6 +512,8 @@
                                     <img onclick="anonOn({{idea.id}})" src="{{user.profile_picture}}?type=square" width="32" height="32" />
                                     <img onclick="anonOff({{idea.id}})" class="hidden" src="{{request.static_url('totter:static/images/anonymous_profile.jpg')}}" width="32" height="32" />
                                     </div>
+                                    {% else %}
+                                    <img onclick="anonOn({{idea.id}})" src="{{request.static_url('totter:static/images/default_profile.jpg')}}" width="32" height="32" />
                                     {% endif %}
                                     <textarea class="comment_text comment_input remember" type="text" order="{{idea.id}}">Comment</textarea><br />
                                     <span class="enter_to_submit default">Push Enter to Submit</span>
