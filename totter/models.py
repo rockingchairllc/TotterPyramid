@@ -67,6 +67,9 @@ class User(Base):
             (Allow, 'group:users', 'friends'),
             ('Deny', 'system.Everyone', 'view'),
         ]
+    @hybrid_property
+    def full_name(self):
+        return self.first_name + ' ' + self.last_name
 
 class Participation(Base):
     __tablename__ = 'Participants'

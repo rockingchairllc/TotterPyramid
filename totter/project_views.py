@@ -17,6 +17,8 @@ import logging
 from user import get_user
 from template import user_dict, idea_dict, comment_dict
 
+import notification as note
+
 
 def record_event(action, project_id, time, action_data):
     # TODO: Deferred processing?
@@ -46,6 +48,7 @@ def add_comment(request):
         'idea_first' : idea_author.first_name,
         'idea_last' : idea_author.last_name,
         })
+    note.new_comment(request, request.context.idea.project, request.context.idea, new_comment, cur_user)
     return {'comment_id' : new_comment.id}
     
 @view_config(context='totter.models.Project', name='updates', request_method='POST', renderer='json', xhr=True, permission='edit')
@@ -81,6 +84,8 @@ def add_rating(request):
     
     logging.warn('Rating received ' + str(rating_data))
     
+    note.new_rating(request, request.context.project, request.context, cur_user)
+    
     if 'stars' in rating_data:
         return star_rating(idea_id, cur_user, rating_data)
     else:
@@ -115,7 +120,6 @@ def star_rating(idea_id, cur_user, rating_data):
     session.merge(agg_rating)
     session.merge(new_rating)
     session.flush()
-    
     return {'rating' : {'stars' : new_rating.stars}, 'total_stars' : agg_rating.average_stars, 'rating_count' : agg_rating.count}
     
 def like_love_rating(idea_id, cur_user, rating_data):
@@ -204,7 +208,7 @@ def add_idea(request):
         'idea_first' : new_idea.author.first_name,
         'idea_last' : new_idea.author.last_name,
         })
-        
+    note.new_idea(request, request.context.project, new_idea, cur_user)
     return {'idea_id' : new_idea.id, 'ideas_count' : request.context.project.ideas.count()}
 
 @view_config(context='totter.models.Project', name='ideas', renderer='ideas.jinja2', permission='view')
@@ -289,8 +293,12 @@ def project(request):
     
     # Update user access time:
     if user:
-        session.merge(Participation(user_email=user.email, project_id=project.id, access_time=utcnow()))
-    
+        part = session.query(Participation).filter(Participation.user_email==user.email).filter(Participation.project_id==project.id).first()
+        if not part or not part.access_time:
+            note.new_participant(request, request.context, user)  
+        part.access_time = utcnow()
+        session.flush()
+              
     return template_permissions(request, {
         'project_id' : project.id,
         'project' : project, 
@@ -386,6 +394,7 @@ def create(request):
             session = DBSession()
             session.add(participation)
             session.flush()
+            note.new_project(request, new_project, user)
         except IntegrityError:
             # url_name collision.
             raise HTTPBadRequest(explanation="Sorry! That URL has already been taken!")
