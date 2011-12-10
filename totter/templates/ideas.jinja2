@@ -518,8 +518,14 @@
                                 <li class="new_comment first_update">
                                     {% if user %}
                                     <div class="toggle">
-                                    <img onclick="anonOn({{idea.id}})" src="{{user.profile_picture}}?type=square" width="32" height="32" />
-                                    <img onclick="anonOff({{idea.id}})" class="hidden" src="{{request.static_url('totter:static/images/anonymous_profile.jpg')}}" width="32" height="32" />
+                                    <div>
+                                        <img onclick="anonOn({{idea.id}})" src="{{user.profile_picture}}?type=square" width="32" height="32" />
+                                        <span class="comment_anon_status">Currently posting as <b>{{user.first_name}}</b>, click picture on left to post as Anonymous</span>
+                                    </div>
+                                    <div class="hidden">
+                                        <img onclick="anonOff({{idea.id}})" src="{{request.static_url('totter:static/images/anonymous_profile.jpg')}}" width="32" height="32" />
+                                        <span class="comment_anon_status">Currently posting as <font color="red">Anonymous</font>, click picture on left to post as {{user.first_name}}.</span>
+                                    </div>
                                     </div>
                                     {% else %}
                                     <img onclick="anonOn({{idea.id}})" src="{{request.static_url('totter:static/images/default_profile.jpg')}}" width="32" height="32" />
