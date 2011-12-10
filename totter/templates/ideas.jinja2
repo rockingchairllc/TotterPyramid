@@ -384,9 +384,10 @@
             <!-- END Add Idea and Modal Overlay -->
             <div class="sort_by">
                 Sort by:
-                <a href="{{request.path_url}}?sort=date">Date</a> |
-                <a href="{{request.path_url}}?sort=rating">Rating</a> |
-                <a href="{{request.path_url}}?sort=user">User</a>
+                
+                {% if sort != 'date' %}<a href="{{request.path_url}}?sort=date">{% endif %}Date</a> |
+                {% if sort != 'rating' %}<a href="{{request.path_url}}?sort=rating">{% endif %}Rating</a> |
+                {% if sort != 'user' %}<a href="{{request.path_url}}?sort=user">{% endif %}User</a>
             </div><!-- .sort_by -->
             {% if not ideas_count %}
             <div class="list_empty_prompt">
