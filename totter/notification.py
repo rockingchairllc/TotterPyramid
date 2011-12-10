@@ -10,6 +10,7 @@ def root_url(request):
     
 def handle_response(response):
     logging.info("Response received for notification request:" + str(response))
+    logging.info("Response content: " + response.content)
     pass
 
 def post_event(request, subscription, subject, message, time=None, after=handle_response):
@@ -59,6 +60,13 @@ def new_idea(request, project, idea, author):
     parent_sub = str(project.id) + ":ideas-new"
     subscription = str(project.id) + ':' + str(idea.id) + ":new"
     create_subscription(request, subscription, parent_sub)
+    parent_sub = str(project.id) + ':ideas-comments'
+    subscription = str(project.id) + ':' + str(idea.id) + ":comments" 
+    create_subscription(request, subscription, parent_sub)
+    parent_sub = str(project.id) + ':ideas-votes'
+    subscription = str(project.id) + ':' + str(idea.id) + ":votes"  
+    create_subscription(request, subscription, parent_sub)
+    
     subject = "New idea posted to %s" % project.title
     message = """
 %(who)s posted a new idea to the %(title)s:
@@ -66,10 +74,10 @@ def new_idea(request, project, idea, author):
 """ % {'who' : idea.author.full_name + ' ' , 'title' : project.title, 'data' : idea.data}
     post_event(request, subscription, subject, message)
     
+    subscribe(request, idea.author.email, str(project.id) + ':' + str(idea.id) + ":comments", frequency='immediate')
+    
 def new_comment(request, project, idea, comment, author):
-    parent_sub = str(project.id) + ':ideas-comments'
-    subscription = str(project.id) + ':' + str(idea.id) + ":comment"  
-    create_subscription(request, subscription, parent_sub)
+    subscription = str(project.id) + ':' + str(idea.id) + ":comments" 
     subject = "New comment posted to %s" % project.title
     message = """
 %(who)s posted a new comment to %(idea_who)s's idea on %(title)s
@@ -78,19 +86,18 @@ def new_comment(request, project, idea, comment, author):
     'title' : project.title, 'data' : comment.data}
     post_event(request, subscription, subject, message)
     
+    subscribe(request, comment.author.email, subscription, frequency='immediate')
+    
 def new_rating(request, project, idea, rater):
-    parent_sub = str(project.id) + ':ideas-votest'
-    subscription = str(project.id) + ':' + str(idea.id) + ":votes"  
-    create_subscription(request, subscription, parent_sub)
+    subscription = str(project.id) + ':' + str(idea.id) + ":votes"
     subject = "%s rated %s's idea" % (rater.full_name, idea.author.full_name)
     message = subject
     post_event(request, subscription, subject, message)
     
 def new_participant(request, project, participant):
-    parent_sub = str(project.id)
     subscription = str(project.id) + ':participation'
-    create_subscription(request, subscription, parent_sub)
     subject = "%s participated in %s" % (participant.full_name, project.title)
     message = subject
     post_event(request, subscription, subject, message)
+    subscribe(request, participant.email, str(project.id), frequency='daily')
 
