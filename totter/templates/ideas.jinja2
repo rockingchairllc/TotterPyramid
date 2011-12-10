@@ -54,6 +54,9 @@
         
         bindAll();
     });
+    
+    
+    
     </script>
     <!-- Commentary -->
     {% raw %}
@@ -89,6 +92,7 @@
 		function submitkey_binding(e) {
 			if( e.keyCode==13 ){ // User pressed enter.
 			    e.preventDefault();
+			    {% if user %}
                 idx = $(this).attr("order");
                 var prjId = "{{project.id}}";
                 var cmtdata = $(this).val();
@@ -122,7 +126,10 @@
 						$('#comments'+idx).children('.new_comment').children('.comment_text').val('');
 					}
 				});
-            }
+			    {% else %}
+			    showLoginPrompt();
+			    {% endif %}
+			}
 		}
 		
 	</script>
@@ -168,6 +175,7 @@
 		}
 		
 		function send_rating(context, idea_id, rating) {
+		    {% if user %}
 		    $.ajax({
 				url:"{{request.application_url}}/project/{{project.id}}/idea/" + idea_id + "/rating",
 				type: "POST",
@@ -187,6 +195,9 @@
     			    $('#total_rating_' + idea_id).html('Total Rating: ' + data.total_rating);
 				}
 			});
+			{% else %}
+			showLoginPrompt();
+			{% endif %}
 		}
 	</script>
 	
@@ -196,10 +207,11 @@
 			$('.add_idea').show();
 		}
 		function hideAddIdea() {
-		    $('.add_idea').hide();
-		    $('.add_idea .remember').default();
-		}
+            hideModalContainer();
+        }
+    
 	    function addIdea_to_project() {
+	        {% if user %}
 			var prjId = "{{project.id}}";
 			var anonymous = $(".add_idea_modal #anonymous").is(':checked');
 			var IdeaData = JSON.stringify({'data': $(".add_idea_modal textarea").val(), 'project_id': prjId, 'anonymous' : anonymous});
@@ -243,7 +255,10 @@
                 $('.project_ideas').prepend(prepare_data);
                 $('#comments'+new_id).children('.new_comment').children('.comment_text').bind('keypress', submitkey_binding);*/
 			}
-			
+			{% else %}
+			hideAddIdea();
+			showLoginPrompt();
+			{% endif %}			
 		}
 	</script>
 	<!--  Star -->
@@ -260,10 +275,6 @@
                 // Show the corresponding star_rating box:
                 $idea.find('.star_rating').show();
             });
-        });
-        
-        $('.star_rating_overlay').click(function() {
-            $('.star_rating').hide();
         });
         
         $('.star_tool_tip').each(function(){
@@ -299,6 +310,7 @@
                 var myIndex = index;
                 index += 1;
                 $(this).click(function() {
+                    {% if user %}
                     console.log('Sending ajax rating.');
                     $.ajax({
                         url:"{{request.application_url}}/project/{{project.id}}/idea/"+idea_id+"/rating",
@@ -307,11 +319,16 @@
                         data: JSON.stringify({'stars' : myIndex + 1}),
                         success: on_rating_success
                     });
+                    {% else %}
+                    $idea.find('.star_rating').hide();
+                    showLoginPrompt();
+                    {% endif %}
                 });
             });
             
             var cancelButton = $(this).find('.rating-cancel');
             $(cancelButton).click(function() {
+                {% if user %}
                 console.log('Sending ajax rating.');
                 $.ajax({
                     url:"{{request.application_url}}/project/{{project.id}}/idea/"+idea_id+"/rating",
@@ -320,6 +337,10 @@
                     data: JSON.stringify({'stars' : 0}),
                     success: on_rating_success
                 });
+                {% else %}
+                $idea.find('.star_rating').hide();
+                showLoginPrompt();
+                {% endif %}
             });
         });
     }
@@ -327,20 +348,15 @@
 {% endblock %}
 
 {% block add_idea_btn %}
-{% if user %}
 <!-- Just show the overlay. -->
 <button class="add_idea_button" onclick="showAddIdea()">Add Idea</button>
-{% else %}
-{{fakebutton('Add Idea', 'add_idea_button')}}
-{% endif %}
-
 {% endblock %}
 
 {% block project_body %}
             <!-- Add Idea and Modal Overlay -->
-            <div class="add_idea">
-                <div class="add_idea_overlay" onClick="hideAddIdea()"></div>
-                <div class="add_idea_modal drop-shadow">
+            <div class="add_idea modal_container">
+                <div class="add_idea_overlay dark_overlay click_off"></div>
+                <div class="add_idea_modal modal_dialog drop-shadow">
                     <h1>Add Idea</h1>
                     <div class="anonymous"><label for="anonymous">Anonymous:</label><input type="checkbox" id="anonymous"/></div>
                     <textarea class="remember">Start typing your idea...</textarea>
@@ -352,6 +368,10 @@
                     <button type="button" onClick="addIdea_to_project()">Add Idea</button>
                 </div><!-- idea_idea_modal -->
             </div><!-- .add_idea -->
+            
+            
+            
+            
             
             <!-- END Add Idea and Modal Overlay -->
             <div class="sort_by">
@@ -426,7 +446,7 @@
                                     </a>
                                     </div>
                                     <div class="star_rating">
-                                        <div class="star_rating_overlay"></div>
+                                        <div class="star_rating_overlay clickOff"></div>
                                         <ul class="star_tool_tip drop-shadow">
                                             <label>Your rating:</label>
                                             <form class="star_scale">
@@ -486,17 +506,17 @@
                                     {% endfor %}
                                     </ul>
                                 </li>
-                                {% if user %}
                                 <li class="new_comment first_update">
+                                    {% if user %}
                                     <div class="toggle">
                                     <img onclick="anonOn({{idea.id}})" src="{{user.profile_picture}}?type=square" width="32" height="32" />
                                     <img onclick="anonOff({{idea.id}})" class="hidden" src="{{request.static_url('totter:static/images/anonymous_profile.jpg')}}" width="32" height="32" />
                                     </div>
+                                    {% endif %}
                                     <textarea class="comment_text comment_input remember" type="text" order="{{idea.id}}">Comment</textarea><br />
                                     <span class="enter_to_submit default">Push Enter to Submit</span>
                                     <span class="enter_to_submit throbber hidden">Posting...<img src="{{request.static_url('totter:static/images/throbber.gif')}}"/></span>
                                 </li><!-- .new_comment -->
-                                {% endif %}
                             </ul><!-- .project_idea_comments -->
                         </div><!-- idea_body -->
                     </div> <!-- .idea -->

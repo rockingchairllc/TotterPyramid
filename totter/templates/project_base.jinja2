@@ -49,14 +49,39 @@
                  autoResize: {}
              });
              
+            // All .clickOffs are page-size translucent/transparent background divs
+            // That function to hide their parent containing div when they are clicked
+            // This is so our modal dialogs close when users click outside of them.
+            $('.click_off').each(function() {
+                var $this = $(this);
+                $this.click(function() {
+                    $this.parent().hide();
+                });
+            });
+             
         });
                     
         
-
+    function hideModalContainer() {
+        $('.modal_container').hide();
+        $('.modal_container .remember').default(); // Reset all textboxes in the modal container to defaults.
+    }
+    
+    function showLoginPrompt() {
+        $('.login_prompt').show();
+    }
 </script>
 {% endblock %}
 {% block page_body %}
             {% block project_header %}
+            <div class="login_prompt modal_container">
+                <div class="dark_overlay click_off"></div>
+                <div class="login_prompt_modal modal_dialog drop-shadow">
+                    <h1>Uh oh! You need to <a href="{{request.route_url('login')}}">login</a> to do that!</h1>
+                    <button type="button" onClick="hideModalContainer()">Go back to browsing</a>
+                </div><!-- login_prompt_modal -->
+            </div><!-- .login_prompt -->
+            
             <!-- Begin the main content. -->
             <div class="project">
             <div class="title">
@@ -90,13 +115,9 @@
                         <span class="project_stat">{{project.deadline}}</span>
                     </li>
                     {% block add_idea_btn %}
-                    {% if user %}
                     <form class="button_wrapper" method="LINK" action="{{request.resource_url(context)}}ideas#ideapopup">
                         <input type="submit" class="add_idea_button" value="Add Idea"></input>
                     </form>
-                    {% else %}
-                    {{fakebutton('Add Idea', 'add_idea_button')}}
-                    {% endif %}
                     {% endblock %}
                 </ul><!-- .project_stats -->
             {% endblock %}

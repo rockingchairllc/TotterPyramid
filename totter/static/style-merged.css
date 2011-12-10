@@ -382,8 +382,9 @@ Project Page
 .project h1 { display:inline; }
 .title input { font-weight:bold; }
 .idea_description { margin-bottom:1em; word-wrap:break-word; }
+.login_prompt {display: none;}
 .add_idea {display: none;}
-.add_idea_modal {
+.modal_dialog {
 	position: fixed;
 	top: 50%;
 	left: 50%;
@@ -394,11 +395,16 @@ Project Page
 	margin-top: -240px;
 	z-index: 200;
 }
+
+.login_prompt button { display: block; margin: 0 auto; width: 300px; margin-top: 10px; font-size: 1.4em; }
+.login_prompt h1 { margin: 0 auto; text-align: center; }
+.login_prompt_modal { height: 100px; }
+
 .add_idea_modal h1 {color: #2471BE;}
 .add_idea_modal textarea {height: 75px;}
 .add_idea_modal a {position: absolute; right: 25px; top: 15px;}
 .add_idea_modal button {position: absolute; right: 15px; width: 100px; font-size: 1.1em;}
-.add_idea_overlay {
+.dark_overlay {
 	position: fixed;
 	top: 0;
 	left: 0;
