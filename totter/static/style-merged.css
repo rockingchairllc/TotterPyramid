@@ -382,8 +382,7 @@ Project Page
 .project h1 { display:inline; }
 .title input { font-weight:bold; }
 .idea_description { margin-bottom:1em; word-wrap:break-word; }
-.login_prompt {display: none;}
-.add_idea {display: none;}
+.modal_container {display: none}
 .modal_dialog {
 	position: fixed;
 	top: 50%;
