@@ -80,7 +80,8 @@
                d.getElementsByTagName('head')[0].appendChild(js);
              }(document));
             </script>
-            <div class="fb-login-button">Login with Facebook</div>
+            <div class="fb-login-button"
+                data-redirect-uri="{{fb_redirect_url}}">Login with Facebook</div>
 	</div><!-- .login_register_wrap -->
 {% endblock %}
 

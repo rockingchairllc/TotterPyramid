@@ -162,7 +162,7 @@ def login(request):
         login = login,
         password = password,
         user = authenticated_userid(request),
-        
+        fb_redirect_url = request.session.get('referrer', '/')
         )
     fail_result[message] = True
     return fail_result
@@ -213,7 +213,8 @@ def register(request):
         lastname = lastname,
         password = password,
         user = authenticated_userid(request),
-        app_id = request.registry.settings['facebook.app_id']
+        app_id = request.registry.settings['facebook.app_id'],
+        fb_redirect_url = request.session.get('referrer', '/')
         )
         
 
