@@ -56,8 +56,11 @@ def groupfinder(userid, request):
 
 @view_config(context=Forbidden)
 def forbidden_handler(request):
-    request.session['authdenied_referrer'] = request.referrer
-    logging.info('Storing forbidden referrer in cookie: ' + str(request.referrer))
+    if request.referrer is not None:
+        request.session['referrer'] = request.referrer
+    elif request.context is not None:
+        request.session['referrer'] = request.resource_url(request.context)
+    logging.info('Storing forbidden referrer in cookie: ' + str(request.session['referrer']))
     if isinstance(request.context, Project):
         # User tried to access a project.
         return HTTPFound(location=request.route_url('access_project', project_id=request.context.id))
@@ -284,12 +287,12 @@ def facebook(request):
         
 def redirect_to_referrer(request, headers=None):
     url = request.referer if request.referer else request.application_url
-    if request.session.get('authdenied_referrer'):
-        url = request.session['authdenied_referrer']
-        request.session['authdenied_referrer'] = None
+    if request.session.get('referrer'):
+        url = request.session['referrer']
+        request.session['referrer'] = None
         logging.info('redirect_to_referrer read from cookie: ' + str(url))
     if url == request.route_url('login') or url == request.route_url('logout') or url == request.route_url('register'):
         # User 
         url = '/'
-        logging.info('Referrer cookie is invalid.' if 'authdenied_referrer' in request.session else 'no referrer cookie!')
+        logging.info('Referrer cookie is invalid.' if 'referrer' in request.session else 'no referrer cookie!')
     return HTTPFound(location = url, headers=headers)
