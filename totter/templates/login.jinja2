@@ -38,7 +38,8 @@
 {% block body %}	
     <div class="login_register_wrap drop-shadow curved curved-vt-2">
             
-            <h1 class="title">Welcome to Totter</h1>
+            <img class="logo" src="{{request.application_url}}/static/images/logo.png">
+            <h2 class="motto">Where ideas come to play!</h2>
             {% if invalid_password -%}<font color="red"> Invalid password. </font> {% endif %}
             {% if unknown_user -%}<font color="red"> Unknown email, try registering? </font> {% endif %}
             <form id="loginForm" method="post" action="{{request.route_url('login')}}">
