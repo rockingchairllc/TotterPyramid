@@ -2,6 +2,7 @@
 {% block scripts %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
+<script src="http://connect.facebook.net/en_US/all.js"></script>
 <script src="{{request.static_url('totter:static/jquery-facebook-multi-friend-selector/jquery.facebook.multifriend.select.js')}}"></script>
 <script type="text/javascript">
     (function($) {
@@ -136,19 +137,25 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
     <div id="fb-root"></div>
     <script>
       // assume we are already logged in
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '{{fb_app_id}}', // App ID
-          channelUrl : '//LETSTOTTER.COM/static/channel.php', // Channel File
-          status     : true, // check login status
-          cookie     : true, // enable cookies to allow the server to access the session
-          oauth      : true, // enable OAuth 2.0
-          xfbml      : true  // parse XFBML
-        });
-        // Additional initialization code here
-        $("#jfmfs-container").jfmfs();
-      };
       
+      
+      
+      $(document).ready(function() {
+          FB.init({
+              appId      : '{{fb_app_id}}', // App ID
+              channelUrl : '//LETSTOTTER.COM/static/channel.php', // Channel File
+              status     : true, // check login status
+              cookie     : true, // enable cookies to allow the server to access the session
+              oauth      : true, // enable OAuth 2.0
+              xfbml      : true  // parse XFBML
+            });
+            // Additional initialization code here
+            $("#jfmfs-container").jfmfs();
+      }     
+      /*
+      window.fbAsyncInit = function() {
+        
+      };
       // Load the SDK Asynchronously
       (function(d){
          var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
@@ -156,7 +163,7 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
          js.src = "//connect.facebook.net/en_US/all.js";
          d.getElementsByTagName('head')[0].appendChild(js);
        }(document));
-      
+      */
       function sendRequestViaMultiFriendSelector() {
           var friendSelector  = $("#jfmfs-container").data('jfmfs');
           var selectedFriends = friendSelector.getSelectedIds();
