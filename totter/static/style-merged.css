@@ -490,7 +490,7 @@ div.project_description,
 ul.project_updates {margin-top: 10px; padding: 5px;}
 div.project_description h2 { display:inline; }
 
-ul.project_updates {background: #efefef;}
+ul.project_updates {background: #efefef;margin-left: 2em;}
 /* Same as: background:none repeat scroll 0 0 #EFEFEF; ? */
 
 ul.project_updates li {
@@ -499,7 +499,7 @@ ul.project_updates li {
 	border-bottom: 1px solid #ccc;
 }
 ul.project_updates li.first_update {border-top: none;}
-ul.project_updates li.last_update {border-bottom: none;}
+ul.project_updates li.last_update {border-bottom: none;margin-left: 1em;}
 span.project_update_date {font-weight: bold;}
 
 div.updates_header {
