@@ -220,7 +220,7 @@ def register(request):
         password = password,
         user = authenticated_userid(request),
         app_id = request.registry.settings['facebook.app_id'],
-        fb_redirect_url = referrer('request'),
+        fb_redirect_url = referrer(request),
         fb_login_url = fb_login_url(request),
         )
 def fb_login_url(request):
