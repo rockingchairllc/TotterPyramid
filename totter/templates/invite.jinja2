@@ -169,31 +169,32 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
          d.getElementsByTagName('head')[0].appendChild(js);
        }(document));
     
-      function sendRequestViaMultiFriendSelector() {
-          var friendSelector  = $("#jfmfs-container").data('jfmfs');
-          var selectedFriends = friendSelector.getSelectedIds();
-          FB.ui({
-              method: 'send',
-              name: '{{project.title}}',
-              link: '{{project.url}}',
-              to: selectedFriends,
-              picture: "{{request.static_url('totter:static/images/logo.png')}}",
-              redirect_uri: '{{project.url}}',
-              description: "Following up on my wall post, here's the project key: {{project.key}}",
-              });
-              
-         // Fire off an ajax request to the server
-         // that posts to people's walls using the graph API
-         // Send selectedFriends.
-         $.ajax({
-				url:"{{request.resource_url(request.context, 'publish_stream')}}",
-				type: "POST",
-				dataType: "json",
-				data: JSON.stringify({'selected_friends' : selectedFriends}),
-				success: function(data) {
-				    console.log('Sent feed posts.');
-				});
-      }
+    function sendRequestViaMultiFriendSelector() {
+        var friendSelector  = $("#jfmfs-container").data('jfmfs');
+        var selectedFriends = friendSelector.getSelectedIds();
+        FB.ui({
+          method: 'send',
+          name: '{{project.title}}',
+          link: '{{project.url}}',
+          to: selectedFriends,
+          picture: "{{request.static_url('totter:static/images/logo.png')}}",
+          redirect_uri: '{{project.url}}',
+          description: "Following up on my wall post, here's the project key: {{project.key}}",
+          });
+          
+        // Fire off an ajax request to the server
+        // that posts to people's walls using the graph API
+        // Send selectedFriends.
+        $.ajax({
+            url:"{{request.resource_url(request.context, 'publish_stream')}}",
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify({'selected_friends' : selectedFriends}),
+            success: function(data) {
+                console.log('Sent feed posts.');
+            }
+        });
+    }
       
      </script>
 {% endblock %}
