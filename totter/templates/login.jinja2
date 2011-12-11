@@ -63,8 +63,15 @@
             <h3 class="register login_text">New here?  
                 <a href="{{request.route_url('register')}}" class="register_btn">Register</a></h3>
         
+            <script type="text/javascript">
+            function popitup(url) {
+                newwindow=window.open(url,'name','height=200,width=150');
+                if (window.focus) {newwindow.focus()}
+                return false;
+            }
+            </script>
             <div class="fb_login">
-                <a target="_blank" href="{{fb_login_url}}">
+                <a target="_blank" onclick="popitup({{fb_login_url}})">
                     <img src="{{request.application_url}}/static/images/facebook.png">
                 </a>
             </div><!-- .fb_login -->
