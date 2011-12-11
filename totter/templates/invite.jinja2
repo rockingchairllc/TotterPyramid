@@ -143,6 +143,7 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
       
       
       $(document).ready(function() {
+        $("#jfmfs-container").jfmfs();
         var friendSelector  = $("#jfmfs-container").data('jfmfs');
         friendSelector.populateMultiselect({{friend_data|safe}});
           
