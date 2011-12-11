@@ -163,6 +163,7 @@ def login(request):
         password = password,
         user = authenticated_userid(request),
         fb_redirect_url = request.session.get('referrer', '/')
+        fb_login_url = fb_login_url(),
         )
     fail_result[message] = True
     return fail_result
@@ -207,13 +208,7 @@ def register(request):
             return redirect_to_referrer(request, headers)
 
 
-    fb_url = "https://www.facebook.com/dialog/oauth"
-    params = "&".join([
-        'client_id=' + request.registry.settings['facebook.app_id'], 
-        'redirect_uri='+request.route_url('facebook'),
-        'display=popup',
-        'scope=email,publish_stream',
-    ])
+    
     return dict(
         message = message,
         login = login,
@@ -223,9 +218,17 @@ def register(request):
         user = authenticated_userid(request),
         app_id = request.registry.settings['facebook.app_id'],
         fb_redirect_url = request.session.get('referrer', '/'),
-        facebook_login_url = fb_url + '?' + params,
+        fb_login_url = fb_login_url(),
         )
-        
+def fb_login_url():
+    fb_url = "https://www.facebook.com/dialog/oauth"
+    params = "&".join([
+        'client_id=' + request.registry.settings['facebook.app_id'], 
+        'redirect_uri='+request.route_url('facebook'),
+        'display=popup',
+        'scope=email,publish_stream',
+    ])
+    return fb_url + '?' + params
 
 def facebook(request):
     # Our handler for facebook stuff.
