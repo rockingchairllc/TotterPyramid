@@ -28,8 +28,8 @@ def publish_stream(request):
     message = """
     I've invited you to the Totter project, '%s'. 
     Visit http://letstotter.com and login with facebook to 
-    start creating automatically. Or, check your facebook messages 
-    for credentials. Totter: Where Ideas Come To Play!
+    start creating automatically. Or, check your facebook messages for credentials. 
+    Totter: Where Ideas Come To Play!
     """ % project.title
     for id in profile_ids:
         graph.put_wall_post(message, {

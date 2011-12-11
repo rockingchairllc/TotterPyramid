@@ -288,7 +288,6 @@ def facebook(request):
             'redirect_uri='+request.route_url('facebook'),
             'display=popup',
             'scope=email,publish_stream',
-            
         ])
         return HTTPFound(location = fb_url+"?"+params)
         
