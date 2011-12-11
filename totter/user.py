@@ -310,7 +310,10 @@ def referrer(request):
         url = request.session['referrer']
         request.session['referrer'] = None
         logging.info('redirect_to_referrer read from cookie: ' + str(url))
-    if url == request.route_url('login') or url == request.route_url('logout') or url == request.route_url('register'):
+    if url in [request.route_url('login'), 
+               request.route_url('logout'), 
+               request.route_url('register'), 
+               request.route_url('fb_redirect')]:
         # User 
         url = '/'
         logging.info('Referrer cookie is invalid.' if 'referrer' in request.session else 'no referrer cookie!')
