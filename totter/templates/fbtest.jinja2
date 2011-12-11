@@ -13,6 +13,9 @@
             xfbml      : true
           });
           console.log("this will be run once FB is initialized");
+          FB.Event.subscribe('auth.login', function () {
+              window.location = "{{request.route_url('fbtest')}}";
+          });
         };
         (function(d){
            var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
@@ -23,6 +26,6 @@
          
       </script>
       <div>{{message}}</div>
-      <div class="fb-login-button" scope="email">Login with Facebook</div>
+      <div class="fb-login-button" scope="email" >Login with Facebook</div>
     </body>
  </html>
