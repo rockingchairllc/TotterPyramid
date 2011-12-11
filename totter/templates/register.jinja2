@@ -60,6 +60,14 @@
             </fieldset>
         </form>			             
         <h2>- or -</h2>
+        
+        <script type="text/javascript">
+        function popitup(url) {
+            newwindow=window.open(url,'name','height=340,width=630');
+            if (window.focus) {newwindow.focus()}
+            return false;
+        }
+        </script>
         <div class="fb_login">
             <a target="_blank" onclick="popitup('{{fb_login_url}}')">
                 <img src="{{request.application_url}}/static/images/facebook_register.png">
