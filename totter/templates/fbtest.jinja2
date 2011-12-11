@@ -54,7 +54,7 @@
             ];
             var query = queryParams.join('&');
             var url = path + query;
-            window.location(url);
+            window.location = url;
         } else {
             var accessToken = window.location.hash.substring(1);
             var path = "https://graph.facebook.com/me?";
