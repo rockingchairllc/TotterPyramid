@@ -71,7 +71,7 @@
             }
             </script>
             <div class="fb_login">
-                <a target="login_frame" href="{{fb_login_url}}">
+                <a target="_blank" onclick="popitup('{{fb_login_url}}')">
                     <img src="{{request.application_url}}/static/images/facebook.png">
                 </a>
                 <iframe name="login_frame"></iframe>
