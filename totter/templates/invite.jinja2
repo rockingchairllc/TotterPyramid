@@ -135,6 +135,10 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
       onclick="sendRequestViaMultiFriendSelector(); return false;"
       value="Send Request to Many Users with MFS"
     />
+    <input type="button"
+      onclick="postToFeed(); return false;"
+      value="Send Request to Many Users with MFS"
+    />
     </p>
     
     <div id="fb-root"></div>
@@ -178,8 +182,28 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
               link: '{{project.url}}',
               to: selectedFriends,
               picture: "{{request.static_url('totter:static/images/logo.png')}}",
-              redirect_uri: '{{project.url}}'
+              redirect_uri: '{{project.url}}',
+              description: 'Project Key: {{project.key}}'
               });
+      }
+      
+      function postToFeed() {
+
+        // calling the API ...
+        var obj = {
+          method: 'feed',
+          link: 'https://developers.facebook.com/docs/reference/dialogs/',
+          picture: 'http://fbrell.com/f8.jpg',
+          name: 'Facebook Dialogs',
+          caption: 'Reference Documentation',
+          description: 'Using Dialogs to interact with users.'
+        };
+
+        function callback(response) {
+          document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
+        }
+
+        FB.ui(obj, callback);
       }
      </script>
      
