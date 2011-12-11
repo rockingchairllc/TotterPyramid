@@ -183,7 +183,8 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
               to: selectedFriends,
               picture: "{{request.static_url('totter:static/images/logo.png')}}",
               redirect_uri: '{{project.url}}',
-              description: 'Project Key: {{project.key}}'
+              description: 'Project Key: {{project.key}}',
+              message: 'Testing send message message.'
               });
       }
       
@@ -196,7 +197,8 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
           picture: 'http://fbrell.com/f8.jpg',
           name: 'Facebook Dialogs',
           caption: 'Reference Documentation',
-          description: 'Using Dialogs to interact with users.'
+          description: 'Using Dialogs to interact with users.',
+          message: 'Facebook feed posting is so awesome!'
         };
 
         function callback(response) {
