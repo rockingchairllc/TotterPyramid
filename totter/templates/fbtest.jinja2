@@ -12,6 +12,7 @@
             cookie     : true,
             xfbml      : true
           });
+          FB.Flash.hasMinVersion = function () { return false; };
           console.log("this will be run once FB is initialized");
           FB.Event.subscribe('auth.login', function () {
               window.location = "{{request.route_url('fbtest')}}";
