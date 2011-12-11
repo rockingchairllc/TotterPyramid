@@ -452,7 +452,7 @@ def invite(request):
     
     
     # Get friends list from serverside facebook api.
-    graph = fb.GraphAPI(fb_params['access_token'])
+    graph = fb.GraphAPI(request.session['access_token'])
     friends = graph.get_connections("me", "friends", fields='id,name')
     
     
