@@ -58,10 +58,11 @@ def groupfinder(userid, request):
 @view_config(context=Forbidden)
 def forbidden_handler(request):
     if request.referrer is not None:
+        logging.info('setting referrer(1): ' + str(request.referrer))
         request.session['referrer'] = request.referrer
     elif request.context is not None:
+        logging.info('setting referrer(2): ' + str(request.referrer))
         request.session['referrer'] = request.resource_url(request.context)
-    logging.info('Storing forbidden referrer in cookie: ' + str(request.session['referrer']))
     if isinstance(request.context, Project):
         # User tried to access a project.
         return HTTPFound(location=request.route_url('access_project', project_id=request.context.id))
@@ -163,7 +164,7 @@ def login(request):
         login = login,
         password = password,
         user = authenticated_userid(request),
-        fb_redirect_url = request.session.get('referrer', '/'),
+        fb_redirect_url = referrer(request),
         fb_login_url = fb_login_url(request),
         )
     fail_result[message] = True
@@ -218,7 +219,7 @@ def register(request):
         password = password,
         user = authenticated_userid(request),
         app_id = request.registry.settings['facebook.app_id'],
-        fb_redirect_url = request.session.get('referrer', '/'),
+        fb_redirect_url = referrer('request'),
         fb_login_url = fb_login_url(request),
         )
 def fb_login_url(request):
