@@ -2,9 +2,15 @@ import facebook as fb
 from pyramid.security import authenticated_userid
 from pyramid.view import view_config
 
+from facebook import OAuth2
+
 @view_config(route_name='fb')
 def facebook2(request):
     fbuser = fb.get_user_from_cookie(request.cookies, 
+                        request.registry.settings['facebook.app_id'],
+                        request.registry.settings['facebook.secret']
+    )
+    fbuser = OAuth2.getUserFromCookie(request.cookies, 
                         request.registry.settings['facebook.app_id'],
                         request.registry.settings['facebook.secret']
     )
@@ -12,7 +18,7 @@ def facebook2(request):
 
 @view_config(route_name='fbtest', renderer='fbtest.jinja2')
 def fbtest(request):
-    fbuser = fb.get_user_from_cookie(request.cookies, 
+    fbuser = OAuth2.getUserFromCookie(request.cookies, 
                         request.registry.settings['facebook.app_id'],
                         request.registry.settings['facebook.secret']
     )
