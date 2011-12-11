@@ -233,6 +233,7 @@ def facebook(request):
                     'client_secret' : request.registry.settings['facebook.secret'],
                     'code' : request.params['code'],
                     'redirect_uri' : request.route_url('facebook'),
+                    'type' : 'web_server'
                 }
             )
             logging.info('facebook response:' + str(fb_resp.content))
