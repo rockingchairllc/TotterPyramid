@@ -163,7 +163,7 @@ def login(request):
         password = password,
         user = authenticated_userid(request),
         fb_redirect_url = request.session.get('referrer', '/'),
-        fb_login_url = fb_login_url(),
+        fb_login_url = fb_login_url(request),
         )
     fail_result[message] = True
     return fail_result
@@ -218,9 +218,9 @@ def register(request):
         user = authenticated_userid(request),
         app_id = request.registry.settings['facebook.app_id'],
         fb_redirect_url = request.session.get('referrer', '/'),
-        fb_login_url = fb_login_url(),
+        fb_login_url = fb_login_url(request),
         )
-def fb_login_url():
+def fb_login_url(request):
     fb_url = "https://www.facebook.com/dialog/oauth"
     params = "&".join([
         'client_id=' + request.registry.settings['facebook.app_id'], 
