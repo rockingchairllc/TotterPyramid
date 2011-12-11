@@ -1,6 +1,7 @@
 from user import get_user
 from pyramid.httpexceptions import HTTPBadRequest
 from pyramid.view import view_config
+import facebook as fb
 
 @view_config(context='totter.models.Project',  name='publish_stream', permission='invite')
 def publish_stream(request):
