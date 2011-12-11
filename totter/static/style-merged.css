@@ -490,20 +490,24 @@ div.project_description,
 ul.project_updates {margin-top: 10px; padding: 5px;}
 div.project_description h2 { display:inline; }
 
-ul.project_updates {background: #efefef;margin-left: 2em;}
+ul.project_updates {margin-left: 2em;}
 /* Same as: background:none repeat scroll 0 0 #EFEFEF; ? */
 
 ul.project_updates li {
 	padding: 8px 0;
 	border-top: 1px solid #fff;
 	border-bottom: 1px solid #ccc;
+	background-color: #EFEFEF;
+	padding-left: .2em;
+	margin-top: .2em;
 }
 ul.project_updates li.first_update {border-top: none;}
-ul.project_updates li.last_update {border-bottom: none;margin-left: 1em;}
+ul.project_updates li.last_update {border-bottom: none;}
 span.project_update_date {font-weight: bold;}
 
 div.updates_header {
     overflow: hidden;
+    background-color: #EFEFEF;
 }
 
 div.updates_header h2 {
