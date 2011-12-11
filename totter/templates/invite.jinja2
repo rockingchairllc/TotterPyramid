@@ -160,6 +160,9 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
             $("#jfmfs-container").jfmfs();
             var friendSelector  = $("#jfmfs-container").data('jfmfs');
             friendSelector.populateMultiselect({{friend_data|safe}});
+          FB.login({
+            scope: 'publish_stream',
+          });
       });
       /*
       window.fbAsyncInit = function() {
@@ -208,40 +211,4 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
         FB.ui(obj, callback);
       }
      </script>
-     
-    <a href="https://www.facebook.com/dialog/feed?
-  app_id=123050457758183&
-  link=https://developers.facebook.com/docs/reference/dialogs/&
-  picture=http://fbrell.com/f8.jpg&
-  name=Facebook%20Dialogs&
-  caption=Reference%20Documentation&
-  description=Using%20Dialogs%20to%20interact%20with%20users.&
-  message=Facebook%20Dialogs%20are%20so%20easy!&
-  redirect_uri=http://www.example.com/response">Testing</a>
-    <!--
-    <div id="fb-root"></div>
-    <script>
-      
-      
-      function sendRequestToRecipients() {
-        var user_ids = document.getElementsByName("user_ids")[0].value;
-        FB.ui({method: 'apprequests',
-          message: 'My Great Request',
-          to: user_ids, 
-        }, requestCallback);
-      }
-
-      function sendRequestViaMultiFriendSelector() {
-        FB.ui({method: 'apprequests',
-          message: 'My Great Request'
-        }, requestCallback);
-      }
-      
-      function requestCallback(response) {
-        // Handle callback here
-      }
-    
-      
-    </script>
-    -->
 {% endblock %}
