@@ -61,7 +61,7 @@
         </form>			             
         <h2>- or -</h2>
         <div class="fb_login">
-            <a href="{{request.route_url('facebook')}}">
+            <a target="_blank" onclick="popitup('{{fb_login_url}}')">
                 <img src="{{request.application_url}}/static/images/facebook_register.png">
             </a>
         </div><!-- .fb_login -->
