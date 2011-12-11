@@ -325,6 +325,6 @@ def fb_redirect(request):
     window.close();
     </script>
     </head><body></body></html>
-    """ % referrer(request)
+    """ % request.route_url('facebook')
     return Response(document, content_type='text/html')
     
