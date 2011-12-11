@@ -156,11 +156,13 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
       function sendRequestViaMultiFriendSelector() {
         FB.ui({method: 'apprequests',
           message: 'My Great Request'
-        }, requestCallback);
+        }, requestCallback); 
       }
       
       function requestCallback(response) {
         // Handle callback here
+        console.log("Got response");
+        console.log(response);
       }
     
       // Load the SDK Asynchronously
