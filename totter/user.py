@@ -152,7 +152,7 @@ def login(request):
                 user.last_login = utcnow()
                 session.flush()
                 merge_anon_user_projects(request, user.id)
-                return redirect_to_referrer(request, headers)
+                return HTTPFound(location=referrer(request), headers=headers)
             else:
                 message = 'invalid_password'
         except NoResultFound:
@@ -206,7 +206,7 @@ def register(request):
         else:
             merge_anon_user_projects(request, user.id)
             headers = remember(request, str(user.id))
-            return redirect_to_referrer(request, headers)
+            return HTTPFound(location=referrer(request), headers=headers)
 
 
     
@@ -284,7 +284,7 @@ def facebook(request):
             merge_anon_user_projects(request, user.id)
         login = user.email
         headers = remember(request, str(user.id))
-        return redirect_to_referrer(request, headers)
+        return HTTPFound(location=referrer(request), headers=headers)
     elif 'error' in request.params:
         # The user denied our request to use their fb creds.
         logging.info('Facebook credential access denied by user.')
@@ -304,7 +304,7 @@ def facebook(request):
         ])
         return HTTPFound(location = fb_url+"?"+params)
         
-def redirect_to_referrer(request, headers=None):
+def referrer(request):
     url = request.referer if request.referer else request.application_url
     if request.session.get('referrer'):
         url = request.session['referrer']
@@ -314,7 +314,7 @@ def redirect_to_referrer(request, headers=None):
         # User 
         url = '/'
         logging.info('Referrer cookie is invalid.' if 'referrer' in request.session else 'no referrer cookie!')
-    return HTTPFound(location = url, headers=headers)
+    return url
 
 @view_config(route_name='fb_redirect')
 def fb_redirect(request):
@@ -325,6 +325,6 @@ def fb_redirect(request):
     window.close();
     </script>
     </head><body></body></html>
-    """ % request.session.get('referrer', '/')
+    """ % referrer(request)
     return Response(document, content_type='text/html')
     
