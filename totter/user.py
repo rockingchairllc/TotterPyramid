@@ -326,7 +326,7 @@ def fb_redirect(request):
     document = """
     <html><head>
     <script type="text/javascript">
-    window.opener.location.href = "%s";
+    window.opener.location.href = "%s" + window.location.href.slice(window.location.href.indexOf('?') );
     window.close();
     </script>
     </head><body></body></html>
