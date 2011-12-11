@@ -224,7 +224,7 @@ def fb_login_url(request):
     fb_url = "https://www.facebook.com/dialog/oauth"
     params = "&".join([
         'client_id=' + request.registry.settings['facebook.app_id'], 
-        'redirect_uri='+request.route_url('fb_redir'),
+        'redirect_uri='+request.route_url('fb_redirect'),
         'display=popup',
         'scope=email,publish_stream',
     ])
