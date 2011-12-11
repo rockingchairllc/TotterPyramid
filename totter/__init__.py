@@ -43,9 +43,6 @@ def main(global_config, **settings):
     # Facebook client-side testing:
     config.add_route('fb', '/fb')
     config.add_route('fbtest', '/fbtest')
-    config.add_view('totter.fb.fbtest',
-                    route_name='fbtest',
-                    renderer='fbtest.jinja2')
 
     config.add_route('logout', '/logout')
     config.add_view('totter.user.logout', route_name='logout')
