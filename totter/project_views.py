@@ -452,8 +452,11 @@ def invite(request):
     
     
     # Get friends list from serverside facebook api.
-    graph = fb.GraphAPI(request.session['access_token'])
-    friends = graph.get_connections("me", "friends", fields='id,name')
+    friends = ''
+    if 'access_token' in request.session:
+        graph = fb.GraphAPI(request.session['access_token'])
+        friends = graph.get_connections("me", "friends", fields='id,name')
+        friends = json.dumps(friends)
     
     
     response_params.update({'user' : user_dict(request, user), 
@@ -462,7 +465,7 @@ def invite(request):
     'fb_app_id' : request.registry.settings['facebook.app_id'],
     'iframe_url' : iframe_url,
     'fb_access_token' : request.session['access_token'] if 'access_token' in request.session else None,
-    'friend_data' : json.dumps(friends)
+    'friend_data' : friends
     })
     return template_permissions(request, response_params)
     
