@@ -206,6 +206,14 @@ def register(request):
             headers = remember(request, str(user.id))
             return redirect_to_referrer(request, headers)
 
+
+    fb_url = "https://www.facebook.com/dialog/oauth"
+    params = "&".join([
+        'client_id=' + request.registry.settings['facebook.app_id'], 
+        'redirect_uri='+request.route_url('facebook'),
+        'display=popup',
+        'scope=email,publish_stream',
+    ])
     return dict(
         message = message,
         login = login,
@@ -214,7 +222,8 @@ def register(request):
         password = password,
         user = authenticated_userid(request),
         app_id = request.registry.settings['facebook.app_id'],
-        fb_redirect_url = request.session.get('referrer', '/')
+        fb_redirect_url = request.session.get('referrer', '/'),
+        facebook_login_url = fb_url + '?' + params,
         )
         
 
