@@ -7,8 +7,9 @@
 
     </head>
     <body>
-        <!--
+       
       <div id="fb-root"></div>
+      <div id="jfmfs-container"></div>
       <script>
         window.fbAsyncInit = function() {
         FB.Flash.hasMinVersion = function () { return false; };
@@ -23,7 +24,7 @@
         
         console.log("this will be run once FB is initialized");
         FB.Event.subscribe('auth.login', function () {
-            window.location = "{{request.route_url('fbtest')}}";
+                $("#jfmfs-container").jfmfs();
             });
         };
         (function(d){
@@ -35,8 +36,9 @@
          
       </script>
       <div>{{message}}</div>
-      <div class="fb-login-button" scope="email" >Login with Facebook</div>
+      <fb:login-button scope="email"></fb:login-button>
       -->
+      <!--
       <div>{{message}}</div>
       <button button onclick="login()">Login</button>
       <div id="jfmfs-container"></div>
@@ -77,6 +79,6 @@
     }
     </script> 
    <p id="userName"></p> 
-
+-->
     </body>
  </html>
