@@ -162,7 +162,7 @@ def login(request):
         login = login,
         password = password,
         user = authenticated_userid(request),
-        fb_redirect_url = request.session.get('referrer', '/')
+        fb_redirect_url = request.session.get('referrer', '/'),
         fb_login_url = fb_login_url(),
         )
     fail_result[message] = True
