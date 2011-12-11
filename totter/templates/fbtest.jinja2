@@ -48,10 +48,13 @@
             var path = 'https://www.facebook.com/dialog/oauth?';
             var queryParams = ['client_id=' + appID,
             'redirect_uri=' + window.location,
-            'response_type=token'];
+            'response_type=token',
+            'scope=email',
+            
+            ];
             var query = queryParams.join('&');
             var url = path + query;
-            window.open(url);
+            window.location(url);
         } else {
             var accessToken = window.location.hash.substring(1);
             var path = "https://graph.facebook.com/me?";
