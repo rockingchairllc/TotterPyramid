@@ -133,11 +133,15 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
     <p>
     <input type="button"
       onclick="sendRequestViaMultiFriendSelector(); return false;"
-      value="Send Request to Many Users with MFS"
+      value="Send message"
     />
     <input type="button"
       onclick="postToFeed(); return false;"
-      value="Send Request to Many Users with MFS"
+      value="Post to feed"
+    />
+    <input type="button"
+      onclick="requestPermissions(); return false;"
+      value="Request permissions"
     />
     </p>
     
@@ -160,10 +164,14 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
             $("#jfmfs-container").jfmfs();
             var friendSelector  = $("#jfmfs-container").data('jfmfs');
             friendSelector.populateMultiselect({{friend_data|safe}});
-          FB.login({
+         
+      });
+      
+      function requestPermissions() {
+         FB.login({
             scope: 'publish_stream',
           });
-      });
+      }
       /*
       window.fbAsyncInit = function() {
         
