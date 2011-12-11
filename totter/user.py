@@ -9,6 +9,7 @@ from pyramid.view import view_config
 from datetime import datetime
 import facebook as fb
 import requests, urlparse
+from urllib2 import URLError
 from models import *
 import logging 
 import uuid
