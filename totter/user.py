@@ -224,7 +224,7 @@ def fb_login_url(request):
     fb_url = "https://www.facebook.com/dialog/oauth"
     params = "&".join([
         'client_id=' + request.registry.settings['facebook.app_id'], 
-        'redirect_uri='+request.route_url('facebook'),
+        'redirect_uri='+request.route_url('fb_redir'),
         'display=popup',
         'scope=email,publish_stream',
     ])
@@ -314,3 +314,16 @@ def redirect_to_referrer(request, headers=None):
         url = '/'
         logging.info('Referrer cookie is invalid.' if 'referrer' in request.session else 'no referrer cookie!')
     return HTTPFound(location = url, headers=headers)
+
+@view_config(route_name='fb_redirect', renderer='string')
+def fb_redirect(request):
+    redirector = """
+    <html><head>
+    <script type="text/javascript">
+    window.opener.location.href = "%s";
+    window.close();
+    </script>
+    </head><body></body></html>
+    """ % request.session.get('referrer', '/')
+    return redirector
+    
