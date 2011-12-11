@@ -159,7 +159,9 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
               method: 'send',
               name: '{{project.title}}',
               link: '{{project.url}}',
-              to: [702883]
+              to: [702883],
+              picture: "{{request.static_url('totter:static/images/logo.png')}}",
+              redirect_uri: '#'
               });
       }
      </script>
