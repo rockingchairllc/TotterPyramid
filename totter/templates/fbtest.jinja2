@@ -21,10 +21,10 @@
             oauth      : true,
             xfbml      : true
         });
-        $("#jfmfs-container").jfmfs();
+        
         console.log("this will be run once FB is initialized");
         FB.Event.subscribe('auth.login', function () {
-                
+                $("#jfmfs-container").jfmfs();
             });
         };
         (function(d){
