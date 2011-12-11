@@ -31,6 +31,7 @@ def main(global_config, **settings):
 
     config.add_route('access_project', '/access/{project_id}')
     
+    
     #config.add_route('user_entity', '/user/{user_id}/', traverse='/user/{user_id}')
     
     config.add_route('login', '/login')

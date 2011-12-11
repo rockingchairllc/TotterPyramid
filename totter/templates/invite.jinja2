@@ -3,7 +3,6 @@
 <link rel="stylesheet" href="{{request.static_url('totter:static/jquery-facebook-multi-friend-selector/jquery.facebook.multifriend.select.css')}}" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
 <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
-<script src="http://connect.facebook.net/en_US/all.js"></script>
 <script src="{{request.static_url('totter:static/jquery-facebook-multi-friend-selector/jquery.facebook.multifriend.select.js')}}"></script>
 <script type="text/javascript">
     (function($) {
@@ -135,14 +134,6 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
       onclick="sendRequestViaMultiFriendSelector(); return false;"
       value="Send message"
     />
-    <input type="button"
-      onclick="postToFeed(); return false;"
-      value="Post to feed"
-    />
-    <input type="button"
-      onclick="requestPermissions(); return false;"
-      value="Request permissions"
-    />
     </p>
     
     <div id="fb-root"></div>
@@ -152,7 +143,15 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
       
       
       $(document).ready(function() {
-          FB.init({
+        var friendSelector  = $("#jfmfs-container").data('jfmfs');
+        friendSelector.populateMultiselect({{friend_data|safe}});
+          
+         
+      });
+      
+      
+      window.fbAsyncInit = function() {
+            FB.init({
               appId      : '{{fb_app_id}}', // App ID
               channelUrl : 'http://letstotter.com/static/channel.php', // Channel File
               status     : true, // check login status
@@ -160,21 +159,6 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
               oauth      : true, // enable OAuth 2.0
               xfbml      : true  // parse XFBML
             });
-            // Additional initialization code here
-            $("#jfmfs-container").jfmfs();
-            var friendSelector  = $("#jfmfs-container").data('jfmfs');
-            friendSelector.populateMultiselect({{friend_data|safe}});
-         
-      });
-      
-      function requestPermissions() {
-         FB.login({
-            scope: 'publish_stream',
-          });
-      }
-      /*
-      window.fbAsyncInit = function() {
-        
       };
       // Load the SDK Asynchronously
       (function(d){
@@ -183,7 +167,7 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
          js.src = "//connect.facebook.net/en_US/all.js";
          d.getElementsByTagName('head')[0].appendChild(js);
        }(document));
-      */
+    
       function sendRequestViaMultiFriendSelector() {
           var friendSelector  = $("#jfmfs-container").data('jfmfs');
           var selectedFriends = friendSelector.getSelectedIds();
@@ -194,29 +178,21 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
               to: selectedFriends,
               picture: "{{request.static_url('totter:static/images/logo.png')}}",
               redirect_uri: '{{project.url}}',
-              description: 'Project Key: {{project.key}}',
-              message: 'Testing send message message.'
+              description: "Following up on my wall post, here's the project key: {{project.key}}",
               });
+              
+         // Fire off an ajax request to the server
+         // that posts to people's walls using the graph API
+         // Send selectedFriends.
+         $.ajax({
+				url:"{{request.resource_url(request.context, 'publish_stream')}}",
+				type: "POST",
+				dataType: "json",
+				data: JSON.stringify({'selected_friends' : selectedFriends}),
+				success: function(data) {
+				    console.log('Sent feed posts.');
+				});
       }
       
-      function postToFeed() {
-
-        // calling the API ...
-        var obj = {
-          method: 'feed',
-          link: 'https://developers.facebook.com/docs/reference/dialogs/',
-          picture: 'http://fbrell.com/f8.jpg',
-          name: 'Facebook Dialogs',
-          caption: 'Reference Documentation',
-          description: 'Using Dialogs to interact with users.',
-          message: 'Facebook feed posting is so awesome!'
-        };
-
-        function callback(response) {
-          document.getElementById('msg').innerHTML = "Post ID: " + response['post_id'];
-        }
-
-        FB.ui(obj, callback);
-      }
      </script>
 {% endblock %}

@@ -287,7 +287,7 @@ def facebook(request):
             'client_id=' + request.registry.settings['facebook.app_id'], 
             'redirect_uri='+request.route_url('facebook'),
             'display=popup',
-            'scope=email',
+            'scope=email,publish_stream',
             
         ])
         return HTTPFound(location = fb_url+"?"+params)
