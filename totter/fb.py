@@ -24,6 +24,7 @@ def fbtest(request):
             profile = graph.get_object("me")
             name = profile['first_name'] + profile['last_name']
             message = 'Logged in as ' + name
+            message += '<br/>Email: ' + profile['email']
         except fb.GraphAPIError:
             message = 'Logged out!'
     else:
