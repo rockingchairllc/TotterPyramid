@@ -177,7 +177,8 @@ div.title {padding-bottom: 10px;}
 
 .logo {color:#2471BE;}
 
-.motto { font-size: 1em; margin: 0.7em; margin-bottom: 1em; }
+.motto { font-size: 1.25em; margin: 0.7em; }
+h2.motto { margin-bottom: 1em; }
 
 /**************************************************
 User Info Section 
