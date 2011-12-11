@@ -16,8 +16,9 @@ _ = TranslationStringFactory('totter')
 import logging
 from user import get_user
 from template import user_dict, idea_dict, comment_dict
-
 import notification as note
+import facebook as fb
+import json
 
 
 def record_event(action, project_id, time, action_data):
@@ -448,14 +449,20 @@ def invite(request):
             if email in existing:
                 continue
             session.add(Participation(project_id=project.id, user_email=email))
-        
-        
+    
+    
+    # Get friends list from serverside facebook api.
+    graph = fb.GraphAPI(fb_params['access_token'])
+    friends = graph.get_connections("me", "friends", fields='id,name')
+    
+    
     response_params.update({'user' : user_dict(request, user), 
     'project' : {'key':project.key,'title':project.title, 'url': request.resource_url(project)},
     'creator' : user_dict(request, project.creator),
     'fb_app_id' : request.registry.settings['facebook.app_id'],
     'iframe_url' : iframe_url,
     'fb_access_token' : request.session['access_token'] if 'access_token' in request.session else None,
+    'friend_data' : json.dumps(friends)
     })
     return template_permissions(request, response_params)
     
