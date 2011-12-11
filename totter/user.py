@@ -13,6 +13,7 @@ from models import *
 import logging 
 import uuid
 import pprint
+from pyramid.response import Response
 pp = pprint.PrettyPrinter(indent=4)
 
 def get_user(request, allow_anon=False):
@@ -315,9 +316,9 @@ def redirect_to_referrer(request, headers=None):
         logging.info('Referrer cookie is invalid.' if 'referrer' in request.session else 'no referrer cookie!')
     return HTTPFound(location = url, headers=headers)
 
-@view_config(route_name='fb_redirect', renderer='string')
+@view_config(route_name='fb_redirect')
 def fb_redirect(request):
-    redirector = """
+    document = """
     <html><head>
     <script type="text/javascript">
     window.opener.location.href = "%s";
@@ -325,5 +326,5 @@ def fb_redirect(request):
     </script>
     </head><body></body></html>
     """ % request.session.get('referrer', '/')
-    return redirector
+    return Response(document, content_type='text/html')
     
