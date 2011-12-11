@@ -318,6 +318,7 @@ def referrer(request):
         # User 
         url = '/'
         logging.info('Referrer cookie is invalid.' if 'referrer' in request.session else 'no referrer cookie!')
+    logging.info('referrer: ' + url)
     return url
 
 @view_config(route_name='fb_redirect')
