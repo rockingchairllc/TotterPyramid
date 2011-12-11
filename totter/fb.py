@@ -9,7 +9,8 @@ def facebook2(request):
                         request.registry.settings['facebook.secret']
     )
     return {}
-    
+
+@view_config(route_name='fbtest', renderer='fbtest.jinja2')
 def fbtest(request):
     fbuser = fb.get_user_from_cookie(request.cookies, 
                         request.registry.settings['facebook.app_id'],
