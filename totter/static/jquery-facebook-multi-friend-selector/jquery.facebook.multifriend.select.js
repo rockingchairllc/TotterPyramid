@@ -74,7 +74,10 @@
 			excluded_friends_graph = arrayToObjectGraph(settings.exclude_friends),
             all_friends;
             
-        FB.api('/me/friends?fields=' + settings.friend_fields, function(response) {
+        // ----------+----------+----------+----------+----------+----------+----------+
+        // Public functions
+        // ----------+----------+----------+----------+----------+----------+----------+
+        this.populateMultiselect = function(response) {
             var sortedFriendData = response.data.sort(settings.sorter),
                 preselectedFriends = {},
                 buffer = [],
@@ -97,12 +100,7 @@
             });
 
             init();
-        });
-        
-        
-        // ----------+----------+----------+----------+----------+----------+----------+
-        // Public functions
-        // ----------+----------+----------+----------+----------+----------+----------+
+        };
         
         this.getSelectedIds = function() {
             var ids = [];

@@ -127,7 +127,7 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
     
     <div id="jfmfs-container"></div>
     
-    {{friend_data}}
+    
     
     <p>
     <input type="button"
@@ -153,6 +153,8 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
             });
             // Additional initialization code here
             $("#jfmfs-container").jfmfs();
+            var friendSelector  = $("#jfmfs-container").data('jfmfs');
+            friendSelector.populateMultiselect({{friend_data}});
       });
       /*
       window.fbAsyncInit = function() {
