@@ -2,6 +2,7 @@
 {% block scripts %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
+<script src="{{request.static_url('totter:static/jquery-facebook-multi-friend-selector/
 <script type="text/javascript">
     (function($) {
         $(document).ready(function(){
@@ -123,6 +124,8 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
     
     </div> <!-- .email_invite -->
     
+    <div id="jfmfs-container"></div>
+    
     <p>
     <input type="button"
       onclick="sendRequestViaMultiFriendSelector(); return false;"
@@ -142,8 +145,8 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
           oauth      : true, // enable OAuth 2.0
           xfbml      : true  // parse XFBML
         });
-    
         // Additional initialization code here
+        $("#jfmfs-container").jfmfs();
       };
       
       // Load the SDK Asynchronously
@@ -155,10 +158,15 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
        }(document));
       
       function sendRequestViaMultiFriendSelector() {
+          var friendSelector  = $("#jfmfs-container").data('jfmfs');
+          var selectedFriends = friendSelector.getSelectedIds();
           FB.ui({
               method: 'send',
               name: '{{project.title}}',
               link: '{{project.url}}',
+              to: selectedFriends,
+              picture: "{{request.static_url('totter:static/images/logo.png')}}",
+              redirect_uri: '{{project.url}}'
               });
       }
      </script>
