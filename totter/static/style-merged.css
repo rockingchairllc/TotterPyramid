@@ -24,6 +24,9 @@ a:hover {text-decoration: underline;}
 .clearfloat {clear:both;}
 .hidden { display:none; }
 
+.wrapped,.the_content > *, .header > *, .project_header > * { padding-left: 200px !important; padding-right: 200px !important; }
+
+
 /*******************************************************************************************************************************
  Form Elements 
 *******************************************************************************************************************************/
@@ -123,19 +126,32 @@ Drop Shadows
 }
 /* Curved Shadows - This only does the left side */
 .curved:before {
-	top:10px;
-	bottom:10px;
-	left:0;
-	right:50%;
-	-moz-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-	-webkit-box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-	box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
-	-moz-border-radius: 10px / 100px;
-	border-radius: 10px / 100px;
+   top:10px;
+   bottom:10px;
+   left:0;
+   right:50%;
 }
+
 /* Vertical Curve - both right and left sides */
 .curved-vt-2:before {
-	right:0;
+   right:0;
+}
+
+/* Generate the shadow: */
+.curved:before, .modal_dialog:before {
+    -moz-box-shadow: 0 0 20px rgb(36,113,190);
+   -webkit-box-shadow: 0 0 20px rgb(36,113,190);
+   box-shadow: 0 0 20px rgb(36,113,190);
+   -moz-border-radius: 0px / 100px;
+   border-radius: 0px / 100px;
+}
+
+/* Position the shadow on the modal boxes */
+.modal_dialog:before {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 /* For User Options tool tip dropdown. */
@@ -157,10 +173,7 @@ body {
 
 /* Centers a fixed width */
 .wrapper {
-	width: 950px;
 	position: relative;
-	margin: 20px auto;
-	padding: 40px;
 	border-radius: 15px;
 }
 
@@ -303,10 +316,15 @@ Project Access Page
 /******************************************************************************************************************************************************
 Create Page
 ******************************************************************************************************************************************************/
-.wrapper.create_totter {
-width:700px;
+.create_totter_wrap {
+    width:700px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    margin: 0 auto;
+    padding: 30px;
+    margin-top: 10px;
 }
-
 #create_project .field {
     margin-bottom: 29px;
 }
@@ -323,6 +341,7 @@ width:700px;
 
 #create_project .input#description {
     height: 50px;
+    width: 684px;
 }
 
 #create_project .input#title {
