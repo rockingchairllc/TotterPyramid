@@ -82,14 +82,16 @@ def new_project(request, project, author):
     post_event(request, str(project.id) + ":created", subject, message)
     
 def new_idea(request, project, idea, author):
-    parent_sub = str(project.id) + ":ideas-new"
-    subscription = str(project.id) + ':' + str(idea.id) + ":new"
-    create_subscription(request, subscription, parent_sub)
+    # Attach to the project idea hirarchy
     parent_sub = str(project.id) + ':ideas-comments'
     subscription = str(project.id) + ':' + str(idea.id) + ":comments" 
     create_subscription(request, subscription, parent_sub)
     parent_sub = str(project.id) + ':ideas-votes'
     subscription = str(project.id) + ':' + str(idea.id) + ":votes"  
+    create_subscription(request, subscription, parent_sub)
+    
+    parent_sub = str(project.id) + ":ideas-new"
+    subscription = str(project.id) + ':' + str(idea.id) + ":new"
     create_subscription(request, subscription, parent_sub)
     
     subject = "New idea posted to %s" % project.title
