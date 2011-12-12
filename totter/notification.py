@@ -13,11 +13,14 @@ def handle_response(response):
     logging.info("Response content: " + response.content)
     pass
 
-def post_event(request, subscription, subject, message, time=None, after=handle_response):
+def post_event(request, subscription, subject, message, time=None, after=handle_response, from_email=None):
     if not time:
         time = utcnow()
+    data = {'subscription':subscription, 'subject':subject, 'message':message}
+    if from_email:
+        data['from'] = from_email
     requests.post(root_url(request) + '/event',
-        data = {'subscription':subscription, 'subject':subject, 'message':message},
+        data,
         hooks = {'response' : handle_response})
     
 def subscribe(request, email, subscription, frequency='immediate', after=handle_response):
@@ -28,6 +31,7 @@ def subscribe(request, email, subscription, frequency='immediate', after=handle_
 def create_subscription(request, subscription, parent=None, after=handle_response):
     if not parent:
         parent = 'root'
+    logging.info("Creating subscription %s => %s" % (subscription, str(parent)))
     requests.post(root_url(request) + '/subscription',
         data = {'name':subscription, 'parent':parent},
         hooks = {'response' : handle_response})
@@ -37,24 +41,44 @@ def unroll_subscription_tree(request, root, tree):
         create_subscription(request, parent, root)
         if isinstance(child, list):
             for el in child:
-                create_subscription(request, el, parent)
+                if isinstance(el, str):
+                    create_subscription(request, el, parent)
+                elif isinstance(el, dict):
+                    unroll_subscription_tree(request, parent, el)
         elif isinstance(child, dict):
             unroll_subscription_tree(request, parent, child)
         elif isinstance(child, str):
             create_subscription(request, child, parent)
+
                 
 def new_project(request, project, author):
     root = 'root'
     tree = {'project' :
         {str(project.id) : [
-            str(project.id) + ':ideas-new',
-            str(project.id) + ':ideas-comments',
-            str(project.id) + ':ideas-votes',
-            str(project.id) + ':participation'
+                {str(project.id) + ":owner" : [
+                        str(project.id) + ':ideas-new',
+                        str(project.id) + ':participation',
+                        str(project.id) + ':ideas-comments',
+                    ]
+                },
+                str(project.id) + ':ideas-votes',
             ]
         }
     }
     unroll_subscription_tree(request, root, tree)
+    subscribe(request, author.email, str(project.id) + ":owner")
+    
+    create_subscription(request, str(project.id) + ":created", root)
+    subscribe(request, author.email, str(project.id) + ":created")
+    
+    
+    subject = "You Created a Totter"
+    message = """
+    Congratulations! Your Totter project %s is located at
+    <%s>
+    Your project access key is: %s
+    """ % (project.title, request.resource_url(project), project.key)
+    post_event(request, str(project.id) + ":created", subject, message)
     
 def new_idea(request, project, idea, author):
     parent_sub = str(project.id) + ":ideas-new"
@@ -72,7 +96,7 @@ def new_idea(request, project, idea, author):
 %(who)s posted a new idea to the %(title)s:
 %(data)s
 """ % {'who' : idea.author.full_name + ' ' , 'title' : project.title, 'data' : idea.data}
-    post_event(request, subscription, subject, message)
+    post_event(request, subscription, subject, message, from_email=idea.author.email)
     
     subscribe(request, idea.author.email, str(project.id) + ':' + str(idea.id) + ":comments", frequency='immediate')
     
@@ -84,7 +108,7 @@ def new_comment(request, project, idea, comment, author):
 %(data)s
 """ % {'who' : comment.author.full_name, 'idea_who' : idea.author.full_name,
     'title' : project.title, 'data' : comment.data}
-    post_event(request, subscription, subject, message)
+    post_event(request, subscription, subject, message, from_email=comment.author.email)
     
     subscribe(request, comment.author.email, subscription, frequency='immediate')
     
@@ -92,12 +116,12 @@ def new_rating(request, project, idea, rater):
     subscription = str(project.id) + ':' + str(idea.id) + ":votes"
     subject = "%s rated %s's idea" % (rater.full_name, idea.author.full_name)
     message = subject
-    post_event(request, subscription, subject, message)
+    post_event(request, subscription, subject, message, from_email=rater.email)
     
 def new_participant(request, project, participant):
     subscription = str(project.id) + ':participation'
     subject = "%s participated in %s" % (participant.full_name, project.title)
     message = subject
-    post_event(request, subscription, subject, message)
+    post_event(request, subscription, subject, message, from_email=participant.email)
     subscribe(request, participant.email, str(project.id), frequency='daily')
 
