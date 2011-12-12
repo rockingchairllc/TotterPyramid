@@ -406,7 +406,7 @@ div.pick_friends_modal {
 }
 
 div.facebook_buttons { float: right; }
-.uiButton,.uiButtonSuppressed:active,.uiButtonSuppressed:focus,.uiButtonSuppressed:hover{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yN/r/bxBBFKhnmCK.png);background-repeat:no-repeat;background-position:0 -245px;background-color:#eee;border:1px solid #999;border-bottom-color:#888;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .1);cursor:pointer;display:inline-block;font-size: 11px;font-weight:bold;line-height:13px;padding:2px 6px;text-align:center;text-decoration:none;vertical-align:top;white-space:nowrap}
+.uiButton,.uiButtonSuppressed:active,.uiButtonSuppressed:focus,.uiButtonSuppressed:hover{background-repeat:no-repeat;background-position:0 -245px;background-color:#eee;border:1px solid #999;border-bottom-color:#888;-webkit-box-shadow:0 1px 0 rgba(0, 0, 0, .1);cursor:pointer;display:inline-block;font-size: 11px;font-weight:bold;line-height:13px;padding:2px 6px;text-align:center;text-decoration:none;vertical-align:top;white-space:nowrap}
 .uiButtonLarge{line-height:16px}
 .uiButton + .uiButton{margin-left:4px}
 .uiButton:hover{text-decoration:none}
@@ -418,10 +418,10 @@ div.facebook_buttons { float: right; }
 .uiButtonOverlay,.uiButtonOverlay:hover{-webkit-background-clip:padding-box;background-color:#fff;background-color:rgba(255, 255, 255, .8);background-image:none;border-color:#a5a5a5;border-color:rgba(0, 0, 0, .35);-webkit-border-radius:2px}
 .uiButtonOverlay:focus,.uiButtonOverlay:active{background-color:#f9fafc;background-color:rgba(249, 250, 252, .9);border-color:#3b5998;border-color:rgba(59, 89, 152, .5)}
 .async_saving .uiButton.uiButtonOverlay,.uiButtonOverlay.uiButtonDisabled,.uiButtonOverlay.uiButtonDisabled:active,.uiButtonOverlay.uiButtonDisabled:focus,.uiButtonOverlay.uiButtonDisabled:hover{background-color:#fff;background-color:rgba(255, 255, 255, .8);border-color:#c8c8c8;border-color:rgba(180, 180, 180, .8)}
-.uiButtonSpecial{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yN/r/bxBBFKhnmCK.png);background-repeat:no-repeat;background-position:0 -49px;background-color:#69a74e;border-color:#3b6e22 #3b6e22 #2c5115}
+.uiButtonSpecial{background-repeat:no-repeat;background-position:0 -49px;background-color:#69a74e;border-color:#3b6e22 #3b6e22 #2c5115}
 .uiButtonSpecial:active{background:#609946;border-bottom-color:#3b6e22}
 .async_saving .uiButton.uiButtonSpecial,.uiButtonSpecial.uiButtonDisabled,.uiButtonSpecial.uiButtonDisabled:active,.uiButtonSpecial.uiButtonDisabled:focus,.uiButtonSpecial.uiButtonDisabled:hover{background:#b4d3a7;border-color:#9db791}
-.uiButtonConfirm{background-image:url(https://s-static.ak.facebook.com/rsrc.php/v1/yN/r/bxBBFKhnmCK.png);background-repeat:no-repeat;background-position:0 -294px;background-color:#5b74a8;border-color:#29447e #29447e #1a356e}
+.uiButtonConfirm{background-repeat:no-repeat;background-position:0 -294px;background-color:#5b74a8;border-color:#29447e #29447e #1a356e}
 .uiButtonConfirm:active{background:#4f6aa3;border-bottom-color:#29447e}
 .async_saving .uiButton.uiButtonConfirm,.uiButtonConfirm.uiButtonDisabled,.uiButtonConfirm.uiButtonDisabled:active,.uiButtonConfirm.uiButtonDisabled:focus,.uiButtonConfirm.uiButtonDisabled:hover{background:#adbad4;border-color:#94a2bf}
 .async_saving .uiButton.uiButtonSpecial .uiButtonText,.async_saving .uiButton.uiButtonSpecial input,.async_saving .uiButton.uiButtonConfirm .uiButtonText,.async_saving .uiButton.uiButtonConfirm input,.uiButtonSpecial .uiButtonText,.uiButtonSpecial input,.uiButtonSpecial.uiButtonDisabled .uiButtonText,.uiButtonSpecial.uiButtonDisabled input,.uiButtonConfirm .uiButtonText,.uiButtonConfirm input,.uiButtonConfirm.uiButtonDisabled .uiButtonText,.uiButtonConfirm.uiButtonDisabled input{color:#fff}
