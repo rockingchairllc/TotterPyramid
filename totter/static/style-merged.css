@@ -143,7 +143,7 @@ Drop Shadows
    border-radius: 0px / 100px;
 }
 .modal_dialog:before {
--moz-box-shadow: 0 0 20px white;
+    -moz-box-shadow: 0 0 20px white;
    -webkit-box-shadow: 0 0 20px white;
    box-shadow: 0 0 20px white;
    -moz-border-radius: 0px / 100px;
@@ -156,6 +156,15 @@ Drop Shadows
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+/* Position the shadow on the modal boxes */
+div.pick_friends_modal:before {
+    -moz-box-shadow: 0 0 20px rgb(36,113,190);
+    -webkit-box-shadow: 0 0 20px rgb(36,113,190);
+    box-shadow: 0 0 20px rgb(36,113,190);
+    -moz-border-radius: 0px / 100px;
+    border-radius: 0px / 100px;
 }
 
 /* For User Options tool tip dropdown. */
@@ -182,6 +191,11 @@ body {
 	margin-left: 20px;
 	margin-right: 20px;
 	padding: 40px;
+}
+
+.body_wrapper {
+    width: 900px;
+    margin: 0 auto;
 }
 
 /********************************************************************************************
