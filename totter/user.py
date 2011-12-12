@@ -317,7 +317,7 @@ def referrer(request):
                url.startswith(request.route_url('register')) or
                url.startswith(request.route_url('fb_redirect'))):
         # User 
-        url = '/'
+        url = request.route_url('home')
         logging.info('Referrer cookie is invalid.' if 'referrer' in request.session else 'no referrer cookie!')
     logging.info('referrer: ' + url)
     return url
