@@ -12,7 +12,7 @@
     <!-- General -->
     <script type="text/javascript">
     function bindAll() {
-        
+        $('.comment_input').autoResize({max_width : 'original', min_height:'original', extraSpace: 10});
         
         // Creates a toggle function between each of .toggle's children.
         $('.toggle').toggler('bind');
@@ -44,7 +44,7 @@
     $(document).ready(function(){
         console.log('document.ready');
         $('.comment_input').live('keypress', submitkey_binding);
-        $('.comment_input').autoResize({max_width : 'original', min_height:'original', extraSpace: 10});
+        
         
         // If our URL has #ideapopup on the end, open the add idea popup.
         anchor = self.document.location.hash;
