@@ -540,7 +540,7 @@ ul.project_stats li {
 	font-weight: bold;
 }
 span.project_stat {font-size: 1.3em;}
-.add_idea_button {width: 125px; font-size: 1.1em; float: right;}
+.add_idea_button {width: 125px; font-size: 1.1em; float: right;margin-right: 7.5px;}
 
 .sort_by {}
 .sort_by button {width: 75px; font-size: 16px;}
@@ -779,8 +779,8 @@ ul.project_idea_comments {
 	background: white;
 	padding-left: 10px;
 	padding-right: 10px;
-	margin-left: 10px;
-	margin-right: 39px;
+	margin-left: 52px;
+	margin-right: 113px;
 }
 ul.project_idea_comments li {
 	padding: 8.5px 0;
