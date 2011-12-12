@@ -385,6 +385,15 @@ div.pick_friends_modal {
     padding-top: 2.5em;
 }
 
+.invite_method#facebook h3 {
+    display: inline;
+}
+
+.invite_method#facebook button {
+    margin: 0;
+    vertical-align: bottom;
+}
+
 #jfmfs-friend-selector input {
     box-shadow: initial;
     -webkit-box-shadow: initial;
