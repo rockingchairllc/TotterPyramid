@@ -1,4 +1,4 @@
-{% extends "base.jinja2" %}
+{% extends "page_base.jinja2" %}
 
 {% set custom_class = 'create_totter' -%}
 {% block scripts %}
@@ -55,26 +55,8 @@
     })(jQuery);
 </script>
 {% endblock %}
-{% block body %}
+{% block page_body %}
     <!-- Begin the main content. Create the Totter -->
-    <!-- Begin the Header -->
-    <div class="header">
-        {% if user %}
-        <div class="user_info">
-            <h4 class="username_first_name">{{user.first_name}}</h4>
-            <ul class="tool_tip drop-shadow">
-                <li><a href="{{user.profile_url}}">View Profile</a></li>
-                <li><a href="{{request.route_url('logout')}}">Logout</a></li>
-            </ul>
-            <img src="{{user.profile_picture}}" class="user_photo" />
-        </div><!-- .user_info -->
-        {% endif %}
-        <h1 class="logo"><a href="/">totter</a></h1>
-        
-        <!-- Clear the float to prevent the header from collapsing -->
-        <div class="clearfloat"></div>
-        
-    </div><!-- .header -->
     <div class="create_totter create_totter_wrap drop-shadow curved curved-vt-2">
     
         <form id="create_project" method="post" action="{{request.path_url}}">

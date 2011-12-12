@@ -135,10 +135,17 @@ Drop Shadows
 }
 
 /* Generate the shadow: */
-.curved:before, .modal_dialog:before {
+.curved:before {
     -moz-box-shadow: 0 0 20px rgb(36,113,190);
    -webkit-box-shadow: 0 0 20px rgb(36,113,190);
    box-shadow: 0 0 20px rgb(36,113,190);
+   -moz-border-radius: 0px / 100px;
+   border-radius: 0px / 100px;
+}
+.modal_dialog:before {
+-moz-box-shadow: 0 0 20px white;
+   -webkit-box-shadow: 0 0 20px white;
+   box-shadow: 0 0 20px white;
    -moz-border-radius: 0px / 100px;
    border-radius: 0px / 100px;
 }
@@ -221,8 +228,8 @@ User Info Section
 	display: block; 
 	z-index: 100; 
 	position: absolute;
-	right: 195px; 
-	top: 55px; 
+	right: 32px; 
+	top: 91px; 
 	text-decoration: none;
 }
 .user_info ul li {
