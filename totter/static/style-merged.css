@@ -382,6 +382,18 @@ font-weight:bold;
 div.pick_friends_modal {
     width: 725px;
     height: 460px;
+    padding-top: 2.5em;
+}
+
+#jfmfs-friend-selector input {
+    box-shadow: initial;
+    -webkit-box-shadow: initial;
+    -moz-box-shadow: initial;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    width: auto;
+    height: auto;
 }
 
 
