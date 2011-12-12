@@ -24,6 +24,7 @@ def post_event(request, subscription, subject, message, time=None, after=handle_
         hooks = {'response' : handle_response})
     
 def subscribe(request, email, subscription, frequency='immediate', after=handle_response):
+    logging.info('subscribing %s to %s' % (email, subscription))
     requests.post(root_url(request, ) + '/subscribe',
         data = {'subscription':subscription, 'email':email, 'frequency':frequency},
         hooks = {'response' : handle_response})
