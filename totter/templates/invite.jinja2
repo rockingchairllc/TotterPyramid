@@ -167,9 +167,15 @@
             <div class="pick_friends_overlay dark_overlay click_off"></div>
             <div class="pick_friends_modal modal_dialog drop-shadow">
                 <div id="jfmfs-container"></div>
-                <button onclick="sendMessage(); return false;">Send message</button>
+                <div class="facebook_buttons">
+                <label class="uiButton uiButtonLarge uiButtonConfirm">
+                    <input type="button" onclick="sendMessage(); return false;" value="Send message"/>
+                </label>
+                <label class="uiButton uiButtonLarge">
+                    <input  type="button" onclick="hideModalContainer()" value="Cancel"/>
+                </label>
+                </div>
                 <div id="fb-root"></div>
-                <a class="cancel" href="javascript:void(0)" onClick="hideModalContainer()">Cancel</a>
             </div> <!-- .pick_friends_modal -->
         </div> <!-- .pick_friends -->
     </div><!-- .invite_method -->
