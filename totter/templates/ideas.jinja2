@@ -95,7 +95,8 @@
 			    {% if user %}
                 idx = $(this).attr("order");
                 var prjId = "{{project.id}}";
-                var cmtdata = $(this).val();
+                var $this = $(this);
+                var cmtdata = $this.val();
 				var CommentData = JSON.stringify({'data': cmtdata, 'project_id': prjId, 'Idea_id': idx, 'anonymous' : anon_state[idx] || 0 });
 				$('#comments'+idx).find('.enter_to_submit.default').addClass('hidden');
 				$('#comments'+idx).find('.enter_to_submit.throbber').removeClass('hidden');
@@ -105,6 +106,7 @@
 					dataType: "json",
 					data: CommentData,
 					success: function(){
+					    $this.default();
 					    $('#comments'+idx).find('.enter_to_submit.default').removeClass('hidden');
 				        $('#comments'+idx).find('.enter_to_submit.throbber').addClass('hidden');
 				        
