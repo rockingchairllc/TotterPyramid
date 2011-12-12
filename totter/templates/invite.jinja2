@@ -151,6 +151,24 @@
 </script>
 {% endblock %}
 {% block page_body %}
+    <!-- START Pick Friends Modal -->
+    <div class="pick_friends modal_container">
+        <div class="pick_friends_overlay dark_overlay click_off"></div>
+        <div class="pick_friends_modal modal_dialog drop-shadow">
+            <div id="jfmfs-container"></div>
+            <div class="facebook_buttons">
+            <label class="uiButton uiButtonLarge uiButtonConfirm">
+                <input type="button" onclick="sendMessage(); return false;" value="Send message"/>
+            </label>
+            <label class="uiButton uiButtonLarge">
+                <input  type="button" onclick="hideModalContainer()" value="Cancel"/>
+            </label>
+            </div>
+            <div id="fb-root"></div>
+        </div> <!-- .pick_friends_modal -->
+    </div> <!-- .pick_friends -->
+    <!-- END Pick Friends Modal -->
+
     <div class="email_invite">
     {% if created %}<h1>Project created successfully!</h1>{% endif %}
     {% if invited %}<h1>Successfully sent {{invitee_count}} invites.</h1>{% endif %}
@@ -162,23 +180,13 @@
         <span class="access_info">Project Access Key:</span> {{project.key}}
     </div> <!-- .invite_method -->
     <div class="invite_method" id="facebook">
-        <h3>Invite via facebook:</h3>
+        <h3>Invite via facebook (beta):</h3>
+        {% if friend_data %}
         <button onclick="showPickFriends()">Select Friends</button>
-        <div class="pick_friends modal_container">
-            <div class="pick_friends_overlay dark_overlay click_off"></div>
-            <div class="pick_friends_modal modal_dialog drop-shadow">
-                <div id="jfmfs-container"></div>
-                <div class="facebook_buttons">
-                <label class="uiButton uiButtonLarge uiButtonConfirm">
-                    <input type="button" onclick="sendMessage(); return false;" value="Send message"/>
-                </label>
-                <label class="uiButton uiButtonLarge">
-                    <input  type="button" onclick="hideModalContainer()" value="Cancel"/>
-                </label>
-                </div>
-                <div id="fb-root"></div>
-            </div> <!-- .pick_friends_modal -->
-        </div> <!-- .pick_friends -->
+        {% else %}
+        <a href="{{request.route_url('logout')}}">Logout</a> and login again with Facebook to use this feature.
+        {% endif %}
+        
     </div><!-- .invite_method -->
     <div class="invite_method">
         <h3>Invite via email:</h3>
