@@ -24,9 +24,6 @@ a:hover {text-decoration: underline;}
 .clearfloat {clear:both;}
 .hidden { display:none; }
 
-.wrapped,.the_content > *, .header > *, .project_header > * { padding-left: 200px !important; padding-right: 200px !important; }
-
-
 /*******************************************************************************************************************************
  Form Elements 
 *******************************************************************************************************************************/
@@ -175,6 +172,9 @@ body {
 .wrapper {
 	position: relative;
 	border-radius: 15px;
+	margin-left: 20px;
+	margin-right: 20px;
+	padding: 40px;
 }
 
 /********************************************************************************************
@@ -734,10 +734,33 @@ div.star_rating { display: none; }
 div.toggle_comments { clear:both; }
 
 ul.project_idea_comments .new_comment {
-	display: list-item;
 	text-align: center;
 	background:  hsl(0, 0%, 91%);
 	/* Same as background:none repeat scroll 0 0 #E8E8E8; ? */
+}
+.project_idea_comments li.new_comment {
+    display: list-item;
+    padding-top: 8.5px;
+    padding-bottom: 0.7px;
+}
+div.comment_user_text {
+    display: table;
+    width: 100%;
+}
+div.comment_user_text .profile_picture {
+    display: table-cell;
+    width: 34px;
+}
+div.comment_user_text textarea {
+    display: table-cell;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    width: 99%;
+}
+div.comment_user_text textarea:after {
+    display: table-cell;
+    width: 2px;
 }
 
 .enter_to_submit {
@@ -768,7 +791,7 @@ ul.project_idea_comments li {
 ul.project_idea_comments li img {float: left; position: relative; top: -6px; margin-left: 2.5px;}
 .comment_body {margin-left: 40px;}
 .comment_text {font-size: 12px; word-wrap:break-word;}
-.comment_input { height: 15px; position: relative; width: 770px; margin: 0; top: -5px;}
+.comment_input { height: 35px; position: relative; margin: 0; top: -12px;}
 .comment_anon_status { position: absolute; left: 42px; bottom: 0; font-size: 10px; }
 .comment_author {font-size: 12px; font-weight: bold;}
 ul.project_idea_comments li.existing_comments {
