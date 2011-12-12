@@ -1,40 +1,42 @@
 {% extends "page_base.jinja2" %}
 {% block page_body %}
-<h1>Welcome to Totter {{ user.first_name }}!</h1>
-<div class="dashboard_section">
-    {% if invited_projects %}<h3 class="notification">You've been invited to a Totter project!</h3>{% endif %}
-    <ul class="project_list invited_projects">
-    {% for project in invited_projects %}
-        <li>
-        Check it out: <a href="{{project.url}}">{{project.title}}</a>
-        </li>
-    {% endfor %}
-    </ul>
-</div>
-<div class="dashboard_section">
-    <h3>Totter projects you manage:</h3>
-    <ul class="project_list created_projects">
-    {% for project in created_projects %}
-        <li>
-            <a href="{{project.url}}">{{project.title}}</a>
-        </li>
-    {% endfor %}
-    {% if not created_projects %}<li>None</li>{% endif %}
-    </ul>
-</div>
-<div class="dashboard_section">
-    <h3>Other Totter projects you participate in:</h3>
-    <ul class="project_list other_projects">
-    {% for project in other_projects %}
-        <li>
-            <a href="{{project.url}}">{{project.title}}</a>
-        </li>
-    {% endfor %}
-    {% if not other_projects %}<li>None</li>{% endif %}
-    </ul>
-</div>
-<div class="dashboard_links">
-    <a href="{{learn_more_url}}">Click here to learn more about Totter.</a>
-    <a href="{{create_url}}">Click here to create a new Totter project.</a>
+<div class="the_content">
+    <h1>Welcome to Totter {{ user.first_name }}!</h1>
+    <div class="dashboard_section">
+        {% if invited_projects %}<h3 class="notification">You've been invited to a Totter project!</h3>{% endif %}
+        <ul class="project_list invited_projects">
+        {% for project in invited_projects %}
+            <li>
+            Check it out: <a href="{{project.url}}">{{project.title}}</a>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="dashboard_section">
+        <h3>Totter projects you manage:</h3>
+        <ul class="project_list created_projects">
+        {% for project in created_projects %}
+            <li>
+                <a href="{{project.url}}">{{project.title}}</a>
+            </li>
+        {% endfor %}
+        {% if not created_projects %}<li>None</li>{% endif %}
+        </ul>
+    </div>
+    <div class="dashboard_section">
+        <h3>Other Totter projects you participate in:</h3>
+        <ul class="project_list other_projects">
+        {% for project in other_projects %}
+            <li>
+                <a href="{{project.url}}">{{project.title}}</a>
+            </li>
+        {% endfor %}
+        {% if not other_projects %}<li>None</li>{% endif %}
+        </ul>
+    </div>
+    <div class="dashboard_links">
+        <a href="{{learn_more_url}}">Click here to learn more about Totter.</a>
+        <a href="{{create_url}}">Click here to create a new Totter project.</a>
+    </div>
 </div>
 {% endblock %}

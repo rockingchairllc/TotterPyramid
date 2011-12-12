@@ -189,6 +189,7 @@ div.title {padding-bottom: 10px;}
 /* Used to be h1.title */
 
 .logo {color:#2471BE;}
+h1.logo { position: absolute; top: 20px; }
 
 .motto { font-size: 1.25em; margin: 0.7em; }
 h2.motto { margin-bottom: 1em; }
@@ -220,8 +221,8 @@ User Info Section
 	display: block; 
 	z-index: 100; 
 	position: absolute;
-	right: 30px; 
-	top: 90px; 
+	right: 195px; 
+	top: 55px; 
 	text-decoration: none;
 }
 .user_info ul li {

@@ -1,15 +1,17 @@
 {% extends "page_base.jinja2" %}
 {% block page_body %}
-<h1 class="title">User Details</h1>
-<h3>{{first_name}} {{last_name}}</h3>
-<img src="{{profile_picture}}"></img>
-<div>Shares {{shared_project_count}} projects with you.</div>
-
-<ul class="user_projects">
-{% for project in projects %}
-<li><div class="project_title"><a href="{{project.url}}">{{ project.title }}</a></div>
-<div class="participation_info">Posted {{ project.idea_count }} ideas and {{ project.comment_count }} comments.<div>
-</li>
-{% endfor %}
-</ul>
+<div class="the_content">
+    <h1 class="title">User Details</h1>
+    <h3>{{first_name}} {{last_name}}</h3>
+    <img src="{{profile_picture}}"></img>
+    <div>Shares {{shared_project_count}} projects with you.</div>
+    
+    <ul class="user_projects">
+    {% for project in projects %}
+    <li><div class="project_title"><a href="{{project.url}}">{{ project.title }}</a></div>
+    <div class="participation_info">Posted {{ project.idea_count }} ideas and {{ project.comment_count }} comments.<div>
+    </li>
+    {% endfor %}
+    </ul>
+</div>
 {% endblock %}
