@@ -1,7 +1,7 @@
 {% extends "page_base.jinja2" %}
 {% block scripts %}
+{{ super() }}
 <link rel="stylesheet" href="{{request.static_url('totter:static/jquery-facebook-multi-friend-selector/jquery.facebook.multifriend.select.css')}}" />
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
 <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
 <script src="{{request.static_url('totter:static/jquery-facebook-multi-friend-selector/jquery.facebook.multifriend.select.js')}}"></script>
 <script type="text/javascript">
@@ -73,8 +73,6 @@
                         event.preventDefault();
                     }
                 });
-                
-                $
             }
             $submit_btn.click(on_submit);
             $form.submit(on_submit);
@@ -82,6 +80,73 @@
 		});
 		
     })(jQuery);
+</script>
+
+<!-- Facebook scripts -->
+<script>
+    // assume we are already logged in
+    $(document).ready(function() {
+        $("#jfmfs-container").jfmfs();
+        var friendSelector  = $("#jfmfs-container").data('jfmfs');
+        {% if friend_data %}
+        friendSelector.populateMultiselect({{friend_data|safe}});
+        {% else %}
+        {% raw %}
+        friendSelector.populateMultiselect({"data":[{"id" : 1135710554, 'name' : "Francisco Saldana"}], "paging":{}});
+        {% endraw %}
+        {% endif %}
+    });
+      
+      
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '{{fb_app_id}}', // App ID
+            channelUrl : 'http://letstotter.com/static/channel.php', // Channel File
+            status     : true, // check login status
+            cookie     : true, // enable cookies to allow the server to access the session
+            oauth      : true, // enable OAuth 2.0
+            xfbml      : true  // parse XFBML
+        });
+    };
+      
+    // Load the SDK Asynchronously
+    (function(d){
+        var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+        js = d.createElement('script'); js.id = id; js.async = true;
+        js.src = "//connect.facebook.net/en_US/all.js";
+        d.getElementsByTagName('head')[0].appendChild(js);
+    }(document));
+    
+    function sendMessage() {
+        var friendSelector  = $("#jfmfs-container").data('jfmfs');
+        var selectedFriends = friendSelector.getSelectedIds();
+        FB.ui({
+          method: 'send',
+          name: '{{project.title}}',
+          link: '{{project.url}}',
+          to: selectedFriends,
+          picture: "{{request.static_url('totter:static/images/logo.png')}}",
+          redirect_uri: '{{project.url}}',
+          description: "Following up on my wall post, here's the project key: {{project.key}}",
+          });
+          
+        // Fire off an ajax request to the server
+        // that posts to people's walls using the graph API
+        // Send selectedFriends.
+        $.ajax({
+            url:"{{request.resource_url(request.context, 'publish_stream')}}",
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify({'selected_friends' : selectedFriends}),
+            success: function(data) {
+                console.log('Sent feed posts.');
+            }
+        });
+    }
+    
+    function showPickFriends() {
+        $('.pick_friends').show();
+    }
 </script>
 {% endblock %}
 {% block page_body %}
@@ -91,11 +156,23 @@
     <h2><a href="{{project.url}}">Go to the project now!</a></h2>
     
     <div class="invite_method">
-    <h3>Share this information to invite people:</h3>
-    <span class="access_info">Project URL:</span> {{project.url}} <br/>
-    <span class="access_info">Project Access Key:</span> {{project.key}}
+        <h3>Share this information to invite people:</h3>
+        <span class="access_info">Project URL:</span> {{project.url}} <br/>
+        <span class="access_info">Project Access Key:</span> {{project.key}}
     </div> <!-- .invite_method -->
-    
+    <div class="invite_method">
+        <h3>Invite via facebook:</h3>
+        <button onclick="showPickFriends()">Select Friends</button>
+        <div class="pick_friends modal_container">
+            <div class="pick_friends_overlay dark_overlay click_off"></div>
+            <div class="pick_friends_modal modal_dialog drop-shadow">
+                <div id="jfmfs-container"></div>
+                <button onclick="sendMessage(); return false;">Send message</button>
+                <div id="fb-root"></div>
+                <a class="cancel" href="javascript:void(0)" onClick="hideModalContainer()">Cancel</a>
+            </div> <!-- .pick_friends_modal -->
+        </div> <!-- .pick_friends -->
+    </div><!-- .invite_method -->
     <div class="invite_method">
         <h3>Invite via email:</h3>
         <form method="post" action="{{request.path_url}}">
@@ -125,76 +202,6 @@ What is a totter project? It's a fun and easy way to share ideas with people on 
     
     </div> <!-- .email_invite -->
     
-    <div id="jfmfs-container"></div>
+   
     
-    
-    
-    <p>
-    <input type="button"
-      onclick="sendRequestViaMultiFriendSelector(); return false;"
-      value="Send message"
-    />
-    </p>
-    
-    <div id="fb-root"></div>
-    <script>
-      // assume we are already logged in
-      
-      
-      
-      $(document).ready(function() {
-        $("#jfmfs-container").jfmfs();
-        var friendSelector  = $("#jfmfs-container").data('jfmfs');
-        friendSelector.populateMultiselect({{friend_data|safe}});
-          
-         
-      });
-      
-      
-      window.fbAsyncInit = function() {
-            FB.init({
-              appId      : '{{fb_app_id}}', // App ID
-              channelUrl : 'http://letstotter.com/static/channel.php', // Channel File
-              status     : true, // check login status
-              cookie     : true, // enable cookies to allow the server to access the session
-              oauth      : true, // enable OAuth 2.0
-              xfbml      : true  // parse XFBML
-            });
-      };
-      // Load the SDK Asynchronously
-      (function(d){
-         var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
-         js = d.createElement('script'); js.id = id; js.async = true;
-         js.src = "//connect.facebook.net/en_US/all.js";
-         d.getElementsByTagName('head')[0].appendChild(js);
-       }(document));
-    
-    function sendRequestViaMultiFriendSelector() {
-        var friendSelector  = $("#jfmfs-container").data('jfmfs');
-        var selectedFriends = friendSelector.getSelectedIds();
-        FB.ui({
-          method: 'send',
-          name: '{{project.title}}',
-          link: '{{project.url}}',
-          to: selectedFriends,
-          picture: "{{request.static_url('totter:static/images/logo.png')}}",
-          redirect_uri: '{{project.url}}',
-          description: "Following up on my wall post, here's the project key: {{project.key}}",
-          });
-          
-        // Fire off an ajax request to the server
-        // that posts to people's walls using the graph API
-        // Send selectedFriends.
-        $.ajax({
-            url:"{{request.resource_url(request.context, 'publish_stream')}}",
-            type: "POST",
-            dataType: "json",
-            data: JSON.stringify({'selected_friends' : selectedFriends}),
-            success: function(data) {
-                console.log('Sent feed posts.');
-            }
-        });
-    }
-      
-     </script>
 {% endblock %}

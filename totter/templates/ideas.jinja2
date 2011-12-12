@@ -368,7 +368,7 @@
                     <h1>Add Idea</h1>
                     <div class="anonymous"><label for="anonymous">Anonymous:</label><input type="checkbox" id="anonymous"/></div>
                     <textarea class="remember">Start typing your idea...</textarea>
-                    <a href="javascript:void(0)" onClick="hideAddIdea()">Cancel</a>
+                    <a class="cancel" href="javascript:void(0)" onClick="hideAddIdea()">Cancel</a>
                     <div class="throbber hidden">
                         <span>Posting...</span>
                         <img src="{{request.static_url('totter:static/images/throbber.gif')}}"/>
@@ -376,12 +376,9 @@
                     <button type="button" onClick="addIdea_to_project()">Add Idea</button>
                 </div><!-- idea_idea_modal -->
             </div><!-- .add_idea -->
-            
-            
-            
-            
-            
             <!-- END Add Idea and Modal Overlay -->
+            
+            
             <div class="sort_by">
                 Sort by:
                 

@@ -1,6 +1,26 @@
 {% extends "base.jinja2" %}
 {% set custom_class = custom_class|default('') -%}
 {% block scripts %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
+<script src="{{request.static_url('totter:static/js/jquery.default.js')}}"></script>
+<script type="text/javascript">
+    function hideModalContainer() {
+        $('.modal_container').hide();
+        $('.modal_container .remember').default(); // Reset all textboxes in the modal container to defaults.
+    }
+    
+    $(document).ready(function(){
+        // All .clickOffs are page-size translucent/transparent background divs
+        // That function to hide their parent containing div when they are clicked
+        // This is so our modal dialogs close when users click outside of them.
+        $('.click_off').each(function() {
+            var $this = $(this);
+            $this.click(function() {
+                $this.parent().hide();
+            });
+        });
+    });
+</script>
 {% endblock %}
 {% block body %}
 	<div class="wrapper {{custom_class}}">

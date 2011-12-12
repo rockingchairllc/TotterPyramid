@@ -19,12 +19,12 @@
 {% set active_page = active_page|default('overview') -%}
 
 {% block scripts %}
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
+{{ super() }}
 <script src="{{request.static_url('totter:static/js/jquery.jeditable.js')}}" type="text/javascript" charset="utf-8"></script>
 <script src="{{request.static_url('totter:static/js/jquery.autoresize.js')}}"></script>
 
 <script src="{{request.static_url('totter:static/js/jquery.jeditable.autoresize.js')}}"></script>
-<script src="{{request.static_url('totter:static/js/jquery.default.js')}}"></script>
+
 <script type="text/javascript">
 
         $(document).ready(function(){
@@ -54,12 +54,6 @@
             });
              
         });
-                    
-        
-    function hideModalContainer() {
-        $('.modal_container').hide();
-        $('.modal_container .remember').default(); // Reset all textboxes in the modal container to defaults.
-    }
     
     function showLoginPrompt() {
         $('.login_prompt').show();
