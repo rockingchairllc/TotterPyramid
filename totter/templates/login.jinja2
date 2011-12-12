@@ -2,6 +2,7 @@
 {% block scripts %}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
 <script type="text/javascript">
+    {{ super() }}
     $(document).ready(function() {
         var searchBox = $("[name=login]");
         var searchBoxDefault = "Email";
@@ -64,13 +65,7 @@
             <h3 class="register login_text">New here?  
                 <a href="{{request.route_url('register')}}" class="register_btn">Register</a></h3>
         
-            <script type="text/javascript">
-            function popitup(url) {
-                newwindow=window.open(url,'name','height=340,width=630');
-                if (window.focus) {newwindow.focus()}
-                return false;
-            }
-            </script>
+            
             <div class="fb_login">
                 <a target="_blank" onclick="popitup('{{fb_login_url}}')">
                     <img src="{{request.application_url}}/static/images/facebook.png">

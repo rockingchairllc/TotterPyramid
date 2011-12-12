@@ -14,7 +14,7 @@ from urllib import urlencode
 from mail import send_email
 _ = TranslationStringFactory('totter')
 import logging
-from user import get_user
+from user import get_user, fb_login_url
 from template import user_dict, idea_dict, comment_dict
 import notification as note
 import facebook as fb
@@ -465,7 +465,8 @@ def invite(request):
     'fb_app_id' : request.registry.settings['facebook.app_id'],
     'iframe_url' : iframe_url,
     'fb_access_token' : request.session['access_token'] if 'access_token' in request.session else None,
-    'friend_data' : friends
+    'friend_data' : friends,
+    'fb_login_url' : fb_login_url(request)
     })
     return template_permissions(request, response_params)
     

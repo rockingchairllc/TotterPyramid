@@ -1,6 +1,7 @@
 {% extends "base.jinja2" %}
 {% set custom_class = custom_class|default('') -%}
 {% block scripts %}
+    {{ super() }}
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.js"></script>
 <script src="{{request.static_url('totter:static/js/jquery.default.js')}}"></script>
 <script type="text/javascript">

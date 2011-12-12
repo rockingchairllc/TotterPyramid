@@ -6,6 +6,13 @@
     <link rel="stylesheet" href="{{request.application_url}}/static/style-merged.css" >
 	<link rel="shortcut icon" href="{{request.application_url}}/static/images/favicon.png" />
     {% block scripts %}
+    <script type="text/javascript">
+    function popitup(url) {
+        newwindow=window.open(url,'name','height=340,width=630');
+        if (window.focus) {newwindow.focus()}
+        return false;
+    }
+    </script>
     {% endblock %}
 </head>
 <body>
