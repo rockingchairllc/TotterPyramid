@@ -242,6 +242,7 @@ class AggregateRating(Base):
 #### Containers ####
 from pyramid.security import ALL_PERMISSIONS, Allow, Everyone
 import logging
+logging = logging.getLogger('routes')
 from zope.interface import implements, Interface
 # FIXME: ProjectLongname and ProjectShortname both derive from ProjectContainer
 # For pyramid views to be able to specify "either" as their context by just specifying
