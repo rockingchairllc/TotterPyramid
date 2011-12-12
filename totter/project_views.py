@@ -454,9 +454,12 @@ def invite(request):
     # Get friends list from serverside facebook api.
     friends = ''
     if 'access_token' in request.session:
+        logging.info('Invite: access_token present in session, populating friends list')
         graph = fb.GraphAPI(request.session['access_token'])
         friends = graph.get_connections("me", "friends", fields='id,name')
         friends = json.dumps(friends)
+    else:
+        logging.info('Invite: no access_token in session, not facebook?')
     
     
     response_params.update({'user' : user_dict(request, user), 
