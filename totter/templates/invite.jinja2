@@ -145,8 +145,11 @@
     }
     
     function showPickFriends() {
-        popitup('{{fb_login_url}}');
         $('.pick_friends').show();
+    }
+    
+    function showWhy() {
+        $('.why').show();
     }
 </script>
 {% endblock %}
@@ -168,6 +171,18 @@
         </div> <!-- .pick_friends_modal -->
     </div> <!-- .pick_friends -->
     <!-- END Pick Friends Modal -->
+    
+    <!-- START Pick Friends Modal -->
+    <div class="why modal_container">
+        <div class="why_overlay dark_overlay click_off"></div>
+        <div class="why_modal modal_dialog drop-shadow">
+            We occasionally have an issue with retrieving your Facebook credentials after you've been logged in for some time.
+            <br/>If you're logged in without Facebook, we can't send Facebook messages on your behalf.
+            <br/>
+            <button  onclick="hideModalContainer()">Close</button>
+        </div> <!-- .why_modal -->
+    </div> <!-- .why -->
+    <!-- END Pick Friends Modal -->
 
     <div class="email_invite">
     {% if created %}<h1>Project created successfully!</h1>{% endif %}
@@ -184,7 +199,8 @@
         {% if friend_data %}
         <button onclick="showPickFriends()">Select Friends</button>
         {% else %}
-        <a href="{{request.route_url('logout')}}">Logout</a> and login again with Facebook to use this feature.
+        <a href="{{request.route_url('logout')}}">Logout</a> and login again with Facebook to use this feature. 
+        <a onclick="showWhy()">(Why?)</a>
         {% endif %}
         
     </div><!-- .invite_method -->
