@@ -78,7 +78,7 @@ def new_project(request, project, author):
     Congratulations! Your Totter project %s is located at
     <%s>
     Your project access key is: %s
-    """ % (project.title, request.resource_url(project), project.key)
+    """ % (project.title, request.root.project_url(project), project.key)
     post_event(request, str(project.id) + ":created", subject, message)
     
 def new_idea(request, project, idea, author):
@@ -94,11 +94,12 @@ def new_idea(request, project, idea, author):
     subscription = str(project.id) + ':' + str(idea.id) + ":new"
     create_subscription(request, subscription, parent_sub)
     
+    
     subject = "New idea posted to %s" % project.title
     message = """
 %(who)s posted a new idea to the %(title)s:
 %(data)s
-""" % {'who' : idea.author.full_name + ' ' , 'title' : project.title, 'data' : idea.data}
+""" % {'who' : idea.author.full_name if not idea.anonymous else 'Someone' , 'title' : project.title, 'data' : idea.data}
     post_event(request, subscription, subject, message, from_email=idea.author.email)
     
     subscribe(request, idea.author.email, str(project.id) + ':' + str(idea.id) + ":comments", frequency='immediate')
@@ -109,7 +110,8 @@ def new_comment(request, project, idea, comment, author):
     message = """
 %(who)s posted a new comment to %(idea_who)s's idea on %(title)s
 %(data)s
-""" % {'who' : comment.author.full_name, 'idea_who' : idea.author.full_name,
+""" % {'who' : comment.author.full_name if not comment.anonymous else 'Someone', 
+    'idea_who' : idea.author.full_name if not idea.anonymous else 'someone',
     'title' : project.title, 'data' : comment.data}
     post_event(request, subscription, subject, message, from_email=comment.author.email)
     
@@ -117,7 +119,7 @@ def new_comment(request, project, idea, comment, author):
     
 def new_rating(request, project, idea, rater):
     subscription = str(project.id) + ':' + str(idea.id) + ":votes"
-    subject = "%s rated %s's idea" % (rater.full_name, idea.author.full_name)
+    subject = "%s rated %s's idea" % (rater.full_name, idea.author.full_name if not idea.anonymous else 'someone')
     message = subject
     post_event(request, subscription, subject, message, from_email=rater.email)
     
