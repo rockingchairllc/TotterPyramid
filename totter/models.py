@@ -99,7 +99,7 @@ class Project(Base):
     creation_time = Column('CreationTime', UTCDateTime, default=utcnow, nullable=False)
     deadline = Column('Deadline', UTCDateTime, nullable=True)
     anonymous = Column('Anonymous', Boolean, nullable=False, default=0)
-    rating_type = Column('RatingType', Enum('like/love', 'star'), default='like/love', nullable=False)
+    rating_type = Column('RatingType', Enum('like/love', 'star'), default='star', nullable=False)
     
     creator = relationship(User, backref=backref('created_projects'))
     
